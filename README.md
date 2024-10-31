@@ -2,7 +2,7 @@
 
 ## Github Rules
 
-### prefix
+### Prefix
 -   feat: 새로운 기능 구현
 -   fix: 버그 수정
 -   refactor: 코드 개선 및 리팩토링
@@ -21,12 +21,12 @@
 -   !BREAKING CHANGE: 커다란 API 변경의 경우
 -   !HOTFIX: 급하게 치명적인 버그를 고쳐야 하는 경우
 
-### commit 이름 예시
-> git commit -m 'category(field): do something'
+### Commit 이름 예시
+> git commit -m 'category(field): do something' <br>
 > git commit -m 'feat(profile): add profile picture upload'
 
 ### Branch 이름 예시
-> feat/T-123-new-login-system
+> feat/T-123-new-login-system <br>
 > build/v2.0.1
 
 ### Others
