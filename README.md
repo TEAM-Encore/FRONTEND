@@ -1,79 +1,38 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Frontend
 
-# Getting Started
+## Github Rules
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+### Prefix
 
-## Step 1: Start the Metro Server
+- feat: 새로운 기능 구현
+- fix: 버그 수정
+- refactor: 코드 개선 및 리팩토링
+- docs: 문서화 작업, 문서 수정
+- chore: 비즈니스 로직과 어플리케이션 로직과 연관 없는 각종 작업들
+- style: 코드의 포맷 및 오타 수정 등 코드 자체의 변경이 없는 경우
+- design: 사용자 UI 디자인 변경
+- comment: 필요한 주석 추가 및 변경
+- rename: 파일 또는 폴더 명을 수정하거나 옮기는 작업만의 경우
+- remove: 파일을 삭제하는 작업만 수행한 경우
+- test: 테스트 코드, 리팩토링 테스트 코드 작성
+- perf: 성능 작업
+- ci: CI 작업
+- build: 빌드 및 패키지 관리 등
+- revert: 이전 변경 사항을 되돌리는 revert
+- !BREAKING CHANGE: 커다란 API 변경의 경우
+- !HOTFIX: 급하게 치명적인 버그를 고쳐야 하는 경우
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+### Commit 이름 예시
 
-To start Metro, run the following command from the _root_ of your React Native project:
+> git commit -m 'category(field): do something' <br>
+> git commit -m 'feat(profile): add profile picture upload'
 
-```bash
-# using npm
-npm start
+### Branch 이름 예시
 
-# OR using Yarn
-yarn start
-```
+> feat/T-123-new-login-system <br>
+> build/v2.0.1
 
-## Step 2: Start your Application
+### Others
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### For iOS
-
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- PR이 Merge가 되면 사용했던 브랜치는 삭제한다.
+- 코드 리뷰를 위해 팀원을 Reviewer 지정을 한다.
