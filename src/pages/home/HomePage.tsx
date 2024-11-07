@@ -8,19 +8,21 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   Image,
+  Dimensions,
 } from 'react-native';
 
 import HomeStyles from '@/pages/home/HomeStyles';
 import Colors from '@/assets/colors/Colors';
 
-import IconTitle from '@/components/home/IconTitle';
-import IconSearch from '@/components/home/IconSearch';
-import IconNotification from '@/components/home/IconNotification';
+import IconTitle from '@/assets/icons/home/IconTitle';
+import IconSearch from '@/assets/icons/home/IconSearch';
+import IconNotification from '@/assets/icons/home/IconNotification';
 import CarouselTicket from '@/components/home/CarouselTicket';
-import IconLike from '@/components/home/IconLike';
-import IconComment from '@/components/home/IconComment';
-import IconDate from '@/components/home/IconDate';
-import IconActor from '@/components/home/IconActor';
+import CarouselBackground from '@/components/home/CarouselBackground';
+import IconLike from '@/assets/icons/home/IconLike';
+import IconComment from '@/assets/icons/home/IconComment';
+import IconDate from '@/assets/icons/home/IconDate';
+import IconActor from '@/assets/icons/home/IconActor';
 
 type HomePageProps = {};
 
@@ -150,10 +152,15 @@ const HomePage: React.FC<HomePageProps> = () => {
     },
   ];
 
+  const windowWidth = Dimensions.get('window').width;
+
   return (
     <SafeAreaView style={HomeStyles.container}>
       <ScrollView>
         <View style={HomeStyles.containerHeader}>
+          <View style={HomeStyles.carouselBackground}>
+            <CarouselBackground />
+          </View>
           <View style={HomeStyles.containerIcons}>
             <IconTitle />
             <View style={HomeStyles.containerRow}>

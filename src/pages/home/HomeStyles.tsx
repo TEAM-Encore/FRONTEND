@@ -10,10 +10,17 @@ const HomeStyles = StyleSheet.create({
     backgroundColor: Colors.gray_01,
   },
   containerHeader: {
-    backgroundColor: Colors.primary_01,
+    backgroundColor: Colors.primary_03,
     height: 283,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
+    overflow: 'hidden',
+  },
+  carouselBackground: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    marginTop: -100,
   },
   containerIcons: {
     flexDirection: 'row',
