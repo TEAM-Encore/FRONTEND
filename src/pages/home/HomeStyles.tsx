@@ -1,5 +1,8 @@
 import {StyleSheet} from 'react-native';
 import Colors from '@/assets/colors/Colors';
+import {typography} from '../../styles/typography';
+
+const {subhead02, subhead03, headline, body01, caption} = typography;
 
 const HomeStyles = StyleSheet.create({
   container: {
@@ -38,7 +41,7 @@ const HomeStyles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   textCarouselTicketTitle: {
-    fontSize: 12,
+    ...caption,
     color: Colors.gray_01,
   },
   containerPagination: {
@@ -74,6 +77,7 @@ const HomeStyles = StyleSheet.create({
     alignItems: 'center',
   },
   textAd: {
+    ...caption,
     color: '#6F6F6F',
   },
   containerTitle: {
@@ -84,11 +88,11 @@ const HomeStyles = StyleSheet.create({
     marginBottom: 20,
   },
   textTitle: {
-    fontSize: 20,
+    ...headline,
     color: Colors.gray_12,
   },
   textWriteReview: {
-    fontSize: 14,
+    ...body01,
     color: Colors.gray_08,
   },
   containerTicket: {
@@ -104,17 +108,12 @@ const HomeStyles = StyleSheet.create({
     paddingVertical: 17,
   },
   textTicketTitle: {
-    fontSize: 16,
+    ...subhead03,
     color: Colors.gray_01,
     marginBottom: 9,
   },
-  textTicketDate: {
-    fontSize: 12,
-    color: Colors.gray_01,
-    marginLeft: 6,
-  },
-  textTicketActor: {
-    fontSize: 12,
+  textTicketDateActor: {
+    ...caption,
     color: Colors.gray_01,
     marginLeft: 6,
   },
@@ -143,7 +142,7 @@ const HomeStyles = StyleSheet.create({
     elevation: 5,
   },
   textPremiumReviewTitle: {
-    fontSize: 14,
+    ...subhead02,
     color: Colors.gray_12,
   },
   containerPremiumReviewRanking: {
@@ -156,12 +155,12 @@ const HomeStyles = StyleSheet.create({
     marginRight: 12,
   },
   textPremiumReviewRanking: {
-    fontSize: 14,
+    ...subhead02,
     color: Colors.gray_01,
   },
   textPremiumReviewLike: {
+    ...caption,
     marginLeft: 4,
-    fontSize: 12,
     color: Colors.gray_12,
   },
   containerBest: {
@@ -179,8 +178,8 @@ const HomeStyles = StyleSheet.create({
     elevation: 5,
   },
   textBest: {
-    width: '55%',
-    fontSize: 16,
+    ...subhead03,
+    width: '50%',
     marginTop: 20,
     marginLeft: 24,
   },
@@ -192,6 +191,7 @@ const HomeStyles = StyleSheet.create({
     alignItems: 'center',
   },
   textBestLikeComment: {
+    ...caption,
     color: '#4F4F4F',
     marginHorizontal: 4,
   },
@@ -202,12 +202,12 @@ const HomeStyles = StyleSheet.create({
     marginBottom: 11,
   },
   textMusicalTitle: {
-    fontSize: 16,
+    ...subhead03,
     color: Colors.gray_12,
     marginBottom: 4,
   },
   textMusicalDateLocation: {
-    fontSize: 12,
+    ...caption,
     color: Colors.gray_07,
   },
   containerPoint: {
@@ -230,11 +230,17 @@ const HomeStyles = StyleSheet.create({
     elevation: 5,
   },
   textPointTitle: {
+    fontFamily: 'Pretendard-SemiBold',
     fontSize: 15,
+    lineHeight: 20,
+    letterSpacing: -0.6,
     color: Colors.gray_12,
   },
   textPointContent: {
+    fontFamily: 'Pretendard-Regular',
     fontSize: 13,
+    lineHeight: 22,
+    letterSpacing: -0.6,
     color: Colors.gray_08,
   },
   containerPointShortcut: {
@@ -246,7 +252,7 @@ const HomeStyles = StyleSheet.create({
     alignItems: 'center',
   },
   textPointShortcut: {
-    fontSize: 14,
+    ...subhead02,
     color: Colors.gray_01,
   },
 });

@@ -201,11 +201,11 @@ const HomePage: React.FC<HomePageProps> = () => {
               <Text style={HomeStyles.textTicketTitle}>뮤지컬[위키드]</Text>
               <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
                 <IconDate />
-                <Text style={HomeStyles.textTicketDate}>2024.06.21</Text>
+                <Text style={HomeStyles.textTicketDateActor}>2024.06.21</Text>
               </View>
               <View style={HomeStyles.containerRow}>
                 <IconActor />
-                <Text style={HomeStyles.textTicketActor}>
+                <Text style={HomeStyles.textTicketDateActor}>
                   우선영 염지은 하은영 윤혜원
                 </Text>
               </View>
