@@ -59,6 +59,23 @@ const HomeStyles = StyleSheet.create({
   inactiveDot: {
     backgroundColor: '#C7A0A0',
   },
+  containerAdImage: {
+    marginTop: 39,
+  },
+  containerAd: {
+    position: 'absolute',
+    top: 15,
+    left: 20,
+    width: 39,
+    height: 18,
+    backgroundColor: '#F7F7F7',
+    borderRadius: 21,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textAd: {
+    color: '#6F6F6F',
+  },
   containerTitle: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -89,6 +106,7 @@ const HomeStyles = StyleSheet.create({
   textTicketTitle: {
     fontSize: 16,
     color: Colors.gray_01,
+    marginBottom: 9,
   },
   textTicketDate: {
     fontSize: 12,
@@ -142,6 +160,7 @@ const HomeStyles = StyleSheet.create({
     color: Colors.gray_01,
   },
   textPremiumReviewLike: {
+    marginLeft: 4,
     fontSize: 12,
     color: Colors.gray_12,
   },
@@ -150,7 +169,6 @@ const HomeStyles = StyleSheet.create({
     height: 128,
     borderRadius: 5,
     backgroundColor: Colors.gray_01,
-    paddingHorizontal: 14,
     shadowColor: 'rgba(23, 23, 23, 0.1)',
     shadowOffset: {
       width: 0,
@@ -161,7 +179,21 @@ const HomeStyles = StyleSheet.create({
     elevation: 5,
   },
   textBest: {
+    width: '55%',
     fontSize: 16,
+    marginTop: 20,
+    marginLeft: 24,
+  },
+  containerBestLikeComment: {
+    position: 'absolute',
+    bottom: 18,
+    left: 25,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  textBestLikeComment: {
+    color: '#4F4F4F',
+    marginHorizontal: 4,
   },
   imageMusical: {
     width: 125,

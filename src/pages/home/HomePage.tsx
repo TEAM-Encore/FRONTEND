@@ -199,7 +199,7 @@ const HomePage: React.FC<HomePageProps> = () => {
           <View style={HomeStyles.containerTicket}>
             <View style={HomeStyles.ticket1}>
               <Text style={HomeStyles.textTicketTitle}>뮤지컬[위키드]</Text>
-              <View style={HomeStyles.containerRow}>
+              <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
                 <IconDate />
                 <Text style={HomeStyles.textTicketDate}>2024.06.21</Text>
               </View>
@@ -263,8 +263,12 @@ const HomePage: React.FC<HomePageProps> = () => {
             <Text style={HomeStyles.textBest}>
               샤롯데시어터 오페라글라스 대여 현황 어떤가요?
             </Text>
-            <IconComment />
-            <IconLike />
+            <View style={HomeStyles.containerBestLikeComment}>
+              <IconComment />
+              <Text style={HomeStyles.textBestLikeComment}>5</Text>
+              <IconLike color="#4F4F4F" />
+              <Text style={HomeStyles.textBestLikeComment}>10</Text>
+            </View>
           </View>
         </View>
 
@@ -316,10 +320,15 @@ const HomePage: React.FC<HomePageProps> = () => {
           showsHorizontalScrollIndicator={false}
         />
 
-        <Image
-          style={{width: '100%', marginTop: 39}}
-          source={require('@/assets/images/ExampleAd.png')}
-        />
+        <View style={HomeStyles.containerAdImage}>
+          <Image
+            style={{width: '100%'}}
+            source={require('@/assets/images/ExampleAd.png')}
+          />
+          <View style={HomeStyles.containerAd}>
+            <Text style={HomeStyles.textAd}>AD</Text>
+          </View>
+        </View>
 
         <View style={[HomeStyles.containerTitle, {marginBottom: 12.5}]}>
           <Text style={HomeStyles.textTitle}>놓칠 수 없는 포인트</Text>
