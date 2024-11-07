@@ -1,15 +1,16 @@
 import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {SvgXml} from 'react-native-svg';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import HomePage from '@/pages/HomePage';
+import {TabSvg} from '@/assets/icons/TabSvg';
+import Colors from '@/assets/colors/Colors';
+
+import HomePage from '@/pages/home/HomePage';
 import PremiumPage from '@/pages/PremiumPage';
 import DashboardPage from '@/pages/DashboardPage';
 import TicketBookPage from '@/pages/TicketBookPage';
 import MyPage from '@/pages/MyPage';
-
-import {SvgXml} from 'react-native-svg';
-import {TabSvg} from '@/assets/icons/TabSvg';
-import Colors from '@/assets/colors/Colors';
 
 export default function Tabs() {
   const Tab = createBottomTabNavigator();
@@ -21,6 +22,8 @@ export default function Tabs() {
     {name: '티켓북', content: TicketBookPage, icon: TabSvg.TicketBookIcon},
     {name: '마이', content: MyPage, icon: TabSvg.MyPageIcon},
   ];
+
+  const {top} = useSafeAreaInsets();
 
   return (
     <>
@@ -46,6 +49,20 @@ export default function Tabs() {
             options={{
               title: item.name,
               tabBarIcon: ({color}) => <SvgXml xml={item.icon} fill={color} />,
+              headerShown: true,
+              headerTitle: '',
+              headerStyle:
+                item.name === '홈'
+                  ? {
+                      backgroundColor: Colors.primary_01,
+                      height: top,
+                      shadowColor: 'transparent',
+                    }
+                  : {
+                      backgroundColor: Colors.gray_01,
+                      height: top,
+                      shadowColor: 'transparent',
+                    },
             }}
           />
         ))}
