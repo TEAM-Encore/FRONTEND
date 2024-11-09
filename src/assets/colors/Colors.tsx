@@ -26,6 +26,8 @@ export default {
   gray_02: '#F7F7F7',
   gray_01: '#FBFBFB',
 
+  wireframe_700: '#4F4F4F',
+
   white: '#FFFFFF',
   black: '#000000',
 };
