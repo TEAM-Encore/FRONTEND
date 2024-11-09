@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import HomePage from '@/pages/HomePage';
+import HomePage from '@/pages/home/HomePage';
 import PremiumPage from '@/pages/PremiumPage';
 import DashboardPage from '@/pages/dashboard/DashboardPage';
 import TicketBookPage from '@/pages/TicketBookPage';
