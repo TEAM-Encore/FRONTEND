@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
-import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
+import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 
 import DashboardTabs from '@/components/navigation/DashboardTabs';
 import DashboardStyles from './DashboardStyles';
@@ -15,8 +15,8 @@ import DashboardStyles from './DashboardStyles';
 // App.js에서 정의한 네비게이션 스택의 타입 설정
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 
-import IconSearch from '@/assets/icons/dashboard/IconSearch';
-import IconNotification from '@/assets/icons/dashboard/IconNotification';
+import IconSearch from '@/assets/icons/dashboard/IconSearch';
+import IconNotification from '@/assets/icons/dashboard/IconNotification';
 
 type RootStackParamList = {
   WritePage: undefined;
@@ -31,7 +31,7 @@ const DashboardPage: React.FC = () => {
         {/* 헤더 */}
         <View style={DashboardStyles.containerHeader}>
           <View style={DashboardStyles.containerIcons}>
-            <Text>게시판</Text>
+            <Text style={DashboardStyles.textTitle}>게시판</Text>
             <View style={DashboardStyles.containerRow}>
               <IconSearch style={{marginRight: 20}} />
               <IconNotification />

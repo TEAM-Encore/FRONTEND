@@ -3,7 +3,7 @@ import {View, Text, TouchableOpacity, Alert} from 'react-native';
 import WriteStyles from './WriteStyles';
 
 import {SvgXml} from 'react-native-svg';
-import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
+import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 
 const WritePage: React.FC = () => {
   return (
