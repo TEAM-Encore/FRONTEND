@@ -5,6 +5,7 @@ import InformationScreen from '@/pages/dashboard/info/InfomationScreen';
 import ActorScreen from '@/pages/dashboard/actor/ActorScreen';
 import ReviewScreen from '@/pages/dashboard/review/ReviewScreen';
 import FreeScreen from '@/pages/dashboard/free/FreeScreen';
+import DashboardStyles from '@/pages/dashboard/DashboardStyles';
 
 function DashboardTabs(): JSX.Element {
   const [selectedTab, setSelectedTab] = useState('Entire');
@@ -26,71 +27,42 @@ function DashboardTabs(): JSX.Element {
     }
   };
   return (
-    <View style={styles.container}>
-      {/* Custom Tab Bar */}
-      <View style={styles.tabContainer}>
-        <TouchableOpacity
-          onPress={() => setSelectedTab('Entire')}
-          style={styles.tabButton}>
-          <Text style={styles.tabText}>전체</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setSelectedTab('Information')}
-          style={styles.tabButton}>
-          <Text style={styles.tabText}>정보</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setSelectedTab('Review')}
-          style={styles.tabButton}>
-          <Text style={styles.tabText}>후기</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setSelectedTab('Actor')}
-          style={styles.tabButton}>
-          <Text style={styles.tabText}>배우</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setSelectedTab('Free')}
-          style={styles.tabButton}>
-          <Text style={styles.tabText}>자유</Text>
-        </TouchableOpacity>
+    <View style={DashboardStyles.container}>
+      <View style={DashboardStyles.tabContainer}>
+        {['Entire', 'Information', 'Review', 'Actor', 'Free'].map(
+          (tab, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => setSelectedTab(tab)}
+              style={[
+                DashboardStyles.tabButton,
+                selectedTab === tab && DashboardStyles.activeTabButton,
+              ]}>
+              <Text
+                style={[
+                  DashboardStyles.tabText,
+                  selectedTab === tab && DashboardStyles.activeTabText,
+                ]}>
+                {tab === 'Entire'
+                  ? '전체'
+                  : tab === 'Information'
+                  ? '정보'
+                  : tab === 'Review'
+                  ? '후기'
+                  : tab === 'Actor'
+                  ? '배우'
+                  : '자유'}
+              </Text>
+              {selectedTab === tab && (
+                <View style={DashboardStyles.activeTabUnderline} />
+              )}
+            </TouchableOpacity>
+          ),
+        )}
       </View>
-
-      {/* Selected Screen */}
-      <View style={styles.screenContent}>{renderScreen()}</View>
+      <View>{renderScreen()}</View>
     </View>
   );
 }
 
 export default DashboardTabs;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  tabContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
-    backgroundColor: '#f1f1f1',
-  },
-  tabButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  tabText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  screenContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  screenContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
