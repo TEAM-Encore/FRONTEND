@@ -1,32 +1,28 @@
-import React, {useState, useRef, useMemo} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   SafeAreaView,
   ScrollView,
   View,
   Text,
   FlatList,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
   Image,
   Dimensions,
-  TouchableOpacity,
 } from 'react-native';
 
 import HomeStyles from '@/pages/home/HomeStyles';
-import {SvgXml} from 'react-native-svg';
-import {HomeIcon} from '@/assets/icons/home/HomeIcon';
+import Colors from '@/assets/colors/Colors';
+
+import IconTitle from '@/assets/icons/home/IconTitle';
 import IconSearch from '@/assets/icons/home/IconSearch';
 import IconNotification from '@/assets/icons/home/IconNotification';
 import IconLike from '@/assets/icons/home/IconLike';
 import IconComment from '@/assets/icons/home/IconComment';
 import IconDate from '@/assets/icons/home/IconDate';
 import IconActor from '@/assets/icons/home/IconActor';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 type HomePageProps = {};
-
-type RootStackParamList = {
-  WritePage: undefined;
-  HomeSearchDefaultPage: undefined;
-};
 
 const CARD_WIDTH = 290;
 const PADDING = 6;
@@ -40,10 +36,6 @@ const Ticket = ({image}: {image: any}) => (
 const HomePage: React.FC<HomePageProps> = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
   const flatListRef = useRef<FlatList<any>>(null);
-  const screenWidth = Dimensions.get('window').width;
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [reviewModalPosition, setReviewModalPosition] = useState({top: 0});
-  const [reviewModalVisible, setReviewModalVisible] = useState(true);
 
   const carouselTicketList = [
     {
@@ -59,6 +51,39 @@ const HomePage: React.FC<HomePageProps> = () => {
       image: require('@/assets/images/home/ImageCarouselColor2.png'),
     },
   ];
+
+  const circularCarouselTicketList = [
+    {
+      id: '0',
+      image: require('@/assets/images/home/ImageCarouselColor2.png'),
+    },
+    ...carouselTicketList,
+    {
+      id: '4',
+      image: require('@/assets/images/home/ImageCarouselColor.png'),
+    },
+  ];
+
+  const handleMomentumScrollEnd = (
+    event: NativeSyntheticEvent<NativeScrollEvent>,
+  ) => {
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+    const newIndex = Math.round(contentOffsetX / (CARD_WIDTH + PADDING * 2));
+    setCurrentIndex(newIndex);
+
+    if (newIndex === 0) {
+      flatListRef.current?.scrollToIndex({
+        index: carouselTicketList.length,
+        animated: false,
+      });
+      setCurrentIndex(carouselTicketList.length);
+    } else if (newIndex === circularCarouselTicketList.length - 1) {
+      flatListRef.current?.scrollToIndex({index: 1, animated: false});
+      setCurrentIndex(1);
+    } else {
+      setCurrentIndex(newIndex);
+    }
+  };
 
   const premiumReviewRanking = [
     {id: '1', title: '위키드 5회차 관람 후기'},
@@ -114,126 +139,72 @@ const HomePage: React.FC<HomePageProps> = () => {
     },
   ];
 
-  const eventBanner = [
+  const point = [
     {
       id: '1',
-      icon: HomeIcon.bannerHeart,
-      color: '#EDDCFF',
-      subColor: '#D6AFFF',
-      title: '댓글로 마음 전하면 30포인트',
-      subTitle: '댓글 3번 작성하기',
+      image: require('@/assets/images/home/IconPoint.png'),
+      title: '+10 포인트',
+      content: '댓글 3번 작성하기',
     },
     {
       id: '2',
-      icon: HomeIcon.bannerGift,
-      color: '#FFF8DB',
-      subColor: '#FFF1BB',
-      title: '오늘의 깜짝 선물 10포인트',
-      subTitle: '로그인 후 20분 경과 시',
+      image: require('@/assets/images/home/IconPoint.png'),
+      title: '+10 포인트',
+      content: '댓글 3번 작성하기',
     },
     {
       id: '3',
-      icon: HomeIcon.bannerTrophy,
-      color: '#FFDFD6',
-      subColor: '#FFB19B',
-      title: '댓글로 마음 전하면 30포인트',
-      subTitle: '좋아요 10개 이상 누를 시',
+      image: require('@/assets/images/home/IconPoint.png'),
+      title: '+10 포인트',
+      content: '댓글 3번 작성하기',
     },
   ];
-
-  const snapToOffsets = useMemo(
-    () =>
-      Array.from(Array(carouselTicketList.length)).map(
-        (_, index) => index * CARD_WIDTH + 15,
-      ),
-    [carouselTicketList],
-  );
-
-  const handleLayout = (event: any) => {
-    const {y, height} = event.nativeEvent.layout;
-    setReviewModalPosition({top: y + height});
-  };
-
-  const handleModalCancel = () => {
-    setReviewModalVisible(false);
-  };
 
   return (
     <SafeAreaView style={HomeStyles.container}>
       <ScrollView>
         <View style={HomeStyles.containerHeader}>
           <View style={HomeStyles.containerIcons}>
-            <SvgXml xml={HomeIcon.iconTitle} />
+            <IconTitle />
             <View style={HomeStyles.containerRow}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('HomeSearchDefaultPage')}>
-                <IconSearch style={{marginRight: 20}} />
-              </TouchableOpacity>
+              <IconSearch style={{marginRight: 20}} />
               <IconNotification />
             </View>
           </View>
-          <FlatList
-            ref={flatListRef}
-            data={carouselTicketList}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item}) => <Ticket image={item.image || null} />}
-            keyExtractor={item => item.id}
-            snapToOffsets={snapToOffsets}
-            decelerationRate="fast"
-            contentContainerStyle={{paddingHorizontal: 52, paddingTop: 10}}
-            initialScrollIndex={1}
-            getItemLayout={(data, index) => ({
-              length: 170,
-              offset:
-                (CARD_WIDTH + PADDING * 2) * index -
-                (screenWidth - CARD_WIDTH) / 2,
-              index,
-            })}
-          />
-        </View>
-        <View style={HomeStyles.containerPagination}>
-          {carouselTicketList.map((_, index) => (
-            <View
-              key={index}
-              style={[
-                HomeStyles.paginationDot,
-                index === currentIndex
-                  ? HomeStyles.activeDot
-                  : HomeStyles.inactiveDot,
-              ]}
+          <View style={HomeStyles.containerRow}>
+            <FlatList
+              ref={flatListRef}
+              data={circularCarouselTicketList}
+              renderItem={({item}) => <Ticket image={item.image || null} />}
+              keyExtractor={item => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              snapToAlignment="center"
+              snapToInterval={CARD_WIDTH + PADDING * 2}
+              decelerationRate="fast"
+              onMomentumScrollEnd={handleMomentumScrollEnd}
+              scrollEventThrottle={16}
             />
-          ))}
+          </View>
+          <View style={HomeStyles.containerPagination}>
+            {carouselTicketList.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  HomeStyles.paginationDot,
+                  index === currentIndex - 1
+                    ? HomeStyles.activeDot
+                    : HomeStyles.inactiveDot,
+                ]}
+              />
+            ))}
+          </View>
         </View>
 
-        <View
-          style={[HomeStyles.containerTitle, {marginTop: 36}]}
-          onLayout={handleLayout}>
+        <View style={[HomeStyles.containerTitle, {marginTop: 33}]}>
           <Text style={HomeStyles.textTitle}>최근 관람한 공연</Text>
           <Text style={HomeStyles.textWriteReview}>리뷰쓰기 {'>'}</Text>
         </View>
-
-        {reviewModalVisible && (
-          <View
-            style={[
-              HomeStyles.containerReviewModal,
-              {top: reviewModalPosition.top},
-            ]}>
-            <View style={HomeStyles.triangle} />
-            <View style={HomeStyles.reviewModal}>
-              <Text style={HomeStyles.textReviewModal}>
-                리뷰 작성하고{' '}
-                <Text style={{fontFamily: 'Pretendard-Bold'}}>20포인트</Text>{' '}
-                받아가세요!
-              </Text>
-              <TouchableOpacity onPress={handleModalCancel}>
-                <SvgXml xml={HomeIcon.modalCancel} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-
         <View style={{alignItems: 'center'}}>
           <View style={HomeStyles.containerTicket}>
             <View style={HomeStyles.ticket1}>
@@ -242,6 +213,7 @@ const HomePage: React.FC<HomePageProps> = () => {
                 source={require('@/assets/images/home/TicketBackground.png')}
                 resizeMode="cover"
               />
+
               <View style={HomeStyles.containerTicketText}>
                 <Text style={HomeStyles.textTicketTitle}>뮤지컬[위키드]</Text>
                 <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
@@ -256,16 +228,16 @@ const HomePage: React.FC<HomePageProps> = () => {
                 </View>
               </View>
             </View>
-            <View style={HomeStyles.ticket2}>
-              <View style={{flexDirection: 'row'}}>
-                <SvgXml xml={HomeIcon.star} />
-                <SvgXml xml={HomeIcon.star} />
-                <SvgXml xml={HomeIcon.star} />
-                <SvgXml xml={HomeIcon.star} />
-                <SvgXml xml={HomeIcon.star} />
-              </View>
-              <Text style={HomeStyles.textReview}>리뷰를{'\n'}남겨주세요</Text>
-            </View>
+            <Image
+              style={HomeStyles.imageTicketLine}
+              source={require('@/assets/images/home/TicketLine.png')}
+              resizeMode="cover"
+            />
+            <Image
+              style={HomeStyles.ticket2}
+              source={require('@/assets/images/home/Musical1.jpeg')}
+              resizeMode="cover"
+            />
           </View>
         </View>
 
@@ -281,7 +253,12 @@ const HomePage: React.FC<HomePageProps> = () => {
                   style={[
                     HomeStyles.containerPremiumReviewRanking,
                     {
-                      backgroundColor: '#F2F2F2',
+                      backgroundColor:
+                        index === 0
+                          ? Colors.sub_04
+                          : index === 1
+                          ? Colors.sub_03
+                          : Colors.sub_02,
                     },
                   ]}>
                   <Text style={HomeStyles.textPremiumReviewRanking}>
@@ -317,53 +294,9 @@ const HomePage: React.FC<HomePageProps> = () => {
             </View>
             <Image
               style={HomeStyles.iconTodayBest}
-              source={require('@/assets/logo/logo5.png')}
+              source={require('@/assets/logo/logo3.png')}
             />
           </View>
-        </View>
-
-        <View style={{marginTop: 48}}>
-          <FlatList
-            ref={flatListRef}
-            data={eventBanner}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item}) => (
-              <View
-                style={[
-                  HomeStyles.eventBanner,
-                  {width: screenWidth, backgroundColor: item.color},
-                ]}>
-                <SvgXml xml={item.icon} />
-                <View style={{marginLeft: 18}}>
-                  <Text style={HomeStyles.textEventBannerTitle}>
-                    {item.title}
-                  </Text>
-                  <Text style={HomeStyles.textEventBannerSubTitle}>
-                    {item.subTitle}
-                  </Text>
-                </View>
-                <View
-                  style={[
-                    HomeStyles.eventBannerPagination,
-                    {backgroundColor: item.subColor},
-                  ]}>
-                  <Text style={HomeStyles.textEventBannerPagination}>
-                    {item.id}/3
-                  </Text>
-                </View>
-              </View>
-            )}
-            keyExtractor={item => item.id}
-            decelerationRate="fast"
-            initialScrollIndex={0}
-            getItemLayout={(data, index) => ({
-              length: 94,
-              offset: 94 * index,
-              index,
-            })}
-          />
         </View>
 
         <View style={HomeStyles.containerTitle}>
@@ -388,14 +321,13 @@ const HomePage: React.FC<HomePageProps> = () => {
           keyExtractor={item => item.id}
           horizontal
           showsHorizontalScrollIndicator={false}
-          nestedScrollEnabled
         />
 
         <View style={HomeStyles.containerTitle}>
           <Text style={HomeStyles.textTitle}>개봉 예정 뮤지컬</Text>
         </View>
         <FlatList
-          style={{marginHorizontal: 12.5, marginBottom: 37}}
+          style={{marginHorizontal: 12.5}}
           ref={flatListRef}
           data={notReleaseMusicals}
           renderItem={({item}) => (
@@ -413,8 +345,40 @@ const HomePage: React.FC<HomePageProps> = () => {
           keyExtractor={item => item.id}
           horizontal
           showsHorizontalScrollIndicator={false}
-          nestedScrollEnabled
         />
+
+        <View style={HomeStyles.containerAdImage}>
+          <Image
+            style={{width: '100%', height: 94}}
+            source={require('@/assets/images/home/ExampleAd.png')}
+          />
+          <View style={HomeStyles.containerAd}>
+            <Text style={HomeStyles.textAd}>AD</Text>
+          </View>
+        </View>
+
+        <View style={[HomeStyles.containerTitle, {marginBottom: 12.5}]}>
+          <Text style={HomeStyles.textTitle}>놓칠 수 없는 포인트</Text>
+          <Text style={HomeStyles.textWriteReview}>전체보기 {'>'}</Text>
+        </View>
+        <View style={{alignItems: 'center', marginBottom: 141}}>
+          {point.map(point => (
+            <View key={point.id} style={HomeStyles.containerPoint}>
+              <View style={HomeStyles.containerRow}>
+                <Image source={point.image} />
+                <View>
+                  <Text style={HomeStyles.textPointTitle}>{point.title}</Text>
+                  <Text style={HomeStyles.textPointContent}>
+                    {point.content}
+                  </Text>
+                </View>
+              </View>
+              <View style={HomeStyles.containerPointShortcut}>
+                <Text style={HomeStyles.textPointShortcut}>바로가기</Text>
+              </View>
+            </View>
+          ))}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

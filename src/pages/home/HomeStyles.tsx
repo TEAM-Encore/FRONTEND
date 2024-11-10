@@ -1,9 +1,8 @@
-import {FlatList, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
 
-const {subhead02, subhead03, headline, body01, bodyLong01, caption} =
-  typography;
+const {subhead02, subhead03, headline, body01, caption} = typography;
 
 const HomeStyles = StyleSheet.create({
   container: {
@@ -11,8 +10,17 @@ const HomeStyles = StyleSheet.create({
     backgroundColor: Colors.gray_01,
   },
   containerHeader: {
-    height: 280,
+    backgroundColor: '#1B1919',
+    height: 283,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
     overflow: 'hidden',
+  },
+  carouselBackground: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    marginTop: -100,
   },
   containerIcons: {
     flexDirection: 'row',
@@ -27,17 +35,12 @@ const HomeStyles = StyleSheet.create({
   },
   containerCarouselTicket: {
     marginHorizontal: 6,
-    shadowColor: '#171717',
-    shadowOffset: {width: 0, height: 0},
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
   },
   containerPagination: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: -15,
-    marginBottom: 15,
+    marginTop: 10,
   },
   paginationDot: {
     width: 6,
@@ -46,10 +49,10 @@ const HomeStyles = StyleSheet.create({
     margin: 3.5,
   },
   activeDot: {
-    backgroundColor: Colors.sub_04,
+    backgroundColor: '#fff',
   },
   inactiveDot: {
-    backgroundColor: Colors.gray_05,
+    backgroundColor: Colors.gray_07,
   },
   containerAdImage: {
     marginTop: 39,
@@ -60,7 +63,7 @@ const HomeStyles = StyleSheet.create({
     left: 20,
     width: 39,
     height: 18,
-    backgroundColor: '#F2F2F2',
+    backgroundColor: '#F7F7F7',
     borderRadius: 21,
     justifyContent: 'center',
     alignItems: 'center',
@@ -84,45 +87,6 @@ const HomeStyles = StyleSheet.create({
     ...body01,
     color: Colors.gray_08,
   },
-  containerReviewModal: {
-    position: 'absolute',
-    zIndex: 2,
-    right: 0,
-    marginRight: 19.8,
-  },
-  triangle: {
-    width: 0,
-    height: 0,
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderLeftWidth: 6,
-    borderRightWidth: 6,
-    borderBottomWidth: 10,
-    bottom: -3,
-    right: -172,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: Colors.gray_12,
-  },
-  reviewModal: {
-    flexDirection: 'row',
-    width: 196,
-    minHeight: 32,
-    paddingHorizontal: 11.75,
-    paddingVertical: 7.23,
-    borderRadius: 8.14,
-    backgroundColor: Colors.gray_12,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  textReviewModal: {
-    fontFamily: 'Pretendard-Regular',
-    fontSize: 10.847,
-    lineHeight: 16.271,
-    letterSpacing: -0.271,
-    color: Colors.gray_01,
-    marginRight: 3.62,
-  },
   containerTicket: {
     flexDirection: 'row',
   },
@@ -131,13 +95,13 @@ const HomeStyles = StyleSheet.create({
     height: 150,
     borderRadius: 8,
     justifyContent: 'flex-end',
-    backgroundColor: Colors.gray_11,
+    marginRight: 1,
   },
   imageTicket1: {
     position: 'absolute',
     width: '100%',
     height: '100%',
-    borderRadius: 7,
+    borderRadius: 8,
   },
   imageTicketLine: {
     position: 'absolute',
@@ -150,27 +114,18 @@ const HomeStyles = StyleSheet.create({
   },
   textTicketTitle: {
     ...subhead03,
-    color: Colors.gray_12,
+    color: Colors.gray_01,
     marginBottom: 9,
   },
   textTicketDateActor: {
     ...caption,
-    color: Colors.gray_12,
+    color: Colors.gray_01,
     marginLeft: 6,
   },
   ticket2: {
     width: 84,
     height: 150,
-    backgroundColor: Colors.sub_03,
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textReview: {
-    ...caption,
-    marginTop: 10,
-    textAlign: 'center',
-    color: Colors.gray_09,
   },
   containerPremiumReviews: {
     flexDirection: 'row',
@@ -179,10 +134,10 @@ const HomeStyles = StyleSheet.create({
     alignItems: 'center',
     width: 335,
     height: 44,
-    backgroundColor: '#F2F2F2',
+    backgroundColor: Colors.gray_01,
     borderRadius: 5,
     paddingHorizontal: 14,
-    shadowColor: 'rgba(23, 23, 23, 0)',
+    shadowColor: 'rgba(23, 23, 23, 0.1)',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -217,7 +172,7 @@ const HomeStyles = StyleSheet.create({
     width: 335,
     height: 128,
     borderRadius: 5,
-    backgroundColor: '#EDDCFF',
+    backgroundColor: Colors.sub_02,
     shadowColor: 'rgba(23, 23, 23, 0.1)',
     shadowOffset: {
       width: 0,
@@ -246,39 +201,11 @@ const HomeStyles = StyleSheet.create({
     marginHorizontal: 4,
   },
   iconTodayBest: {
-    alignSelf: 'flex-end',
-    height: undefined,
-    aspectRatio: 2,
-    resizeMode: 'contain',
-  },
-  eventBanner: {
-    flexDirection: 'row',
-    height: 94,
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-  },
-  textEventBannerTitle: {
-    ...subhead03,
-    color: Colors.gray_12,
-  },
-  textEventBannerSubTitle: {
-    ...bodyLong01,
-    color: Colors.gray_08,
-  },
-  eventBannerPagination: {
     position: 'absolute',
-    width: 39,
-    height: 18,
-    borderRadius: 21,
-    bottom: 15,
-    right: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textEventBannerPagination: {
-    ...caption,
-    color: Colors.gray_10,
+    right: 10.81,
+    bottom: 10,
+    width: 131.19,
+    height: 73,
   },
   imageMusical: {
     width: 125,
