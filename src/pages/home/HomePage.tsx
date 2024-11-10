@@ -17,8 +17,6 @@ import Colors from '@/assets/colors/Colors';
 import IconTitle from '@/assets/icons/home/IconTitle';
 import IconSearch from '@/assets/icons/home/IconSearch';
 import IconNotification from '@/assets/icons/home/IconNotification';
-import CarouselTicket from '@/components/home/CarouselTicket';
-import CarouselBackground from '@/components/home/CarouselBackground';
 import IconLike from '@/assets/icons/home/IconLike';
 import IconComment from '@/assets/icons/home/IconComment';
 import IconDate from '@/assets/icons/home/IconDate';
@@ -29,12 +27,9 @@ type HomePageProps = {};
 const CARD_WIDTH = 290;
 const PADDING = 6;
 
-const Ticket = ({title}: {title: string}) => (
+const Ticket = ({image}: {image: any}) => (
   <View style={HomeStyles.containerCarouselTicket}>
-    <CarouselTicket />
-    <View style={HomeStyles.containerCarouselTicketTitle}>
-      <Text style={HomeStyles.textCarouselTicketTitle}>{title}</Text>
-    </View>
+    <Image style={{width: 290, height: 170}} source={image} />
   </View>
 );
 
@@ -43,17 +38,30 @@ const HomePage: React.FC<HomePageProps> = () => {
   const flatListRef = useRef<FlatList<any>>(null);
 
   const carouselTicketList = [
-    {id: '1', title: '개봉 예정 1'},
-    {id: '2', title: '개봉 예정 2'},
-    {id: '3', title: '개봉 예정 3'},
-    {id: '4', title: '개봉 예정 4'},
-    {id: '5', title: '개봉 예정 5'},
+    {
+      id: '1',
+      image: require('@/assets/images/home/ImageCarouselColor.png'),
+    },
+    {
+      id: '2',
+      image: require('@/assets/images/home/ImageCarousel.png'),
+    },
+    {
+      id: '3',
+      image: require('@/assets/images/home/ImageCarouselColor2.png'),
+    },
   ];
 
   const circularCarouselTicketList = [
-    {id: '0', title: '개봉 예정 5'},
+    {
+      id: '0',
+      image: require('@/assets/images/home/ImageCarouselColor2.png'),
+    },
     ...carouselTicketList,
-    {id: '6', title: '개봉 예정 1'},
+    {
+      id: '4',
+      image: require('@/assets/images/home/ImageCarouselColor.png'),
+    },
   ];
 
   const handleMomentumScrollEnd = (
@@ -86,21 +94,21 @@ const HomePage: React.FC<HomePageProps> = () => {
   const bestMusicals = [
     {
       id: '1',
-      image: require('@/assets/images/Musical1.jpeg'),
+      image: require('@/assets/images/home/Musical1.jpeg'),
       title: '벤자민 버튼',
       date: '24.06.21~24.07.21',
       location: '샤롯데시어터',
     },
     {
       id: '2',
-      image: require('@/assets/images/Musical2.jpeg'),
+      image: require('@/assets/images/home/Musical2.jpeg'),
       title: '카르밀라',
       date: '24.06.21~24.07.21',
       location: '샤롯데시어터',
     },
     {
       id: '3',
-      image: require('@/assets/images/Musical3.jpeg'),
+      image: require('@/assets/images/home/Musical3.jpeg'),
       title: '몬테크리스토',
       date: '24.06.21~24.07.21',
       location: '샤롯데시어터',
@@ -110,21 +118,21 @@ const HomePage: React.FC<HomePageProps> = () => {
   const notReleaseMusicals = [
     {
       id: '1',
-      image: require('@/assets/images/Musical4.jpeg'),
+      image: require('@/assets/images/home/Musical4.jpeg'),
       title: '엘리자벳',
       date: '24.06.21~24.07.21',
       location: '샤롯데시어터',
     },
     {
       id: '2',
-      image: require('@/assets/images/Musical5.jpeg'),
+      image: require('@/assets/images/home/Musical5.jpeg'),
       title: '미오 프라텔로',
       date: '24.06.21~24.07.21',
       location: '샤롯데시어터',
     },
     {
       id: '3',
-      image: require('@/assets/images/Musical6.jpeg'),
+      image: require('@/assets/images/home/Musical6.jpeg'),
       title: '비더슈탄트',
       date: '24.06.21~24.07.21',
       location: '샤롯데시어터',
@@ -134,33 +142,28 @@ const HomePage: React.FC<HomePageProps> = () => {
   const point = [
     {
       id: '1',
-      image: require('@/assets/images/IconPoint.png'),
+      image: require('@/assets/images/home/IconPoint.png'),
       title: '+10 포인트',
       content: '댓글 3번 작성하기',
     },
     {
       id: '2',
-      image: require('@/assets/images/IconPoint.png'),
+      image: require('@/assets/images/home/IconPoint.png'),
       title: '+10 포인트',
       content: '댓글 3번 작성하기',
     },
     {
       id: '3',
-      image: require('@/assets/images/IconPoint.png'),
+      image: require('@/assets/images/home/IconPoint.png'),
       title: '+10 포인트',
       content: '댓글 3번 작성하기',
     },
   ];
 
-  const windowWidth = Dimensions.get('window').width;
-
   return (
     <SafeAreaView style={HomeStyles.container}>
       <ScrollView>
         <View style={HomeStyles.containerHeader}>
-          <View style={HomeStyles.carouselBackground}>
-            <CarouselBackground />
-          </View>
           <View style={HomeStyles.containerIcons}>
             <IconTitle />
             <View style={HomeStyles.containerRow}>
@@ -172,7 +175,7 @@ const HomePage: React.FC<HomePageProps> = () => {
             <FlatList
               ref={flatListRef}
               data={circularCarouselTicketList}
-              renderItem={({item}) => <Ticket title={item.title} />}
+              renderItem={({item}) => <Ticket image={item.image || null} />}
               keyExtractor={item => item.id}
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -205,21 +208,34 @@ const HomePage: React.FC<HomePageProps> = () => {
         <View style={{alignItems: 'center'}}>
           <View style={HomeStyles.containerTicket}>
             <View style={HomeStyles.ticket1}>
-              <Text style={HomeStyles.textTicketTitle}>뮤지컬[위키드]</Text>
-              <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
-                <IconDate />
-                <Text style={HomeStyles.textTicketDateActor}>2024.06.21</Text>
-              </View>
-              <View style={HomeStyles.containerRow}>
-                <IconActor />
-                <Text style={HomeStyles.textTicketDateActor}>
-                  우선영 염지은 하은영 윤혜원
-                </Text>
+              <Image
+                style={HomeStyles.imageTicket1}
+                source={require('@/assets/images/home/TicketBackground.png')}
+                resizeMode="cover"
+              />
+
+              <View style={HomeStyles.containerTicketText}>
+                <Text style={HomeStyles.textTicketTitle}>뮤지컬[위키드]</Text>
+                <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
+                  <IconDate />
+                  <Text style={HomeStyles.textTicketDateActor}>2024.06.21</Text>
+                </View>
+                <View style={HomeStyles.containerRow}>
+                  <IconActor />
+                  <Text style={HomeStyles.textTicketDateActor}>
+                    우선영 염지은 하은영 윤혜원
+                  </Text>
+                </View>
               </View>
             </View>
             <Image
+              style={HomeStyles.imageTicketLine}
+              source={require('@/assets/images/home/TicketLine.png')}
+              resizeMode="cover"
+            />
+            <Image
               style={HomeStyles.ticket2}
-              source={require('@/assets/images/Musical1.jpeg')}
+              source={require('@/assets/images/home/Musical1.jpeg')}
               resizeMode="cover"
             />
           </View>
@@ -239,10 +255,10 @@ const HomePage: React.FC<HomePageProps> = () => {
                     {
                       backgroundColor:
                         index === 0
-                          ? Colors.primary_01
+                          ? Colors.sub_04
                           : index === 1
-                          ? Colors.primary_03
-                          : Colors.primary_05,
+                          ? Colors.sub_03
+                          : Colors.sub_02,
                     },
                   ]}>
                   <Text style={HomeStyles.textPremiumReviewRanking}>
@@ -276,6 +292,10 @@ const HomePage: React.FC<HomePageProps> = () => {
               <IconLike color="#4F4F4F" />
               <Text style={HomeStyles.textBestLikeComment}>10</Text>
             </View>
+            <Image
+              style={HomeStyles.iconTodayBest}
+              source={require('@/assets/logo/logo3.png')}
+            />
           </View>
         </View>
 
@@ -329,8 +349,8 @@ const HomePage: React.FC<HomePageProps> = () => {
 
         <View style={HomeStyles.containerAdImage}>
           <Image
-            style={{width: '100%'}}
-            source={require('@/assets/images/ExampleAd.png')}
+            style={{width: '100%', height: 94}}
+            source={require('@/assets/images/home/ExampleAd.png')}
           />
           <View style={HomeStyles.containerAd}>
             <Text style={HomeStyles.textAd}>AD</Text>
@@ -341,7 +361,7 @@ const HomePage: React.FC<HomePageProps> = () => {
           <Text style={HomeStyles.textTitle}>놓칠 수 없는 포인트</Text>
           <Text style={HomeStyles.textWriteReview}>전체보기 {'>'}</Text>
         </View>
-        <View style={{alignItems: 'center', marginBottom: 16}}>
+        <View style={{alignItems: 'center', marginBottom: 141}}>
           {point.map(point => (
             <View key={point.id} style={HomeStyles.containerPoint}>
               <View style={HomeStyles.containerRow}>
