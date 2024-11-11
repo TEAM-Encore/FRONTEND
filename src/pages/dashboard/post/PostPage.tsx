@@ -16,6 +16,8 @@ import {SvgXml} from 'react-native-svg';
 import PostStyles from '@/pages/dashboard/post/PostStyles';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 
+import ItemComment from '@/components/comment/ItemComment';
+
 type PostPageProps = {};
 
 const PostPage: React.FC<PostPageProps> = () => {
@@ -163,6 +165,8 @@ const PostPage: React.FC<PostPageProps> = () => {
               </TouchableOpacity>
             </View>
           </View>
+
+          <ItemComment commentList={commentList} />
         </ScrollView>
       </SafeAreaView>
       <View style={PostStyles.white} />
