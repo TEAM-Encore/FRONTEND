@@ -1,4 +1,5 @@
 export default {
+  // 추후 삭제 요청
   primary_07: '#26000A',
   primary_06: '#36000E',
   primary_05: '#560116',
@@ -6,6 +7,11 @@ export default {
   primary_03: '#A1022A',
   primary_02: '#DA093E',
   primary_01: '#DA093E',
+
+  sub_04: '#FFDD56',
+  sub_03: '#FEE892',
+  sub_02: '#FFF1BB',
+  sub_01: '#FFF8DB',
 
   gray_12: '#171717',
   gray_11: '#242424',
@@ -19,4 +25,9 @@ export default {
   gray_03: '#F2F2F2',
   gray_02: '#F7F7F7',
   gray_01: '#FBFBFB',
+
+  wireframe_700: '#4F4F4F',
+
+  white: '#FFFFFF',
+  black: '#000000',
 };
