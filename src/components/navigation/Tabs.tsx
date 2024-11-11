@@ -1,29 +1,52 @@
 import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {SvgXml} from 'react-native-svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-import {TabSvg} from '@/assets/icons/TabSvg';
-import Colors from '@/assets/colors/Colors';
 
 import HomePage from '@/pages/home/HomePage';
 import PremiumPage from '@/pages/PremiumPage';
-import DashboardPage from '@/pages/DashboardPage';
+import DashboardPage from '@/pages/dashboard/DashboardPage';
 import TicketBookPage from '@/pages/TicketBookPage';
 import MyPage from '@/pages/MyPage';
+
+import {SvgXml} from 'react-native-svg';
+import {TabSvg} from '@/assets/icons/TabSvg';
+import Colors from '@/assets/colors/Colors';
 
 export default function Tabs() {
   const Tab = createBottomTabNavigator();
 
   const tabList = [
-    {name: '홈', content: HomePage, icon: TabSvg.HomeIcon},
-    {name: '프리미엄', content: PremiumPage, icon: TabSvg.PremiumIcon},
-    {name: '게시판', content: DashboardPage, icon: TabSvg.DashboardIcon},
-    {name: '티켓북', content: TicketBookPage, icon: TabSvg.TicketBookIcon},
-    {name: '마이', content: MyPage, icon: TabSvg.MyPageIcon},
+    {
+      name: '홈',
+      content: HomePage,
+      icon: TabSvg.HomeIcon,
+      tabIcon: TabSvg.tabHomeIcon,
+    },
+    {
+      name: '프리미엄',
+      content: PremiumPage,
+      icon: TabSvg.PremiumIcon,
+      tabIcon: TabSvg.tabPremiumIcon,
+    },
+    {
+      name: '게시판',
+      content: DashboardPage,
+      icon: TabSvg.DashboardIcon,
+      tabIcon: TabSvg.tabDashboardIcon,
+    },
+    {
+      name: '티켓북',
+      content: TicketBookPage,
+      icon: TabSvg.TicketBookIcon,
+      tabIcon: TabSvg.tabTicketBookIcon,
+    },
+    {
+      name: '마이',
+      content: MyPage,
+      icon: TabSvg.MyPageIcon,
+      tabIcon: TabSvg.tabMyPageIcon,
+    },
   ];
-
-  const {top} = useSafeAreaInsets();
 
   return (
     <>
@@ -34,27 +57,28 @@ export default function Tabs() {
           tabBarStyle: {
             height: 102,
           },
-          tabBarActiveTintColor: Colors.primary_02,
-          tabBarInactiveTintColor: Colors.gray_07,
+          tabBarActiveTintColor: Colors.gray_12,
+          tabBarInactiveTintColor: Colors.gray_12,
           tabBarLabelStyle: {
-            marginTop: 2,
             fontSize: 12,
           },
         }}>
-        {tabList.map(item => (
+        {tabList.map((item, index) => (
           <Tab.Screen
             key={item.name}
             name={item.name}
             component={item.content}
             options={{
               title: item.name,
-              tabBarIcon: ({color}) => <SvgXml xml={item.icon} fill={color} />,
+              tabBarIcon: ({focused}) => (
+                <SvgXml xml={focused ? item.tabIcon : item.icon} />
+              ),
               headerShown: true,
               headerTitle: '',
               headerStyle:
                 item.name === '홈'
                   ? {
-                      backgroundColor: Colors.primary_01,
+                      backgroundColor: '#1B1919',
                       height: top,
                       shadowColor: 'transparent',
                     }
