@@ -22,8 +22,9 @@ const InformationStyles = StyleSheet.create({
     marginLeft: 24,
     marginRight: 20,
   },
-  textCommentTitle: {
+  textCategory: {
     ...subhead03,
+    marginRight: 7,
   },
   textLatestRecommended: {
     ...body01,
