@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../../styles/typography';
 
-const {subhead02, subhead03, headline, body01, subhead01, caption} = typography;
+const {subhead02, subhead03, body01, caption} = typography;
 
 const HomeStyles = StyleSheet.create({
   container: {
@@ -155,6 +155,23 @@ const HomeStyles = StyleSheet.create({
     height: 62,
     backgroundColor: '#fff',
     paddingHorizontal: 18,
+    marginBottom: 20,
+    shadowColor: 'rgba(113, 113, 113, 0.10)',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 57,
+    elevation: 5,
+  },
+  white: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    height: 21,
+    backgroundColor: '#fff',
+    zIndex: 10,
   },
   containerCommentTextInput: {
     flex: 1,
@@ -167,7 +184,13 @@ const HomeStyles = StyleSheet.create({
     marginLeft: 18,
     paddingHorizontal: 17,
   },
-  textCommentInput: {},
+  textCommentInput: {
+    ...body01,
+  },
+  textCommentSend: {
+    ...subhead02,
+    color: Colors.gray_12,
+  },
 });
 
 export default HomeStyles;
