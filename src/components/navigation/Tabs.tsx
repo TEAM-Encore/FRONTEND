@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import HomePage from '@/pages/home/HomePage';
 import PremiumPage from '@/pages/PremiumPage';
@@ -72,6 +73,20 @@ export default function Tabs() {
               tabBarIcon: ({focused}) => (
                 <SvgXml xml={focused ? item.tabIcon : item.icon} />
               ),
+              headerShown: true,
+              headerTitle: '',
+              headerStyle:
+                item.name === '홈'
+                  ? {
+                      backgroundColor: '#1B1919',
+                      height: top,
+                      shadowColor: 'transparent',
+                    }
+                  : {
+                      backgroundColor: Colors.gray_01,
+                      height: top,
+                      shadowColor: 'transparent',
+                    },
             }}
           />
         ))}
