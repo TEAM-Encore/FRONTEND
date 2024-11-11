@@ -58,11 +58,11 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
             <Text style={styles.textContent}>{item.comment}</Text>
             <View style={styles.containerRow}>
               <View style={styles.containerLike}>
-                <SvgXml xml={PostIcon.like} />
+                <SvgXml xml={PostIcon.commentLike} />
                 <Text style={styles.textLikeComment}>하트 {item.like}</Text>
               </View>
               <View style={styles.containerRow}>
-                <SvgXml xml={PostIcon.comment} />
+                <SvgXml xml={PostIcon.commentComment} />
                 <Text style={styles.textLikeComment}>댓글 {item.reply}</Text>
               </View>
             </View>
