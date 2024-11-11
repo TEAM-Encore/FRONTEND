@@ -13,12 +13,35 @@ import WriteStyles from './WriteStyles';
 import {SvgXml} from 'react-native-svg';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 
+import ModalCategory from '@/components/categoryModal/ModalCategory';
+
 import WriteBottomTab from '@/components/bottomTab/WriteBottomTab';
 
 const WritePage: React.FC = () => {
   const [title, onChangeTitle] = React.useState('');
   const [content, onChangeContent] = React.useState('');
   const [photoCount, setPhotoCount] = React.useState(0);
+  const [dashboardModalVisible, setDashboardModalVisible] = useState(false);
+  const [categoryModalVisible, setCategoryModalVisible] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const dashboardList = [
+    '게시판 선택 안함',
+    '정보 게시판',
+    '후기 게시판',
+    '배우 게시판',
+    '자유 게시판',
+  ];
+  const categoryList = ['선택 안함', '시야 후기', '굿즈 후기', '공연 감상'];
+
+  const pressDashboard = () => {
+    setDashboardModalVisible(true);
+    setModalTitle('게시판');
+  };
+
+  const pressCategory = () => {
+    setCategoryModalVisible(true);
+    setModalTitle('카테고리');
+  };
 
   return (
     <>
@@ -27,16 +50,30 @@ const WritePage: React.FC = () => {
           <View style={WriteStyles.field_container}>
             <View style={WriteStyles.selectField}>
               <Text style={WriteStyles.fieldText}>게시판 선택</Text>
-              <TouchableOpacity onPress={() => Alert.alert('Action triggered')}>
+              <TouchableOpacity onPress={pressDashboard}>
                 <SvgXml xml={DashboardIcon.downArrow} />
               </TouchableOpacity>
+
+              <ModalCategory
+                modalVisible={dashboardModalVisible}
+                setModalVisible={setDashboardModalVisible}
+                categoryList={dashboardList}
+                modalTitle={modalTitle}
+              />
             </View>
 
             <View style={WriteStyles.selectField}>
               <Text style={WriteStyles.fieldText}>카테고리 선택</Text>
-              <TouchableOpacity onPress={() => Alert.alert('Action triggered')}>
+              <TouchableOpacity onPress={pressCategory}>
                 <SvgXml xml={DashboardIcon.downArrow} />
               </TouchableOpacity>
+
+              <ModalCategory
+                modalVisible={categoryModalVisible}
+                setModalVisible={setCategoryModalVisible}
+                categoryList={categoryList}
+                modalTitle={modalTitle}
+              />
             </View>
           </View>
 

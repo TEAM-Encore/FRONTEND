@@ -12,12 +12,14 @@ import InformationStyles from '@/pages/dashboard/info/InformationStyles';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 
 import ItemPost from '@/components/comment/ItemPost';
-import ModalCategory from '@/components/comment/ModalCategory';
+import ModalCategory from '@/components/categoryModal/ModalCategory';
 
 type InformationScreenProps = {};
 
 const InformationScreen: React.FC<InformationScreenProps> = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const categoryList = ['전체보기', '오페라글라스', '뮤지컬 용어', '이벤트'];
+  const [modalTitle, setModalTitle] = useState('');
 
   const postList = [
     {
@@ -54,6 +56,7 @@ const InformationScreen: React.FC<InformationScreenProps> = () => {
 
   const pressCategory = () => {
     setModalVisible(true);
+    setModalTitle('카테고리');
   };
 
   return (
@@ -62,13 +65,15 @@ const InformationScreen: React.FC<InformationScreenProps> = () => {
         <View style={InformationStyles.containerCommentTitle}>
           <TouchableOpacity
             style={InformationStyles.containerRow}
-            onPress={pressCategory}>
+            onPress={() => pressCategory()}>
             <Text style={InformationStyles.textCategory}>카테고리</Text>
             <SvgXml xml={DashboardIcon.arrowDown} />
           </TouchableOpacity>
           <ModalCategory
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
+            categoryList={categoryList}
+            modalTitle={modalTitle}
           />
           <View style={InformationStyles.containerRow}>
             <TouchableOpacity>
