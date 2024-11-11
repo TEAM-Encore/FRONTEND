@@ -9,6 +9,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import Tabs from './src/components/navigation/Tabs';
 import WritePage from './src/pages/write/WritePage';
+import PostPage from './src/pages/dashboard/post/PostPage';
 
 // 글 작성 페이지 내 뒤로가기 버튼
 function CustomBackButton({navigation}) {
@@ -66,6 +67,11 @@ export default function App(): JSX.Element {
                 <CustomRegisterButton navigation={navigation} />
               ),
             })}
+          />
+          <Stack.Screen
+            name="PostPage"
+            component={PostPage}
+            options={{headerShown: false}}
           />
         </Stack.Navigator>
       </NavigationContainer>
