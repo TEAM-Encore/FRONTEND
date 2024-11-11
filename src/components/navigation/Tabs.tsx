@@ -4,9 +4,13 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import HomePage from '@/pages/home/HomePage';
 import PremiumPage from '@/pages/PremiumPage';
-import DashboardPage from '@/pages/DashboardPage';
+import DashboardPage from '@/pages/dashboard/DashboardPage';
 import TicketBookPage from '@/pages/TicketBookPage';
 import MyPage from '@/pages/MyPage';
+
+import {SvgXml} from 'react-native-svg';
+import {TabSvg} from '@/assets/icons/TabSvg';
+import Colors from '@/assets/colors/Colors';
 
 export default function Tabs() {
   const Tab = createBottomTabNavigator();
@@ -44,8 +48,6 @@ export default function Tabs() {
     },
   ];
 
-  const {top} = useSafeAreaInsets();
-
   return (
     <>
       <Tab.Navigator
@@ -55,14 +57,13 @@ export default function Tabs() {
           tabBarStyle: {
             height: 102,
           },
-          tabBarActiveTintColor: Colors.primary_02,
-          tabBarInactiveTintColor: Colors.gray_07,
+          tabBarActiveTintColor: Colors.gray_12,
+          tabBarInactiveTintColor: Colors.gray_12,
           tabBarLabelStyle: {
-            marginTop: 2,
             fontSize: 12,
           },
         }}>
-        {tabList.map(item => (
+        {tabList.map((item, index) => (
           <Tab.Screen
             key={item.name}
             name={item.name}
