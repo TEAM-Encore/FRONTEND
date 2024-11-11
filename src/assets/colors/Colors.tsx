@@ -26,7 +26,11 @@ export default {
   gray_02: '#F7F7F7',
   gray_01: '#FBFBFB',
 
+  wireframe_800: '#454545',
   wireframe_700: '#4F4F4F',
+  wirteframe_500: '#6D6D6D',
+  wireframe_400: '#878787',
+  wireframe_200: '#D1D1D1',
 
   white: '#FFFFFF',
   black: '#000000',
