@@ -10,7 +10,7 @@ const HomeStyles = StyleSheet.create({
     backgroundColor: Colors.gray_01,
   },
   containerHeader: {
-    backgroundColor: Colors.primary_03,
+    backgroundColor: '#1B1919',
     height: 283,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
@@ -36,21 +36,6 @@ const HomeStyles = StyleSheet.create({
   containerCarouselTicket: {
     marginHorizontal: 6,
   },
-  containerCarouselTicketTitle: {
-    position: 'absolute',
-    marginTop: 10,
-    marginLeft: 11,
-    height: 22,
-    backgroundColor: Colors.primary_01,
-    borderRadius: 21,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-  },
-  textCarouselTicketTitle: {
-    ...caption,
-    color: Colors.gray_01,
-  },
   containerPagination: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -64,10 +49,10 @@ const HomeStyles = StyleSheet.create({
     margin: 3.5,
   },
   activeDot: {
-    backgroundColor: Colors.gray_01,
+    backgroundColor: '#fff',
   },
   inactiveDot: {
-    backgroundColor: '#C7A0A0',
+    backgroundColor: Colors.gray_07,
   },
   containerAdImage: {
     marginTop: 39,
@@ -106,11 +91,24 @@ const HomeStyles = StyleSheet.create({
     flexDirection: 'row',
   },
   ticket1: {
-    width: 251,
+    width: 250,
     height: 150,
     borderRadius: 8,
-    backgroundColor: Colors.primary_05,
     justifyContent: 'flex-end',
+    marginRight: 1,
+  },
+  imageTicket1: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
+  },
+  imageTicketLine: {
+    position: 'absolute',
+    left: 250,
+    marginTop: 7,
+  },
+  containerTicketText: {
     paddingHorizontal: 14,
     paddingVertical: 17,
   },
@@ -163,7 +161,7 @@ const HomeStyles = StyleSheet.create({
   },
   textPremiumReviewRanking: {
     ...subhead02,
-    color: Colors.gray_01,
+    color: Colors.gray_11,
   },
   textPremiumReviewLike: {
     ...caption,
@@ -174,7 +172,7 @@ const HomeStyles = StyleSheet.create({
     width: 335,
     height: 128,
     borderRadius: 5,
-    backgroundColor: Colors.gray_01,
+    backgroundColor: Colors.sub_02,
     shadowColor: 'rgba(23, 23, 23, 0.1)',
     shadowOffset: {
       width: 0,
@@ -201,6 +199,13 @@ const HomeStyles = StyleSheet.create({
     ...caption,
     color: '#4F4F4F',
     marginHorizontal: 4,
+  },
+  iconTodayBest: {
+    position: 'absolute',
+    right: 10.81,
+    bottom: 10,
+    width: 131.19,
+    height: 73,
   },
   imageMusical: {
     width: 125,
@@ -254,7 +259,7 @@ const HomeStyles = StyleSheet.create({
     width: 69,
     height: 31,
     borderRadius: 6,
-    backgroundColor: Colors.primary_01,
+    backgroundColor: Colors.gray_12,
     justifyContent: 'center',
     alignItems: 'center',
   },
