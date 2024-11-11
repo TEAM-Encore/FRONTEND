@@ -10,6 +10,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Tabs from './src/components/navigation/Tabs';
 import WritePage from './src/pages/write/WritePage';
 import PostPage from './src/pages/dashboard/post/PostPage';
+import SavePage from './src/pages/write/save/SavePage';
 
 // 글 작성 페이지 내 뒤로가기 버튼
 function CustomBackButton({navigation}) {
@@ -72,6 +73,19 @@ export default function App(): JSX.Element {
             name="PostPage"
             component={PostPage}
             options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="SavePage"
+            component={SavePage}
+            options={({navigation}) => ({
+              headerStyle: {
+                height: 123,
+                backgroundColor: '#FBFBFB',
+              },
+              title: '임시저장 목록',
+              headerTitleStyle: {...AppStyles.title},
+              headerLeft: () => <CustomBackButton navigation={navigation} />,
+            })}
           />
         </Stack.Navigator>
       </NavigationContainer>
