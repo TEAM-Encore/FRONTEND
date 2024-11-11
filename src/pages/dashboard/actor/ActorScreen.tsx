@@ -1,10 +1,12 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 
-export default function DashboardPage() {
+const ActorScreen: React.FC = () => {
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>대시보드</Text>
+      <Text>ActorScreen!</Text>
     </View>
   );
-}
+};
+
+export default ActorScreen;
