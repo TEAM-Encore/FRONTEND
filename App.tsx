@@ -12,6 +12,16 @@ import WritePage from './src/pages/write/WritePage';
 import PostPage from './src/pages/dashboard/post/PostPage';
 import SavePage from './src/pages/write/save/SavePage';
 
+import {PostDashboard} from './src/api/post.api.tsx';
+
+interface PostData {
+  title: string;
+  content: string;
+  post_type: string;
+  category: string;
+  hashTags: string[];
+}
+
 // 글 작성 페이지 내 뒤로가기 버튼
 function CustomBackButton({navigation}) {
   return (
@@ -27,23 +37,66 @@ function CustomBackButton({navigation}) {
   );
 }
 
-// 글 작성 페이지 내 등록 버튼
-function CustomRegisterButton({navigation}) {
-  return (
-    <TouchableOpacity
-      // 추후에 등록된 글 리스트로 이동하게끔 수정 필요
-      onPress={() => navigation.goBack()}
-      style={AppStyles.register_button}>
-      <View style={AppStyles.register_container}>
-        <Text style={AppStyles.register_text}>등록</Text>
-      </View>
-    </TouchableOpacity>
-  );
-}
-
 const Stack = createStackNavigator();
 
-export default function App(): JSX.Element {
+export default function App() {
+  const [postData, setPostData] = React.useState<PostData | null>(null);
+
+  const postTypeMapping: Record<string, string> = {
+    '게시판 선택 안함': '',
+    '정보 게시판': 'INFORMATION',
+    '후기 게시판': 'REVIEW',
+    '배우 게시판': 'ACTOR',
+    '자유 게시판': 'FREE',
+  };
+
+  const categoryMapping: Record<string, string> = {
+    '선택 안함': '',
+    '시야 후기': 'VIEW_REVIEW',
+    '굿즈 후기': 'GOODS_REVIEW',
+    '공연 감상': 'PERFORMANCE_REVIEW',
+  };
+
+  const handleRegister = async () => {
+    if (postData) {
+      const apiPostType =
+        postTypeMapping[postData.post_type] || postData.post_type;
+      const apiCategory =
+        categoryMapping[postData.category] || postData.category;
+
+      console.log('전달받은 데이터: ', postData);
+      console.log('PostType: ', apiPostType);
+      console.log('Category: ', apiCategory);
+
+      try {
+        const response = await PostDashboard(
+          apiCategory,
+          apiPostType,
+          postData.title,
+          postData.content,
+          postData.hashTags,
+        );
+        console.log('API RESPONSE: ', response.data);
+      } catch (error) {
+        if (error.response) {
+          // 서버가 응답했지만, 상태 코드가 2xx 범위에 있지 않음
+          console.log('Error Response Data:', error.response.data);
+          console.log('Error Response Status:', error.response.status);
+          console.log('Error Response Headers:', error.response.headers);
+        } else if (error.request) {
+          // 요청이 이루어졌으나, 응답을 받지 못함
+          console.log('Error Request:', error.request);
+        } else {
+          // 요청 설정 중 에러가 발생한 경우
+          console.log('Error Message:', error.message);
+        }
+        console.log('Error Config:', error.config);
+      }
+    } else {
+      console.log('No data from WritePage');
+    }
+  };
+
   return (
     <SafeAreaProvider>
       <NavigationContainer independent={true}>
@@ -55,7 +108,6 @@ export default function App(): JSX.Element {
           />
           <Stack.Screen
             name="WritePage"
-            component={WritePage}
             options={({navigation}) => ({
               headerStyle: {
                 height: 123,
@@ -65,10 +117,17 @@ export default function App(): JSX.Element {
               headerTitleStyle: {...AppStyles.title},
               headerLeft: () => <CustomBackButton navigation={navigation} />,
               headerRight: () => (
-                <CustomRegisterButton navigation={navigation} />
+                <TouchableOpacity
+                  onPress={() => handleRegister()}
+                  style={AppStyles.register_button}>
+                  <View style={AppStyles.register_container}>
+                    <Text style={AppStyles.register_text}>등록</Text>
+                  </View>
+                </TouchableOpacity>
               ),
-            })}
-          />
+            })}>
+            {props => <WritePage {...props} setPostData={setPostData} />}
+          </Stack.Screen>
           <Stack.Screen
             name="PostPage"
             component={PostPage}
