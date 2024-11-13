@@ -61,6 +61,20 @@ const WriteStyles = StyleSheet.create({
     ...caption,
     color: Colors.gray_07,
   },
+  selected_photos_container: {
+    flexDirection: 'row', // 가로로 사진을 나란히 배치
+    flexWrap: 'wrap', // 사진이 많을 경우 줄 바꿈
+    marginTop: 10, // 상단 여백
+    padding: 5, // 내부 여백
+  },
+
+  // Optional: 스타일을 추가하여 이미지 미리보기를 꾸밀 수 있음
+  selected_photo: {
+    width: 100,
+    height: 100,
+    margin: 5, // 이미지 사이 간격
+    borderRadius: 8, // 둥근 모서리
+  },
   rule_container: {
     bottom: 0,
     width: '100%',

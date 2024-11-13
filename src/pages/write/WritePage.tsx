@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -16,9 +16,25 @@ import ModalCategory from '@/components/categoryModal/ModalCategory';
 
 import WriteBottomTab from '@/components/bottomTab/WriteBottomTab';
 
-const WritePage: React.FC = () => {
+interface PostData {
+  title: string;
+  content: string;
+  post_type: string;
+  category: string;
+  hashTags: string[];
+}
+
+interface WritePageProps {
+  setPostData: React.Dispatch<React.SetStateAction<PostData | null>>;
+}
+
+const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
   const [title, setTitle] = React.useState('');
   const [content, setContent] = React.useState('');
+  const [post_type, setPostType] = React.useState('게시판 선택');
+  const [category, setCategory] = React.useState('카테고리 선택');
+  const [hashTags, setHashTags] = React.useState<string[]>([]);
+
   const [photoCount, setPhotoCount] = React.useState(0);
   const [dashboardModalVisible, setDashboardModalVisible] = useState(false);
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
@@ -44,16 +60,22 @@ const WritePage: React.FC = () => {
   };
 
   // 해시태그 추출하는 함수
-  const extractHashtags = (text: string): string[] => {
-    const hashtags = text.match(/#[^\s#]+/g); // 해시태그 감지
-    console.log('해시태그:', hashtags);
-    return hashtags ? hashtags : []; // 해시태그가 없을 경우 빈 배열 반환
+  const handleContentChange = (text: string) => {
+    setContent(text);
+    setHashTags(text.match(/#[^\s#]+/g) || []); // 해시태그 감지
+    console.log('해시태그:', hashTags);
   };
 
-  const handleContentChange = (text: string) => {
-    setContent(text); // 내용
-    extractHashtags(text); // 해시태그
-  };
+  // App.tsx로 props 전달
+  useEffect(() => {
+    setPostData({
+      title,
+      content,
+      post_type,
+      category,
+      hashTags,
+    });
+  }, [title, content, post_type, category]);
 
   return (
     <>
@@ -61,7 +83,7 @@ const WritePage: React.FC = () => {
         <ScrollView>
           <View style={WriteStyles.field_container}>
             <View style={WriteStyles.selectField}>
-              <Text style={WriteStyles.fieldText}>게시판 선택</Text>
+              <Text style={WriteStyles.fieldText}>{post_type}</Text>
               <TouchableOpacity onPress={pressDashboard}>
                 <SvgXml xml={DashboardIcon.downArrow} />
               </TouchableOpacity>
@@ -71,11 +93,14 @@ const WritePage: React.FC = () => {
                 setModalVisible={setDashboardModalVisible}
                 categoryList={dashboardList}
                 modalTitle={modalTitle}
+                onSelect={(item: string) => {
+                  setPostType(item);
+                }}
               />
             </View>
 
             <View style={WriteStyles.selectField}>
-              <Text style={WriteStyles.fieldText}>카테고리 선택</Text>
+              <Text style={WriteStyles.fieldText}>{category}</Text>
               <TouchableOpacity onPress={pressCategory}>
                 <SvgXml xml={DashboardIcon.downArrow} />
               </TouchableOpacity>
@@ -85,6 +110,9 @@ const WritePage: React.FC = () => {
                 setModalVisible={setCategoryModalVisible}
                 categoryList={categoryList}
                 modalTitle={modalTitle}
+                onSelect={(item: string) => {
+                  setCategory(item);
+                }}
               />
             </View>
           </View>
