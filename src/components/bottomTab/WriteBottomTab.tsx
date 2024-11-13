@@ -18,7 +18,11 @@ type RootStackParamList = {
   SavePage: undefined;
 };
 
-const WriteBottomTab: React.FC = () => {
+type WriteBottomTabProps = {
+  setContent: React.Dispatch<React.SetStateAction<string>>;
+};
+
+const WriteBottomTab: React.FC<WriteBottomTabProps> = ({setContent}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState('');
   const [selectedSubTitle, setSelectedSubtitle] = useState('');
@@ -41,6 +45,10 @@ const WriteBottomTab: React.FC = () => {
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
+  const addHashTag = () => {
+    setContent(prevContent => prevContent + '#');
+  };
+
   return (
     <>
       <View style={WriteStyles.white} />
@@ -52,7 +60,9 @@ const WriteBottomTab: React.FC = () => {
           <Text style={WriteStyles.bottom_icon_text}>사진</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={WriteStyles.bottom_container}>
+        <TouchableOpacity
+          style={WriteStyles.bottom_container}
+          onPress={addHashTag}>
           <SvgXml xml={DashboardIcon.hash} />
           <Text style={WriteStyles.bottom_icon_text}>태그</Text>
         </TouchableOpacity>

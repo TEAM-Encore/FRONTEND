@@ -6,7 +6,6 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  Alert,
 } from 'react-native';
 
 import WriteStyles from './WriteStyles';
@@ -18,12 +17,13 @@ import ModalCategory from '@/components/categoryModal/ModalCategory';
 import WriteBottomTab from '@/components/bottomTab/WriteBottomTab';
 
 const WritePage: React.FC = () => {
-  const [title, onChangeTitle] = React.useState('');
-  const [content, onChangeContent] = React.useState('');
+  const [title, setTitle] = React.useState('');
+  const [content, setContent] = React.useState('');
   const [photoCount, setPhotoCount] = React.useState(0);
   const [dashboardModalVisible, setDashboardModalVisible] = useState(false);
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
+
   const dashboardList = [
     '게시판 선택 안함',
     '정보 게시판',
@@ -41,6 +41,18 @@ const WritePage: React.FC = () => {
   const pressCategory = () => {
     setCategoryModalVisible(true);
     setModalTitle('카테고리');
+  };
+
+  // 해시태그 추출하는 함수
+  const extractHashtags = (text: string): string[] => {
+    const hashtags = text.match(/#[^\s#]+/g); // 해시태그 감지
+    console.log('해시태그:', hashtags);
+    return hashtags ? hashtags : []; // 해시태그가 없을 경우 빈 배열 반환
+  };
+
+  const handleContentChange = (text: string) => {
+    setContent(text); // 내용
+    extractHashtags(text); // 해시태그
   };
 
   return (
@@ -81,14 +93,14 @@ const WritePage: React.FC = () => {
             <TextInput
               style={WriteStyles.input_title}
               placeholder="제목"
-              onChangeText={onChangeTitle}
+              onChangeText={setTitle}
               value={title}
             />
             <View style={WriteStyles.line} />
             <TextInput
               style={WriteStyles.input_content}
               placeholder="내용을 작성해주세요."
-              onChangeText={onChangeContent}
+              onChangeText={handleContentChange}
               value={content}
               multiline
             />
@@ -124,7 +136,7 @@ const WritePage: React.FC = () => {
         </ScrollView>
       </SafeAreaView>
 
-      <WriteBottomTab />
+      <WriteBottomTab setContent={setContent} />
     </>
   );
 };
