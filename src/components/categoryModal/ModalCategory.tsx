@@ -20,15 +20,17 @@ const {headline, body02, caption} = typography;
 type ModalCategoryProps = {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
+  categoryList: string[];
+  modalTitle: string;
 };
 
 const ModalCategory: React.FC<ModalCategoryProps> = ({
   modalVisible,
   setModalVisible,
+  categoryList,
+  modalTitle,
 }) => {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
-
-  const categoryList = ['전체보기', '오페라글라스', '뮤지컬 용어', '이벤트'];
 
   const handleSelect = (item: string) => {
     setSelectedItem(item);
@@ -53,7 +55,7 @@ const ModalCategory: React.FC<ModalCategoryProps> = ({
             <SvgXml xml={DashboardIcon.cancel} />
           </TouchableOpacity>
           <View style={styles.containerTitle}>
-            <Text style={styles.textTitle}>카테고리 선택</Text>
+            <Text style={styles.textTitle}>{modalTitle} 선택</Text>
           </View>
           {categoryList.map(item => (
             <TouchableOpacity
@@ -92,7 +94,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',
-    height: 397,
+    height: 'auto',
     justifyContent: 'center',
     borderTopStartRadius: 25,
     borderTopEndRadius: 25,

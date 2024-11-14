@@ -48,6 +48,8 @@ export default function Tabs() {
     },
   ];
 
+  const {top} = useSafeAreaInsets();
+
   return (
     <>
       <Tab.Navigator
