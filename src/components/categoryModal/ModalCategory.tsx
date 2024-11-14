@@ -22,6 +22,7 @@ type ModalCategoryProps = {
   setModalVisible: (visible: boolean) => void;
   categoryList: string[];
   modalTitle: string;
+  onSelect: (selectedItem: string) => void;
 };
 
 const ModalCategory: React.FC<ModalCategoryProps> = ({
@@ -29,6 +30,7 @@ const ModalCategory: React.FC<ModalCategoryProps> = ({
   setModalVisible,
   categoryList,
   modalTitle,
+  onSelect,
 }) => {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
@@ -38,6 +40,14 @@ const ModalCategory: React.FC<ModalCategoryProps> = ({
 
   const closeModal = () => {
     setModalVisible(false);
+  };
+
+  const handleConfirm = () => {
+    if (selectedItem) {
+      onSelect(selectedItem); // 부모 컴포넌트로 선택한 항목 전달
+      console.log('선택된 항목:', selectedItem);
+    }
+    closeModal();
   };
 
   return (
@@ -74,7 +84,7 @@ const ModalCategory: React.FC<ModalCategoryProps> = ({
               </Text>
             </TouchableOpacity>
           ))}
-          <TouchableOpacity style={styles.buttonCheck}>
+          <TouchableOpacity style={styles.buttonCheck} onPress={handleConfirm}>
             <Text style={styles.textButton}>확인</Text>
           </TouchableOpacity>
         </View>

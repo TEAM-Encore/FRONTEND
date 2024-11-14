@@ -18,6 +18,7 @@ type InformationScreenProps = {};
 
 const InformationScreen: React.FC<InformationScreenProps> = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [category, setCategory] = useState('카테고리');
   const categoryList = ['전체보기', '오페라글라스', '뮤지컬 용어', '이벤트'];
   const [modalTitle, setModalTitle] = useState('');
 
@@ -66,7 +67,7 @@ const InformationScreen: React.FC<InformationScreenProps> = () => {
           <TouchableOpacity
             style={InformationStyles.containerRow}
             onPress={() => pressCategory()}>
-            <Text style={InformationStyles.textCategory}>카테고리</Text>
+            <Text style={InformationStyles.textCategory}>{category}</Text>
             <SvgXml xml={DashboardIcon.arrowDown} />
           </TouchableOpacity>
           <ModalCategory
@@ -74,6 +75,9 @@ const InformationScreen: React.FC<InformationScreenProps> = () => {
             setModalVisible={setModalVisible}
             categoryList={categoryList}
             modalTitle={modalTitle}
+            onSelect={(item: string) => {
+              setCategory(item);
+            }}
           />
           <View style={InformationStyles.containerRow}>
             <TouchableOpacity>
