@@ -199,6 +199,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
             )}
             keyExtractor={(item, index) => index.toString()}
             horizontal={true}
+            nestedScrollEnabled
           />
 
           <View style={{marginHorizontal: 20}}>

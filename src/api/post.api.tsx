@@ -66,20 +66,22 @@ export const getPostHashtagList = (
   });
 };
 
-export const getPostList = (
-  cursor: number,
-  category: string,
-  type: string,
-  search_word: string,
+// 게시글 페이징 조회
+export const GetPostList = (
   pageable: object,
+  cursor?: number,
+  category?: string,
+  type?: string,
+  search_word?: string,
 ) => {
+  const requestParams = {
+    cursor,
+    category,
+    type,
+    search_word,
+    pageable: JSON.stringify(pageable),
+  };
   return httpApi.get(`/api/v1/post/list`, {
-    params: {
-      cursor,
-      category,
-      type,
-      search_word,
-      pageable,
-    },
+    params: requestParams,
   });
 };
