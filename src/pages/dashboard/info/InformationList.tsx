@@ -31,14 +31,15 @@ const InformationList: React.FC<InformationListProps> = ({
     const fetchPostList = async () => {
       const sortFilter = filterMapping[selectedFilter] || 'createdat';
       const sortCategory = categoryMapping[category] || '';
-      const pageable = {size: 3, sort: {sortFilter}};
       console.log('선택된 필터: ', selectedFilter);
       console.log('선택된 카테고리:', category);
 
       try {
         setLoading(true);
         const response = await GetPostList(
-          pageable,
+          0,
+          100,
+          sortFilter,
           undefined,
           sortCategory,
           'INFORMATION',

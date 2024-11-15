@@ -21,6 +21,7 @@ interface PostData {
   post_type: string;
   category: string;
   hashTags: string[];
+  imgUrls: string[];
 }
 
 interface ModifyData {
@@ -57,7 +58,7 @@ export default function App() {
   const [modifyData, setModifyData] = React.useState<ModifyData | null>(null);
 
   const postTypeMapping: Record<string, string> = {
-    '게시판 선택 안함': '',
+    '게시판 선택 안함': 'NO_SELECT',
     '정보 게시판': 'INFORMATION',
     '후기 게시판': 'REVIEW',
     '배우 게시판': 'ACTOR',
@@ -65,13 +66,14 @@ export default function App() {
   };
 
   const categoryMapping: Record<string, string> = {
-    '선택 안함': '',
+    '카테고리 선택': 'NO_SELECT',
+    '선택 안함': 'NO_SELECT',
     '시야 후기': 'VIEW_REVIEW',
     '굿즈 후기': 'GOODS_REVIEW',
     '공연 감상': 'PERFORMANCE_REVIEW',
   };
 
-  const handleRegister = async () => {
+  const handleRegister = async (navigation, onRegistered) => {
     if (postData) {
       const apiPostType =
         postTypeMapping[postData.post_type] || postData.post_type;
@@ -89,26 +91,33 @@ export default function App() {
           postData.title,
           postData.content,
           postData.hashTags,
+          postData.imgUrls,
         );
         console.log('API RESPONSE: ', response.data);
-      } catch (error) {
-        if (error.response) {
-          // 서버가 응답했지만, 상태 코드가 2xx 범위에 있지 않음
-          console.log('Error Response Data:', error.response.data);
-          console.log('Error Response Status:', error.response.status);
-          console.log('Error Response Headers:', error.response.headers);
-        } else if (error.request) {
-          // 요청이 이루어졌으나, 응답을 받지 못함
-          console.log('Error Request:', error.request);
-        } else {
-          // 요청 설정 중 에러가 발생한 경우
-          console.log('Error Message:', error.message);
+
+        // 등록 성공 후 처리
+        if (response.status === 201 || response.status === 200) {
+          console.log('글이 성공적으로 등록되었습니다!');
+          alert('글이 성공적으로 등록되었습니다.');
+
+          // 등록 완료 후 뒤로가기 및 상태 갱신 트리거
+          onRegistered(); // 이전 컴포넌트에 상태 갱신 요청
+          setTimeout(() => {
+            navigation.goBack(); // 뒤로 가기
+          }, 500); // 약간의 지연 추가
         }
-        console.log('Error Config:', error.config);
+      } catch (error) {
+        console.log('Error:', error);
       }
     } else {
       console.log('No data from WritePage');
     }
+  };
+  // 글 작성 완료 후 새로고침
+  const [refresh, setRefresh] = React.useState(false);
+
+  const triggerRefresh = () => {
+    setRefresh(prev => !prev);
   };
 
   const fetchPutPost = async () => {
@@ -149,7 +158,9 @@ export default function App() {
         <Stack.Navigator initialRouteName="Tabs">
           <Stack.Screen
             name="Tabs"
-            component={Tabs}
+            component={props => (
+              <Tabs {...props} postData={postData} refresh={refresh} />
+            )}
             options={{headerShown: false}}
           />
           <Stack.Screen
@@ -164,7 +175,7 @@ export default function App() {
               headerLeft: () => <CustomBackButton navigation={navigation} />,
               headerRight: () => (
                 <TouchableOpacity
-                  onPress={() => handleRegister()}
+                  onPress={() => handleRegister(navigation, triggerRefresh)}
                   style={AppStyles.register_button}>
                   <View style={AppStyles.register_container}>
                     <Text style={AppStyles.register_text}>등록</Text>

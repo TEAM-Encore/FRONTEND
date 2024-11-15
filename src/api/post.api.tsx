@@ -67,18 +67,22 @@ export const getPostHashtagList = (
 
 // 게시글 페이징 조회
 export const GetPostList = (
-  pageable: object,
+  page: number,
+  size: number,
+  sort: string,
   cursor?: number,
   category?: string,
   type?: string,
   search_word?: string,
 ) => {
   const requestParams = {
+    page,
+    size,
+    sort,
     cursor,
     category,
     type,
     search_word,
-    pageable: JSON.stringify(pageable),
   };
   return httpApi.get(`/api/v1/post/list`, {
     params: requestParams,
