@@ -74,7 +74,7 @@ const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('ModifyPage', {postId});
+            navigation.navigate('ModifyPage', {postId: postId});
             setModalVisible(false);
           }}>
           <Text style={styles.text}>수정</Text>

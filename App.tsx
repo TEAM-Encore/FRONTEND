@@ -177,12 +177,11 @@ export default function App() {
           <Stack.Screen
             name="PostPage"
             component={PostPage}
-            initialParams={{postId: 3}}
+            initialParams={{postId: 5}}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="ModifyPage"
-            // component={ModifyPage}
             options={({navigation}) => ({
               headerStyle: {
                 height: 123,

@@ -1,12 +1,25 @@
 import React from 'react';
-import {FlatList, View, Image, Text, StyleSheet} from 'react-native';
+import {
+  FlatList,
+  View,
+  Image,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import moment from 'moment';
 import {SvgXml} from 'react-native-svg';
+import {useNavigation} from '@react-navigation/native';
+
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
 
 const {subhead03, body01, caption} = typography;
+
+type NavigationProp = {
+  navigate: (screen: 'PostPage') => void;
+};
 
 type PostProps = {
   postList: {
@@ -23,6 +36,8 @@ type PostProps = {
 };
 
 const ItemPost: React.FC<PostProps> = ({postList}) => {
+  const navigation = useNavigation<NavigationProp>();
+
   const getTimeDifference = (created_at: string): string => {
     const created = moment(created_at, moment.ISO_8601);
 
@@ -66,7 +81,11 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
 
         return (
           <>
-            <View style={styles.container}>
+            <TouchableOpacity
+              style={styles.container}
+              onPress={() =>
+                navigation.navigate('PostPage', {postId: item.id})
+              }>
               <View
                 style={[
                   styles.containerCategory,
@@ -119,7 +138,7 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
                   <Image style={styles.image} source={item.image} />
                 )}
               </View>
-            </View>
+            </TouchableOpacity>
 
             <View style={styles.containerRow}></View>
             {index < postList.length - 1 ? (
