@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -12,20 +12,36 @@ import {
   TextInput,
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
+import {useNavigation} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
+import {RootStackParamList} from '../../../../types';
 
 import Colors from '@/assets/colors/Colors';
 import PostStyles from '@/pages/dashboard/post/PostStyles';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
-import {getPost} from '../../../api/post.api';
+import {getPost} from '@/api/post.api';
 import {timeAgo} from '@/util/timeAgo';
 
+import ModalModifyDelete from '@/components/modifyDeleteModal/ModalModifyDelete';
 import ItemComment from '@/components/comment/ItemComment';
 
-type PostPageProps = {
-  postId: number;
+type PostPageRouteProp = RouteProp<RootStackParamList, 'PostPage'>;
+
+interface PostPageProps {
+  route: PostPageRouteProp;
+}
+
+type ModalPosition = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 };
 
-const PostPage: React.FC<PostPageProps> = ({postId = 1}) => {
+const PostPage: React.FC<PostPageProps> = ({route}) => {
+  const {postId} = route.params;
+  const navigation = useNavigation();
+  const iconRef = useRef<View>(null);
   const [postData, setPostData] = useState<{
     category?: string;
     title?: string;
@@ -34,6 +50,10 @@ const PostPage: React.FC<PostPageProps> = ({postId = 1}) => {
     num_of_comment?: number;
     num_of_like?: number;
   }>({});
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalPosition, setModalPosition] = useState<ModalPosition | null>(
+    null,
+  );
 
   const categoryMapping: Record<
     string,
@@ -57,7 +77,6 @@ const PostPage: React.FC<PostPageProps> = ({postId = 1}) => {
     try {
       const response = await getPost(postId);
       setPostData(response.data.data);
-      console.log(response.data);
     } catch (error) {
       console.error('게시글 조회 오류:', error);
     }
@@ -66,6 +85,15 @@ const PostPage: React.FC<PostPageProps> = ({postId = 1}) => {
   useEffect(() => {
     fetchGetPost();
   }, []);
+
+  const handleIconPress = () => {
+    setModalVisible(true);
+    if (iconRef.current) {
+      iconRef.current.measureInWindow((x, y, width, height) => {
+        setModalPosition({x, y, width, height});
+      });
+    }
+  };
 
   const images = [
     {
@@ -116,15 +144,36 @@ const PostPage: React.FC<PostPageProps> = ({postId = 1}) => {
 
   const category = getMappedCategory(postData.category);
 
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
   return (
     <>
       <SafeAreaView style={PostStyles.container}>
         <ScrollView>
           <View style={PostStyles.containerHeader}>
-            <SvgXml xml={PostIcon.arrowLeft} />
+            <TouchableOpacity onPress={() => handleGoBack()}>
+              <SvgXml xml={PostIcon.arrowLeft} />
+            </TouchableOpacity>
             <View style={PostStyles.containerRow}>
-              <SvgXml style={{marginRight: 11}} xml={PostIcon.upload} />
-              <SvgXml xml={PostIcon.moreVertical} />
+              <TouchableOpacity>
+                <SvgXml style={{marginRight: 11}} xml={PostIcon.upload} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleIconPress}>
+                <View ref={iconRef}>
+                  <SvgXml xml={PostIcon.moreVertical} />
+                </View>
+              </TouchableOpacity>
+              {modalPosition && (
+                <ModalModifyDelete
+                  modalVisible={modalVisible}
+                  setModalVisible={setModalVisible}
+                  position={modalPosition}
+                  postId={postId}
+                  onNavigation={navigation}
+                />
+              )}
             </View>
           </View>
 
@@ -132,10 +181,10 @@ const PostPage: React.FC<PostPageProps> = ({postId = 1}) => {
             <View
               style={[
                 PostStyles.containerCategory,
-                {backgroundColor: category.boxColor},
+                {backgroundColor: category?.boxColor},
               ]}>
-              <Text style={[PostStyles.textCategory, {color: category.color}]}>
-                {category.label}
+              <Text style={[PostStyles.textCategory, {color: category?.color}]}>
+                {category?.label}
               </Text>
             </View>
             <Text style={PostStyles.textTitle}>{postData.title}</Text>
