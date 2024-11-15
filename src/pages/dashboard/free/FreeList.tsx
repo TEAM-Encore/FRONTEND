@@ -40,8 +40,6 @@ const FreeList: React.FC<FreeListProps> = ({selectedFilter}) => {
     fetchPostList();
   }, [selectedFilter]);
 
-  return (
-    <>{loading ? <Text>Loading...</Text> : <ItemPost postList={postList} />}</>
-  );
+  return <>{loading ? <></> : <ItemPost postList={postList} />}</>;
 };
 export default FreeList;

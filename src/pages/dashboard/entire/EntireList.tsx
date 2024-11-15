@@ -43,7 +43,7 @@ const EntireList: React.FC<EntireListProps> = ({selectedFilter}) => {
     <>
       <View>
         {/* 추후 로딩 페이지 추가 필요 */}
-        {loading ? <Text>Loading...</Text> : <ItemPost postList={postList} />}
+        {loading ? <></> : <ItemPost postList={postList} />}
       </View>
     </>
   );

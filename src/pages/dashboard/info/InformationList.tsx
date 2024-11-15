@@ -58,9 +58,7 @@ const InformationList: React.FC<InformationListProps> = ({
     fetchPostList();
   }, [selectedFilter, category]);
 
-  return (
-    <>{loading ? <Text>Loading...</Text> : <ItemPost postList={postList} />}</>
-  );
+  return <>{loading ? <></> : <ItemPost postList={postList} />}</>;
 };
 export default InformationList;
 

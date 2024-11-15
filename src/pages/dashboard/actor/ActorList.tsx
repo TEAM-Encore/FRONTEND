@@ -40,8 +40,6 @@ const ActorList: React.FC<ActorListProps> = ({selectedFilter}) => {
     fetchPostList();
   }, [selectedFilter]);
 
-  return (
-    <>{loading ? <Text>Loading...</Text> : <ItemPost postList={postList} />}</>
-  );
+  return <>{loading ? <></> : <ItemPost postList={postList} />}</>;
 };
 export default ActorList;
