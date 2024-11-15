@@ -6,15 +6,14 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  Image,
 } from 'react-native';
-
 import WriteStyles from './WriteStyles';
 import {SvgXml} from 'react-native-svg';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
-
 import ModalCategory from '@/components/categoryModal/ModalCategory';
-
 import WriteBottomTab from '@/components/bottomTab/WriteBottomTab';
+import {SelectImage} from '@/components/selectImage/SelectImage';
 
 interface PostData {
   title: string;
@@ -22,6 +21,7 @@ interface PostData {
   post_type: string;
   category: string;
   hashTags: string[];
+  imgUrls: string[];
 }
 
 interface WritePageProps {
@@ -29,17 +29,17 @@ interface WritePageProps {
 }
 
 const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
-  const [title, setTitle] = React.useState('');
-  const [content, setContent] = React.useState('');
-  const [post_type, setPostType] = React.useState('게시판 선택');
-  const [category, setCategory] = React.useState('카테고리 선택');
-  const [hashTags, setHashTags] = React.useState<string[]>([]);
-
-  const [photoCount, setPhotoCount] = React.useState(0);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [post_type, setPostType] = useState('게시판 선택');
+  const [category, setCategory] = useState('카테고리 선택');
+  const [categoryDisabled, setCategoryDisabled] = useState(true); // 카테고리 활성화 여부
   const [dashboardModalVisible, setDashboardModalVisible] = useState(false);
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
-  const [categoryDisabled, setCategoryDisabled] = useState(true); // 카테고리 활성화 여부
+  const [hashTags, setHashTags] = useState<string[]>([]);
+  const [photoCount, setPhotoCount] = useState(0);
+  const [imgUrls, setImgUrls] = useState<string[]>([]);
 
   const dashboardList = [
     '게시판 선택 안함',
@@ -95,6 +95,18 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
     console.log('해시태그:', hashTags);
   };
 
+  const handleSelectImage = async () => {
+    const imageUrl = await SelectImage(setPhotoCount);
+    if (imageUrl) {
+      setImgUrls(prev => [...prev, imageUrl]);
+    }
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setImgUrls(prev => prev.filter((_, i) => i !== index));
+    setPhotoCount(prev => prev - 1);
+  };
+
   // App.tsx로 props 전달
   useEffect(() => {
     setPostData({
@@ -103,8 +115,9 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
       post_type,
       category,
       hashTags,
+      imgUrls,
     });
-  }, [title, content, post_type, category]);
+  }, [title, content, post_type, category, imgUrls]);
 
   return (
     <>
@@ -132,17 +145,16 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
               <Text
                 style={[
                   WriteStyles.fieldText,
-                  categoryDisabled && {color: '#BDBDBD'}, // 비활성화 스타일 적용
+                  categoryDisabled && {color: '#BDBDBD'},
                 ]}>
                 {category}
               </Text>
               <TouchableOpacity
                 onPress={pressCategory}
-                disabled={categoryDisabled} // 비활성화 상태 반영
-              >
+                disabled={categoryDisabled}>
                 <SvgXml
                   xml={DashboardIcon.downArrow}
-                  style={categoryDisabled && {opacity: 0.5}} // 비활성화 스타일
+                  style={categoryDisabled && {opacity: 0.5}}
                 />
               </TouchableOpacity>
 
@@ -180,10 +192,38 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
               <Text>사진 </Text>
               <Text>({photoCount}/10)</Text>
             </View>
-            <TouchableOpacity style={WriteStyles.photo}>
-              <SvgXml xml={DashboardIcon.camera} />
-              <Text style={WriteStyles.photo_text}>사진 추가</Text>
-            </TouchableOpacity>
+            <View style={WriteStyles.photos}>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {imgUrls.map((url, index) => (
+                  <View key={index} style={WriteStyles.photo_wrapper}>
+                    <Image
+                      source={{uri: url}}
+                      style={{
+                        width: 84,
+                        height: 92,
+                        borderRadius: 9,
+                      }}
+                      resizeMode="cover"
+                    />
+                    <TouchableOpacity
+                      style={WriteStyles.closeButton}
+                      onPress={() => handleRemoveImage(index)}>
+                      <SvgXml xml={DashboardIcon.close} />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+                <TouchableOpacity
+                  style={[
+                    WriteStyles.photo,
+                    photoCount == 10 && {opacity: 0.4},
+                  ]}
+                  onPress={handleSelectImage}
+                  disabled={photoCount == 10}>
+                  <SvgXml xml={DashboardIcon.camera} />
+                  <Text style={WriteStyles.photo_text}>사진 추가</Text>
+                </TouchableOpacity>
+              </ScrollView>
+            </View>
           </View>
 
           <View style={WriteStyles.rule_container}>
@@ -205,7 +245,7 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
         </ScrollView>
       </SafeAreaView>
 
-      <WriteBottomTab setContent={setContent} />
+      <WriteBottomTab setContent={setContent} setPhotoCount={setPhotoCount} />
     </>
   );
 };
