@@ -98,7 +98,6 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
       keyExtractor={item => item.id}
       renderItem={({item, index}) => {
         const category = getMappedCategory(item.category);
-        console.log('item.category: ', item);
         return (
           <>
             <TouchableOpacity

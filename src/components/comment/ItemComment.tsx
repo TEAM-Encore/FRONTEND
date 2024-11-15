@@ -13,6 +13,7 @@ import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
 import {timeAgo} from '@/util/timeAgo';
+import {createLikeComment} from '@/api/comment.api';
 
 import ModalModifyDelete from '@/components/modifyDeleteModal/ModalModifyDelete';
 
@@ -21,12 +22,16 @@ const {caption, bodyLong01} = typography;
 type CommentProps = {
   commentList: {
     id: number;
+    nickname: string;
     is_my_comment: boolean;
     is_post_owner: boolean;
     created_at: string;
     modified_at: string;
     content: string;
     post_id: number;
+    is_liked: boolean;
+    like_count: number;
+    child_comment_count: number;
   }[];
 };
 
@@ -43,6 +48,7 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
   const [modalPosition, setModalPosition] = useState<ModalPosition | null>(
     null,
   );
+  const [postLike, setPostLike] = useState(false);
 
   const handleIconPress = () => {
     setModalVisible(true);
@@ -53,77 +59,97 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
     }
   };
 
+  const fetchCreateLikePost = async (post_id: number, comment_id: number) => {
+    setPostLike(true);
+    try {
+      await createLikeComment(post_id, comment_id);
+    } catch (error) {
+      console.error('게시글 좋아요 생성 오류:', error);
+    }
+  };
+
   return (
     <FlatList
       data={commentList}
       keyExtractor={item => String(item.id)}
-      renderItem={({item, index}) => (
-        <>
-          <View style={styles.container}>
-            <View style={styles.containerWriterHeader}>
-              <View style={styles.containerRow}>
-                <>
-                  <SvgXml xml={PostIcon.writerBackground} />
-                  <Image
-                    style={styles.imageWriter}
-                    source={require('@/assets/logo/logo4.png')}
-                  />
-                </>
-                <View>
-                  <View style={styles.containerWriterText}>
-                    <View style={styles.containerRow}>
-                      <Text style={styles.textWriter}>{'뮤사랑'}</Text>
-                      <SvgXml xml={PostIcon.Badge} />
-                    </View>
-                    <View style={styles.containerRow}>
-                      {item.is_my_comment && (
-                        <Text style={styles.textIsWriterDate}>작성자 · </Text>
-                      )}
-                      <Text style={styles.textIsWriterDate}>
-                        {timeAgo(item.created_at)}
-                      </Text>
+      renderItem={({item, index}) => {
+        setPostLike(item.is_liked);
+        return (
+          <>
+            <View style={styles.container}>
+              <View style={styles.containerWriterHeader}>
+                <View style={styles.containerRow}>
+                  <>
+                    <SvgXml xml={PostIcon.writerBackground} />
+                    <Image
+                      style={styles.imageWriter}
+                      source={require('@/assets/logo/logo4.png')}
+                    />
+                  </>
+                  <View>
+                    <View style={styles.containerWriterText}>
+                      <View style={styles.containerRow}>
+                        <Text style={styles.textWriter}>{item.nickname}</Text>
+                        <SvgXml xml={PostIcon.Badge} />
+                      </View>
+                      <View style={styles.containerRow}>
+                        {item.is_my_comment && (
+                          <Text style={styles.textIsWriterDate}>작성자 · </Text>
+                        )}
+                        <Text style={styles.textIsWriterDate}>
+                          {timeAgo(item.created_at)}
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 </View>
+                <TouchableOpacity onPress={handleIconPress}>
+                  <View ref={iconRef}>
+                    <SvgXml xml={PostIcon.moreVertical} />
+                  </View>
+                </TouchableOpacity>
+                {modalPosition && (
+                  <ModalModifyDelete
+                    modalVisible={modalVisible}
+                    setModalVisible={setModalVisible}
+                    position={modalPosition}
+                    postId={item.post_id}
+                    commentId={item.id}
+                    onNavigation={null}
+                  />
+                )}
               </View>
-              <TouchableOpacity onPress={handleIconPress}>
-                <View ref={iconRef}>
-                  <SvgXml xml={PostIcon.moreVertical} />
-                </View>
-              </TouchableOpacity>
-              {modalPosition && (
-                <ModalModifyDelete
-                  modalVisible={modalVisible}
-                  setModalVisible={setModalVisible}
-                  position={modalPosition}
-                  postId={item.post_id}
-                  commentId={item.id}
-                  onNavigation={null}
-                />
-              )}
-            </View>
 
-            <Text style={styles.textContent}>{item.content}</Text>
-            <View style={styles.containerRow}>
-              <View style={styles.containerLike}>
-                <SvgXml xml={PostIcon.commentLike} />
-                <Text style={styles.textLikeComment}>하트 {10}</Text>
-              </View>
+              <Text style={styles.textContent}>{item.content}</Text>
               <View style={styles.containerRow}>
-                <SvgXml xml={PostIcon.commentComment} />
-                <Text style={styles.textLikeComment}>댓글 {0}</Text>
+                <TouchableOpacity
+                  style={styles.containerLike}
+                  onPress={() => fetchCreateLikePost(item.post_id, item.id)}>
+                  <SvgXml
+                    xml={postLike ? PostIcon.fullLike : PostIcon.commentLike}
+                  />
+                  <Text style={styles.textLikeComment}>
+                    하트 {item.like_count}
+                  </Text>
+                </TouchableOpacity>
+                <View style={styles.containerRow}>
+                  <SvgXml xml={PostIcon.commentComment} />
+                  <Text style={styles.textLikeComment}>
+                    댓글 {item.child_comment_count}
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-          {index < commentList.length - 1 ? (
-            <View style={{marginHorizontal: 20}}>
-              <View style={styles.line} />
-            </View>
-          ) : (
-            <View style={{marginBottom: 26}} />
-          )}
-        </>
-      )}
+            {index < commentList.length - 1 ? (
+              <View style={{marginHorizontal: 20}}>
+                <View style={styles.line} />
+              </View>
+            ) : (
+              <View style={{marginBottom: 26}} />
+            )}
+          </>
+        );
+      }}
     />
   );
 };

@@ -55,12 +55,16 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
   const [commentData, setCommentData] = useState<
     {
       id: number;
+      nickname: string;
       is_my_comment: boolean;
       is_post_owner: boolean;
       created_at: string;
       modified_at: string;
       content: string;
       post_id: number;
+      is_liked: boolean;
+      like_count: number;
+      child_comment_count: number;
     }[]
   >([]);
   const [modalVisible, setModalVisible] = useState(false);
