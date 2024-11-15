@@ -12,7 +12,7 @@ import WritePage from './src/pages/write/WritePage';
 import PostPage from './src/pages/dashboard/post/PostPage';
 import SavePage from './src/pages/write/save/SavePage';
 
-import {PostDashboard} from './src/api/post.api.tsx';
+import {createPost} from './src/api/post.api.tsx';
 
 interface PostData {
   title: string;
@@ -69,7 +69,7 @@ export default function App() {
       console.log('Category: ', apiCategory);
 
       try {
-        const response = await PostDashboard(
+        const response = await createPost(
           apiCategory,
           apiPostType,
           postData.title,

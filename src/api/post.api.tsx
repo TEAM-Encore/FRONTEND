@@ -1,6 +1,6 @@
 import httpApi from './http.api';
 
-export const PostDashboard = (
+export const createPost = (
   category: string,
   post_type: string,
   title: string,
@@ -24,14 +24,46 @@ export const PostDashboard = (
   return httpApi.post(`/api/v1/post`, requestBody);
 };
 
-export const GetDashboard = (post_id: number) => {
+export const getPost = (post_id: number) => {
   return httpApi.get(`/api/v1/post/${post_id}`);
 };
 
-export const PutDashboard = (post_id: number) => {
+export const putPost = (post_id: number) => {
   return httpApi.put(`/api/v1/post/${post_id}`);
 };
 
-export const DeleteDashboard = (post_id: number) => {
+export const deletePost = (post_id: number) => {
   return httpApi.delete(`/api/v1/post/${post_id}`);
+};
+
+export const getPostHashtagList = (
+  cursor: number,
+  hashtag: string,
+  pageable: object,
+) => {
+  return httpApi.get(`/api/v1/post/hashtag-list`, {
+    params: {
+      cursor,
+      hashtag,
+      pageable,
+    },
+  });
+};
+
+export const getPostList = (
+  cursor: number,
+  category: string,
+  type: string,
+  search_word: string,
+  pageable: object,
+) => {
+  return httpApi.get(`/api/v1/post/list`, {
+    params: {
+      cursor,
+      category,
+      type,
+      search_word,
+      pageable,
+    },
+  });
 };
