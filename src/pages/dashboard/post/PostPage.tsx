@@ -19,7 +19,7 @@ import {RootStackParamList} from '../../../../types';
 import Colors from '@/assets/colors/Colors';
 import PostStyles from '@/pages/dashboard/post/PostStyles';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
-import {getPost} from '@/api/post.api';
+import {getPost, createLikePost, deleteLikePost} from '@/api/post.api';
 import {getComments, createComment} from '@/api/comment.api';
 import {timeAgo} from '@/util/timeAgo';
 
@@ -67,6 +67,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     null,
   );
   const [valueComment, onChangeComment] = useState('');
+  const [postLike, setPostLike] = useState(false);
 
   const categoryMapping: Record<
     string,
@@ -96,6 +97,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     try {
       const response = await getPost(postId);
       setPostData(response.data.data);
+      console.log(response.data.data);
     } catch (error) {
       console.error('게시글 조회 오류:', error);
     }
@@ -104,6 +106,24 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
   useEffect(() => {
     fetchGetPost();
   }, []);
+
+  const fetchCreateLikePost = async () => {
+    setPostLike(true);
+    try {
+      await createLikePost(1, postId);
+    } catch (error) {
+      console.error('게시글 좋아요 생성 오류:', error);
+    }
+  };
+
+  const fetchDeleteLikePost = async () => {
+    setPostLike(false);
+    try {
+      await deleteLikePost(1, postId);
+    } catch (error) {
+      console.error('게시글 좋아요 삭제 오류:', error);
+    }
+  };
 
   const fetchGetComments = async () => {
     try {
@@ -228,18 +248,21 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
           </TouchableOpacity>
 
           <View style={PostStyles.containerCommentLikeItems}>
-            <View style={[PostStyles.containerCommentLike, {marginRight: 10}]}>
+            <TouchableOpacity
+              style={[PostStyles.containerCommentLike, {marginRight: 10}]}>
               <SvgXml xml={PostIcon.comment} />
               <Text style={PostStyles.textCommentLike}>
                 {postData.num_of_like}
               </Text>
-            </View>
-            <View style={PostStyles.containerCommentLike}>
-              <SvgXml xml={PostIcon.like} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={PostStyles.containerCommentLike}
+              onPress={postLike ? fetchDeleteLikePost : fetchCreateLikePost}>
+              <SvgXml xml={postLike ? PostIcon.fullLike : PostIcon.like} />
               <Text style={PostStyles.textCommentLike}>
                 {postData.num_of_comment}
               </Text>
-            </View>
+            </TouchableOpacity>
           </View>
 
           <View style={PostStyles.containerWriter}>
