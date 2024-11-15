@@ -21,12 +21,14 @@ const HomeStyles = StyleSheet.create({
     marginHorizontal: 22,
   },
   containerCategory: {
-    width: 55,
     height: 24,
     borderRadius: 4.27,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'flex-start',
     backgroundColor: '#FFE9DC',
+    paddingHorizontal: 12,
+    paddingVertical: 2,
     marginBottom: 22,
   },
   textCategory: {

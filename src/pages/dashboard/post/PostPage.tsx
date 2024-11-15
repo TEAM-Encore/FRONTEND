@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -13,14 +13,60 @@ import {
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
 
+import Colors from '@/assets/colors/Colors';
 import PostStyles from '@/pages/dashboard/post/PostStyles';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
+import {getPost} from '../../../api/post.api';
+import {timeAgo} from '@/util/timeAgo';
 
 import ItemComment from '@/components/comment/ItemComment';
 
-type PostPageProps = {};
+type PostPageProps = {
+  postId: number;
+};
 
-const PostPage: React.FC<PostPageProps> = () => {
+const PostPage: React.FC<PostPageProps> = ({postId = 1}) => {
+  const [postData, setPostData] = useState<{
+    category?: string;
+    title?: string;
+    content?: string;
+    created_at?: string;
+    num_of_comment?: number;
+    num_of_like?: number;
+  }>({});
+
+  const categoryMapping: Record<
+    string,
+    {label: string; color: string; boxColor: string}
+  > = {
+    OPERA_GLASS_RENTAL: {
+      label: '오페라 글래스',
+      color: '#FFB200',
+      boxColor: Colors.sub_01,
+    },
+    MUSICAL_TERM: {label: '뮤지컬 용어', color: '#FF7163', boxColor: '#FFEAE8'},
+    EVENT: {label: '이벤트', color: '#FF853E', boxColor: '#FFE9DC'},
+  };
+
+  const getMappedCategory = (category: string | undefined) => {
+    if (!category) return null;
+    return categoryMapping[category];
+  };
+
+  const fetchGetPost = async () => {
+    try {
+      const response = await getPost(postId);
+      setPostData(response.data.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error('게시글 조회 오류:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGetPost();
+  }, []);
+
   const images = [
     {
       id: '1',
@@ -68,6 +114,8 @@ const PostPage: React.FC<PostPageProps> = () => {
 
   const [valueComment, onChangeComment] = useState('');
 
+  const category = getMappedCategory(postData.category);
+
   return (
     <>
       <SafeAreaView style={PostStyles.container}>
@@ -81,21 +129,17 @@ const PostPage: React.FC<PostPageProps> = () => {
           </View>
 
           <View style={{marginHorizontal: 20}}>
-            <View style={PostStyles.containerCategory}>
-              <Text style={PostStyles.textCategory}>이벤트</Text>
+            <View
+              style={[
+                PostStyles.containerCategory,
+                {backgroundColor: category.boxColor},
+              ]}>
+              <Text style={[PostStyles.textCategory, {color: category.color}]}>
+                {category.label}
+              </Text>
             </View>
-            <Text style={PostStyles.textTitle}>
-              드레스 리허설 참관 및 MD 증정
-            </Text>
-            <Text style={PostStyles.textContent}>
-              추첨을 통해 드레스 리허설을 참관할 수 있는 기회가 있어 공유합니다.
-              벤자민 버튼 공연인데 너무 좋아서 회전문 돌았어서 다른 분들도 꼭
-              보셨으면 좋겠어요!
-              {'\n'}
-              {'\n'}
-              링아센에서 해서 시설도 꽤 좋은 편이라 강추합니다ㅎㅎ 링크로
-              들어가시면 이벤트 내용 나와요~
-            </Text>
+            <Text style={PostStyles.textTitle}>{postData.title}</Text>
+            <Text style={PostStyles.textContent}>{postData.content}</Text>
           </View>
 
           <FlatList
@@ -121,11 +165,15 @@ const PostPage: React.FC<PostPageProps> = () => {
           <View style={PostStyles.containerCommentLikeItems}>
             <View style={[PostStyles.containerCommentLike, {marginRight: 10}]}>
               <SvgXml xml={PostIcon.comment} />
-              <Text style={PostStyles.textCommentLike}>42</Text>
+              <Text style={PostStyles.textCommentLike}>
+                {postData.num_of_like}
+              </Text>
             </View>
             <View style={PostStyles.containerCommentLike}>
               <SvgXml xml={PostIcon.like} />
-              <Text style={PostStyles.textCommentLike}>21</Text>
+              <Text style={PostStyles.textCommentLike}>
+                {postData.num_of_comment}
+              </Text>
             </View>
           </View>
 
@@ -143,7 +191,9 @@ const PostPage: React.FC<PostPageProps> = () => {
                   <Text style={PostStyles.textWriter}>뮤사랑</Text>
                   <SvgXml xml={PostIcon.Badge} />
                 </View>
-                <Text style={PostStyles.textDate}>11분전</Text>
+                <Text style={PostStyles.textDate}>
+                  {timeAgo(postData.created_at)}
+                </Text>
               </View>
             </View>
             <View style={PostStyles.containerWriterButton}>
@@ -152,7 +202,9 @@ const PostPage: React.FC<PostPageProps> = () => {
           </View>
 
           <View style={PostStyles.containerCommentTitle}>
-            <Text style={PostStyles.textCommentTitle}>댓글 21</Text>
+            <Text style={PostStyles.textCommentTitle}>
+              댓글 {postData.num_of_comment}
+            </Text>
             <View style={PostStyles.containerRow}>
               <TouchableOpacity>
                 <Text
