@@ -50,6 +50,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     created_at?: string;
     num_of_comment?: number;
     num_of_like?: number;
+    hashtags?: [];
   }>({});
   const [commentData, setCommentData] = useState<
     {
@@ -78,8 +79,23 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
       color: '#FFB200',
       boxColor: Colors.sub_01,
     },
-    MUSICAL_TERM: {label: '뮤지컬 용어', color: '#FF7163', boxColor: '#FFEAE8'},
-    EVENT: {label: '이벤트', color: '#FF853E', boxColor: '#FFE9DC'},
+    MUSICAL_TERMS: {
+      label: '뮤지컬 용어',
+      color: '#FF7163',
+      boxColor: '#FFEAE8',
+    },
+    EVENTS: {label: '이벤트', color: '#FF853E', boxColor: '#FFE9DC'},
+    VIEW_REVIEW: {
+      label: '시야 후기',
+      color: '#FFB200',
+      boxColor: Colors.sub_01,
+    },
+    GOODS_REVIEW: {label: '굿즈 후기', color: '#FF853E', boxColor: '#FFE9DC'},
+    PERFORMANCE_REVIEW: {
+      label: '공연 감상',
+      color: '#FF4FB3',
+      boxColor: '#FFE6F4',
+    },
   };
 
   const getMappedCategory = (category: string | undefined) => {
@@ -213,15 +229,18 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
           </View>
 
           <View style={{marginHorizontal: 20}}>
-            <View
-              style={[
-                PostStyles.containerCategory,
-                {backgroundColor: category?.boxColor},
-              ]}>
-              <Text style={[PostStyles.textCategory, {color: category?.color}]}>
-                {category?.label}
-              </Text>
-            </View>
+            {category && (
+              <View
+                style={[
+                  PostStyles.containerCategory,
+                  {backgroundColor: category?.boxColor},
+                ]}>
+                <Text
+                  style={[PostStyles.textCategory, {color: category?.color}]}>
+                  {category?.label}
+                </Text>
+              </View>
+            )}
             <Text style={PostStyles.textTitle}>{postData.title}</Text>
             <Text style={PostStyles.textContent}>{postData.content}</Text>
           </View>
@@ -238,13 +257,13 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
           />
 
           <View style={{marginHorizontal: 20}}>
-            <View style={PostStyles.line} />
+            {postData.hashtags?.length !== 0 && (
+              <View style={PostStyles.line} />
+            )}
           </View>
 
           <TouchableOpacity style={PostStyles.containerHashtag}>
-            <Text style={PostStyles.textHashtag}>
-              #벤자민버튼 #MD #드레스리허설
-            </Text>
+            <Text style={PostStyles.textHashtag}>{postData.hashtags}</Text>
           </TouchableOpacity>
 
           <View style={PostStyles.containerCommentLikeItems}>
