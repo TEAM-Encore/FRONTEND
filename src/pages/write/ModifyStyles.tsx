@@ -24,14 +24,14 @@ const ModifyStyles = StyleSheet.create({
   },
   input_title: {
     ...headline,
-    color: Colors.gray_07,
+    color: Colors.gray_12,
     width: 335,
     height: 28,
     marginTop: 29,
   },
   input_content: {
     ...bodyLong01,
-    color: Colors.gray_07,
+    color: Colors.gray_12,
     marginBottom: 20,
   },
   line: {

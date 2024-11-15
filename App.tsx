@@ -73,7 +73,7 @@ export default function App() {
     '공연 감상': 'PERFORMANCE_REVIEW',
   };
 
-  const handleRegister = async (navigation, onRegistered) => {
+  const handleRegister = async navigation => {
     if (postData) {
       const apiPostType =
         postTypeMapping[postData.post_type] || postData.post_type;
@@ -100,27 +100,19 @@ export default function App() {
           console.log('글이 성공적으로 등록되었습니다!');
           alert('글이 성공적으로 등록되었습니다.');
 
-          // 등록 완료 후 뒤로가기 및 상태 갱신 트리거
-          onRegistered(); // 이전 컴포넌트에 상태 갱신 요청
           setTimeout(() => {
             navigation.goBack(); // 뒤로 가기
           }, 500); // 약간의 지연 추가
         }
       } catch (error) {
-        console.log('Error:', error);
+        console.log('게시글 등록 오류:', error.response);
       }
     } else {
       console.log('No data from WritePage');
     }
   };
-  // 글 작성 완료 후 새로고침
-  const [refresh, setRefresh] = React.useState(false);
 
-  const triggerRefresh = () => {
-    setRefresh(prev => !prev);
-  };
-
-  const fetchPutPost = async () => {
+  const fetchPutPost = async navigation => {
     if (modifyData) {
       const {
         postId,
@@ -134,9 +126,13 @@ export default function App() {
         isTemporarySave,
       } = modifyData;
       try {
-        await putPost(postId, {
-          category,
-          post_type,
+        const apiPostType =
+          postTypeMapping[modifyData.post_type] || modifyData.post_type;
+        const apiCategory =
+          categoryMapping[modifyData.category] || modifyData.category;
+        const response = await putPost(postId, {
+          category: apiCategory,
+          post_type: apiPostType,
           title,
           content,
           imgUrls: [],
@@ -144,6 +140,14 @@ export default function App() {
           isNotice: false,
           isTemporarySave: false,
         });
+        if (response.status === 201 || response.status === 200) {
+          console.log('글이 성공적으로 수정되었습니다!');
+          alert('글이 성공적으로 수정되었습니다.');
+
+          setTimeout(() => {
+            navigation.goBack();
+          }, 500);
+        }
       } catch (error) {
         console.error('게시글 수정 오류:', error);
       }
@@ -158,9 +162,7 @@ export default function App() {
         <Stack.Navigator initialRouteName="Tabs">
           <Stack.Screen
             name="Tabs"
-            component={props => (
-              <Tabs {...props} postData={postData} refresh={refresh} />
-            )}
+            component={props => <Tabs {...props} postData={postData} />}
             options={{headerShown: false}}
           />
           <Stack.Screen
@@ -175,7 +177,7 @@ export default function App() {
               headerLeft: () => <CustomBackButton navigation={navigation} />,
               headerRight: () => (
                 <TouchableOpacity
-                  onPress={() => handleRegister(navigation, triggerRefresh)}
+                  onPress={() => handleRegister(navigation)}
                   style={AppStyles.register_button}>
                   <View style={AppStyles.register_container}>
                     <Text style={AppStyles.register_text}>등록</Text>
@@ -203,10 +205,10 @@ export default function App() {
               headerLeft: () => <CustomBackButton navigation={navigation} />,
               headerRight: () => (
                 <TouchableOpacity
-                  onPress={() => fetchPutPost()}
+                  onPress={() => fetchPutPost(navigation)}
                   style={AppStyles.register_button}>
                   <View style={AppStyles.register_container}>
-                    <Text style={AppStyles.register_text}>등록</Text>
+                    <Text style={AppStyles.register_text}>수정</Text>
                   </View>
                 </TouchableOpacity>
               ),

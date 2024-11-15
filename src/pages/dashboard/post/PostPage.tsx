@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -12,7 +12,7 @@ import {
   TextInput,
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../../../../types';
 
@@ -123,9 +123,11 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     }
   };
 
-  useEffect(() => {
-    fetchGetPost();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchGetPost();
+    }, []),
+  );
 
   const fetchCreateLikePost = async () => {
     setPostLike(true);
