@@ -8,6 +8,7 @@ export default {
   primary_02: '#DA093E',
   primary_01: '#DA093E',
 
+  sub_05: '#FFB200',
   sub_04: '#FFDD56',
   sub_03: '#FEE892',
   sub_02: '#FFF1BB',

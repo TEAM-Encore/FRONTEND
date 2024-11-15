@@ -184,6 +184,7 @@ const HomePage: React.FC<HomePageProps> = () => {
               decelerationRate="fast"
               onMomentumScrollEnd={handleMomentumScrollEnd}
               scrollEventThrottle={16}
+              nestedScrollEnabled
             />
           </View>
           <View style={HomeStyles.containerPagination}>
@@ -321,6 +322,7 @@ const HomePage: React.FC<HomePageProps> = () => {
           keyExtractor={item => item.id}
           horizontal
           showsHorizontalScrollIndicator={false}
+          nestedScrollEnabled
         />
 
         <View style={HomeStyles.containerTitle}>
@@ -345,6 +347,7 @@ const HomePage: React.FC<HomePageProps> = () => {
           keyExtractor={item => item.id}
           horizontal
           showsHorizontalScrollIndicator={false}
+          nestedScrollEnabled
         />
 
         <View style={HomeStyles.containerAdImage}>
