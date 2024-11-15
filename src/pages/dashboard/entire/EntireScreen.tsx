@@ -4,6 +4,7 @@ import {SvgXml} from 'react-native-svg';
 import EntireStyles from './EntireStyles';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import CarouselHottest from '@/components/carousel/dashboard/CarouselHottest';
+import EntireList from './EntireList';
 
 const EntireScreen: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState<'최신순' | '인기순'>(
@@ -66,6 +67,10 @@ const EntireScreen: React.FC = () => {
             인기순
           </Text>
         </TouchableOpacity>
+      </View>
+
+      <View>
+        <EntireList selectedFilter={selectedFilter} />
       </View>
     </View>
   );

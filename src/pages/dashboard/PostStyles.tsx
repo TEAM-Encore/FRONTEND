@@ -1,10 +1,11 @@
 import {StyleSheet} from 'react-native';
 import Colors from '@/assets/colors/Colors';
-import {typography} from '../../../styles/typography';
+import {typography} from '../../styles/typography';
 
 const {subhead02, subhead03, body01, caption} = typography;
 
-const InformationStyles = StyleSheet.create({
+// 정보, 후기, 배우, 자유 게시판에서 사용되는 스타일
+const PostStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.gray_01,
@@ -30,6 +31,13 @@ const InformationStyles = StyleSheet.create({
     ...body01,
     color: '#8B8B8B',
   },
+  filter: {
+    ...subhead02,
+  },
+  tab_filter: {
+    ...body01,
+    color: Colors.gray_07,
+  },
 });
 
-export default InformationStyles;
+export default PostStyles;

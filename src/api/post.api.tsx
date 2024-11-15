@@ -1,6 +1,7 @@
 import httpApi from './http.api';
 
-export const PostDashboard = (
+// 게시글 작성
+export const PostPost = (
   category: string,
   post_type: string,
   title: string,
@@ -24,14 +25,37 @@ export const PostDashboard = (
   return httpApi.post(`/api/v1/post`, requestBody);
 };
 
-export const GetDashboard = (post_id: number) => {
+// 게시글 상세 조회
+export const GetPost = (post_id: number) => {
   return httpApi.get(`/api/v1/post/${post_id}`);
 };
 
-export const PutDashboard = (post_id: number) => {
+// 게시글 수정
+export const PutPost = (post_id: number) => {
   return httpApi.put(`/api/v1/post/${post_id}`);
 };
 
-export const DeleteDashboard = (post_id: number) => {
+// 게시글 삭제
+export const DeletePost = (post_id: number) => {
   return httpApi.delete(`/api/v1/post/${post_id}`);
+};
+
+// 게시글 페이징 조회
+export const GetPostList = (
+  pageable: object,
+  cursor?: number,
+  category?: string,
+  type?: string,
+  search_word?: string,
+) => {
+  const requestParams = {
+    cursor,
+    category,
+    type,
+    search_word,
+    pageable: JSON.stringify(pageable),
+  };
+  return httpApi.get(`/api/v1/post/list`, {
+    params: requestParams,
+  });
 };
