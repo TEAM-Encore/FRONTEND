@@ -11,13 +11,13 @@ const {subhead03, body01, caption} = typography;
 type PostProps = {
   postList: {
     id: string;
-    writer: string;
+    nickname: string;
     date: string;
     title: string;
     content: string;
     image?: any;
-    like: number;
-    comment: number;
+    like_count: number;
+    comment_count: number;
   }[];
 };
 
@@ -52,16 +52,20 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
                 <View style={styles.containerInfo}>
                   <View style={styles.containerRow}>
                     <Text style={styles.textIsWriterDate}>
-                      {item.writer} ·{' '}
+                      {item.nickname} ·
                     </Text>
                     <Text style={styles.textIsWriterDate}>{item.date}</Text>
                   </View>
 
                   <View style={styles.containerRow}>
                     <SvgXml xml={PostIcon.commentLike} />
-                    <Text style={styles.textLikeComment}>{item.like}</Text>
+                    <Text style={styles.textLikeComment}>
+                      {item.like_count}
+                    </Text>
                     <SvgXml xml={PostIcon.commentComment} />
-                    <Text style={styles.textLikeComment}>{item.comment}</Text>
+                    <Text style={styles.textLikeComment}>
+                      {item.comment_count}
+                    </Text>
                   </View>
                 </View>
               </View>
