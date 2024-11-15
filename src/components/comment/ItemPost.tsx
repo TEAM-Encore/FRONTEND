@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   FlatList,
   View,
@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
+import {usePostStore} from '../../store/usePostStore';
 
 const {subhead03, body01, caption} = typography;
 
@@ -66,6 +67,8 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
     }
   };
 
+  const imgUrls = usePostStore(state => state.imgUrls); // Zustand에서 모든 imgUrls 가져오기
+
   return (
     <FlatList
       data={postList}
@@ -79,6 +82,10 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
             ? {backgroundColor: '#FFEAE8', textColor: '#FF7163'}
             : {backgroundColor: '#FFE9DC', textColor: '#FF853E'};
 
+        // Zustand에서 현재 item.id에 해당하는 imgUrls 가져오기
+        const itemImgUrls = imgUrls[parseInt(item.id)] || []; // imgUrls가 없으면 빈 배열
+        const thumbnail = itemImgUrls.length > 0 ? itemImgUrls[0] : null; // 첫 번째 이미지
+
         return (
           <>
             <TouchableOpacity
@@ -86,7 +93,7 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
               onPress={() =>
                 navigation.navigate('PostPage', {postId: item.id})
               }>
-               {item.category !== '카테고리 미선택' && (
+              {item.category !== '카테고리 미선택' && (
                 <View
                   style={[
                     styles.containerCategory,
@@ -96,7 +103,7 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
                     {item.category}
                   </Text>
                 </View>
-                )}
+              )}
               <View style={styles.containerRow}>
                 <View style={{flex: 1}}>
                   <Text
@@ -136,8 +143,8 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
                     </View>
                   </View>
                 </View>
-                {item.thumbnail && (
-                  <Image style={styles.image} source={{uri: item.thumbnail}} />
+                {thumbnail && (
+                  <Image style={styles.image} source={{uri: thumbnail}} />
                 )}
               </View>
             </TouchableOpacity>

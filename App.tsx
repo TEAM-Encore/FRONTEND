@@ -14,6 +14,7 @@ import ModifyPage from './src/pages/write/ModifyPage';
 import SavePage from './src/pages/write/save/SavePage';
 
 import {createPost, putPost} from './src/api/post.api';
+import {usePostStore} from './src/store/usePostStore';
 
 interface PostData {
   title: string;
@@ -56,6 +57,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 export default function App() {
   const [postData, setPostData] = React.useState<PostData | null>(null);
   const [modifyData, setModifyData] = React.useState<ModifyData | null>(null);
+  const setPostResponse = usePostStore(state => state.setPostResponse); // Zustand의 상태 업데이트 함수
 
   const postTypeMapping: Record<string, string> = {
     '게시판 선택 안함': 'NO_SELECT',
@@ -68,21 +70,31 @@ export default function App() {
   const categoryMapping: Record<string, string> = {
     '카테고리 선택': 'NO_SELECT',
     '선택 안함': 'NO_SELECT',
+    '오페라 글라스': 'OPERA_GLASS_RENTAL',
+    '뮤지컬 용어': 'MUSICAL_TERMS',
+    이벤트: 'EVENTS',
     '시야 후기': 'VIEW_REVIEW',
     '굿즈 후기': 'GOODS_REVIEW',
     '공연 감상': 'PERFORMANCE_REVIEW',
   };
 
   const handleRegister = async (navigation, onRegistered) => {
+    const {setPostResponse, setImgUrls} = usePostStore.getState();
+
     if (postData) {
       const apiPostType =
         postTypeMapping[postData.post_type] || postData.post_type;
       const apiCategory =
         categoryMapping[postData.category] || postData.category;
 
-      console.log('전달받은 데이터: ', postData);
-      console.log('PostType: ', apiPostType);
-      console.log('Category: ', apiCategory);
+      console.log('전송 데이터: ', {
+        category: apiCategory,
+        post_type: apiPostType,
+        title: postData.title,
+        content: postData.content,
+        hashTags: postData.hashTags,
+        imgUrls: postData.imgUrls,
+      });
 
       try {
         const response = await createPost(
@@ -93,26 +105,33 @@ export default function App() {
           postData.hashTags,
           postData.imgUrls,
         );
-        console.log('API RESPONSE: ', response.data);
 
-        // 등록 성공 후 처리
+        console.log('서버 응답: ', response.data);
+
+        setPostResponse(response.data);
+
+        if (response.data?.data) {
+          setImgUrls(response.data.data, postData.imgUrls);
+        }
+
         if (response.status === 201 || response.status === 200) {
           console.log('글이 성공적으로 등록되었습니다!');
           alert('글이 성공적으로 등록되었습니다.');
-
-          // 등록 완료 후 뒤로가기 및 상태 갱신 트리거
-          onRegistered(); // 이전 컴포넌트에 상태 갱신 요청
-          setTimeout(() => {
-            navigation.goBack(); // 뒤로 가기
-          }, 500); // 약간의 지연 추가
+          onRegistered();
+          setTimeout(() => navigation.goBack(), 500);
         }
       } catch (error) {
-        console.log('Error:', error);
+        if (error.response) {
+          console.error('서버 오류 응답: ', error.response.data);
+        } else {
+          console.error('네트워크 또는 기타 오류: ', error.message);
+        }
       }
     } else {
-      console.log('No data from WritePage');
+      console.error('postData가 비어 있습니다.');
     }
   };
+
   // 글 작성 완료 후 새로고침
   const [refresh, setRefresh] = React.useState(false);
 
