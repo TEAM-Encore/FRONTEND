@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList, View, Image, Text, StyleSheet} from 'react-native';
+import moment from 'moment';
 import {SvgXml} from 'react-native-svg';
-
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
@@ -12,17 +12,45 @@ type PostProps = {
   postList: {
     id: string;
     nickname: string;
-    date: string;
     title: string;
     content: string;
     image?: any;
     like_count: number;
     comment_count: number;
     category: string;
+    created_at: string;
   }[];
 };
 
 const ItemPost: React.FC<PostProps> = ({postList}) => {
+  const getTimeDifference = (created_at: string): string => {
+    const created = moment(created_at, moment.ISO_8601);
+
+    // 날짜 유효성 검증
+    if (!created.isValid()) {
+      console.error('Invalid date format:', created_at);
+      return '알 수 없음';
+    }
+
+    const now = moment();
+    const duration = moment.duration(now.diff(created));
+
+    const minutes = duration.asMinutes();
+    const hours = duration.asHours();
+    const days = duration.asDays();
+
+    if (minutes < 60) {
+      // 60분 이내라면 분 단위로 표시
+      return ` ${Math.floor(minutes)}분 전`;
+    } else if (hours < 24) {
+      // 24시간 이내라면 시간 단위로 표시
+      return ` ${Math.floor(hours)}시간 전`;
+    } else {
+      // 24시간 이상이라면 일 단위로 표시
+      return ` ${Math.floor(days)}일 전`;
+    }
+  };
+
   return (
     <FlatList
       data={postList}
@@ -70,7 +98,9 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
                       <Text style={styles.textIsWriterDate}>
                         {item.nickname} ·
                       </Text>
-                      <Text style={styles.textIsWriterDate}>{item.date}</Text>
+                      <Text style={styles.textIsWriterDate}>
+                        {getTimeDifference(item.created_at)}
+                      </Text>
                     </View>
 
                     <View style={styles.containerRow}>
