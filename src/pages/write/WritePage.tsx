@@ -39,6 +39,7 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
   const [dashboardModalVisible, setDashboardModalVisible] = useState(false);
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
+  const [categoryDisabled, setCategoryDisabled] = useState(true); // 카테고리 활성화 여부
 
   const dashboardList = [
     '게시판 선택 안함',
@@ -47,22 +48,50 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
     '배우 게시판',
     '자유 게시판',
   ];
-  const categoryList = ['선택 안함', '시야 후기', '굿즈 후기', '공연 감상'];
-
   const pressDashboard = () => {
     setDashboardModalVisible(true);
     setModalTitle('게시판');
   };
 
+  const infoCategoryList = [
+    '선택 안함',
+    '오페라 글라스',
+    '뮤지컬 용어',
+    '이벤트',
+  ];
+  const reviewCategoryList = [
+    '선택 안함',
+    '시야 후기',
+    '굿즈 후기',
+    '공연 감상',
+  ];
+  const [categoryList, setCategoryList] = useState(infoCategoryList);
+
+  // 게시판 선택에 따라 카테고리 선택 활성화/비활성화
+  useEffect(() => {
+    if (post_type === '정보 게시판') {
+      setCategoryDisabled(false); // 활성화
+      setCategoryList(infoCategoryList);
+    } else if (post_type == '후기 게시판') {
+      setCategoryDisabled(false);
+      setCategoryList(reviewCategoryList);
+    } else {
+      setCategoryDisabled(true); // 비활성화
+      setCategory('카테고리 선택'); // 기본값으로 초기화
+    }
+  }, [post_type]);
+
   const pressCategory = () => {
-    setCategoryModalVisible(true);
-    setModalTitle('카테고리');
+    if (!categoryDisabled) {
+      setCategoryModalVisible(true);
+      setModalTitle('카테고리');
+    }
   };
 
   // 해시태그 추출하는 함수
   const handleContentChange = (text: string) => {
     setContent(text);
-    setHashTags(text.match(/#[^\s#]+/g) || []); // 해시태그 감지
+    setHashTags(text.match(/#[^\s#]+/g) || []);
     console.log('해시태그:', hashTags);
   };
 
@@ -100,9 +129,21 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
             </View>
 
             <View style={WriteStyles.selectField}>
-              <Text style={WriteStyles.fieldText}>{category}</Text>
-              <TouchableOpacity onPress={pressCategory}>
-                <SvgXml xml={DashboardIcon.downArrow} />
+              <Text
+                style={[
+                  WriteStyles.fieldText,
+                  categoryDisabled && {color: '#BDBDBD'}, // 비활성화 스타일 적용
+                ]}>
+                {category}
+              </Text>
+              <TouchableOpacity
+                onPress={pressCategory}
+                disabled={categoryDisabled} // 비활성화 상태 반영
+              >
+                <SvgXml
+                  xml={DashboardIcon.downArrow}
+                  style={categoryDisabled && {opacity: 0.5}} // 비활성화 스타일
+                />
               </TouchableOpacity>
 
               <ModalCategory
