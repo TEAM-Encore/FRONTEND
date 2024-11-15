@@ -18,6 +18,7 @@ type PostProps = {
     image?: any;
     like_count: number;
     comment_count: number;
+    category: string;
   }[];
 };
 
@@ -26,61 +27,79 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
     <FlatList
       data={postList}
       keyExtractor={item => item.id}
-      renderItem={({item, index}) => (
-        <>
-          <View style={styles.container}>
-            <View style={styles.containerCategory}>
-              <Text style={styles.textCategory}>이벤트</Text>
-            </View>
-            <View style={styles.containerRow}>
-              <View style={{flex: 1}}>
-                <Text
-                  style={styles.textTitle}
-                  numberOfLines={1}
-                  ellipsizeMode="tail">
-                  {item.title}
+      renderItem={({item, index}) => {
+        // 카테고리 색상 지정
+        const style =
+          index % 3 === 0
+            ? {backgroundColor: Colors.sub_01, textColor: Colors.sub_05}
+            : index % 3 === 1
+            ? {backgroundColor: '#FFEAE8', textColor: '#FF7163'}
+            : {backgroundColor: '#FFE9DC', textColor: '#FF853E'};
+
+        return (
+          <>
+            <View style={styles.container}>
+              <View
+                style={[
+                  styles.containerCategory,
+                  {backgroundColor: style.backgroundColor},
+                ]}>
+                <Text style={[styles.textCategory, {color: style.textColor}]}>
+                  {item.category}
                 </Text>
-                <Text
-                  style={styles.textContent}
-                  numberOfLines={1}
-                  ellipsizeMode="tail">
-                  {item.content}
-                </Text>
+              </View>
+              <View style={styles.containerRow}>
+                <View style={{flex: 1}}>
+                  <Text
+                    style={styles.textTitle}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
+                    {item.title}
+                  </Text>
+                  <Text
+                    style={styles.textContent}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
+                    {item.content}
+                  </Text>
 
-                <View style={styles.line} />
+                  <View style={styles.line} />
 
-                <View style={styles.containerInfo}>
-                  <View style={styles.containerRow}>
-                    <Text style={styles.textIsWriterDate}>
-                      {item.nickname} ·
-                    </Text>
-                    <Text style={styles.textIsWriterDate}>{item.date}</Text>
-                  </View>
+                  <View style={styles.containerInfo}>
+                    <View style={styles.containerRow}>
+                      <Text style={styles.textIsWriterDate}>
+                        {item.nickname} ·
+                      </Text>
+                      <Text style={styles.textIsWriterDate}>{item.date}</Text>
+                    </View>
 
-                  <View style={styles.containerRow}>
-                    <SvgXml xml={PostIcon.commentLike} />
-                    <Text style={styles.textLikeComment}>
-                      {item.like_count}
-                    </Text>
-                    <SvgXml xml={PostIcon.commentComment} />
-                    <Text style={styles.textLikeComment}>
-                      {item.comment_count}
-                    </Text>
+                    <View style={styles.containerRow}>
+                      <SvgXml xml={PostIcon.commentLike} />
+                      <Text style={styles.textLikeComment}>
+                        {item.like_count}
+                      </Text>
+                      <SvgXml xml={PostIcon.commentComment} />
+                      <Text style={styles.textLikeComment}>
+                        {item.comment_count}
+                      </Text>
+                    </View>
                   </View>
                 </View>
+                {item.image && (
+                  <Image style={styles.image} source={item.image} />
+                )}
               </View>
-              {item.image && <Image style={styles.image} source={item.image} />}
             </View>
-          </View>
 
-          <View style={styles.containerRow}></View>
-          {index < postList.length - 1 ? (
-            <View style={styles.line2} />
-          ) : (
-            <View style={{marginBottom: 16}} />
-          )}
-        </>
-      )}
+            <View style={styles.containerRow}></View>
+            {index < postList.length - 1 ? (
+              <View style={styles.line2} />
+            ) : (
+              <View style={{marginBottom: 16}} />
+            )}
+          </>
+        );
+      }}
     />
   );
 };
@@ -100,7 +119,6 @@ const styles = StyleSheet.create({
     borderRadius: 4.27,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFE9DC',
     marginBottom: 22,
   },
   textCategory: {
@@ -108,7 +126,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 18,
     letterSpacing: -0.3,
-    color: '#FF853E',
   },
   textTitle: {
     ...subhead03,
