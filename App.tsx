@@ -8,18 +8,11 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import {RootStackParamList} from './types';
 import Tabs from './src/components/navigation/Tabs';
-import PremiumWritePage from './src/pages/write/review/PremiumWritePage';
-import WritePage from './src/pages/write/post/WritePage';
+import WritePage from './src/pages/write/WritePage';
 import PostPage from './src/pages/dashboard/post/PostPage';
-import ModifyPage from './src/pages/write/post/ModifyPage';
 import SavePage from './src/pages/write/save/SavePage';
-import DashboardSearchPage from './src/pages/dashboard/search/DashboardSearchPage';
-import DashboardSearchDefaultPage from './src/pages/search/DashboardSearchDefaultPage';
-import HomeSearchPage from './src/pages/home/search/HomeSearchPage';
-import HomeSearchDefaultPage from './src/pages/search/HomeSearchDefaultPage';
 
-import {createPost, putPost} from './src/api/post.api';
-import {ensureAsyncStorageDir} from './src/util/ensureAsyncStorageDir';
+import {createPost} from './src/api/post.api';
 
 interface PostData {
   title: string;
@@ -27,19 +20,6 @@ interface PostData {
   post_type: string;
   category: string;
   hashTags: string[];
-  imgUrls: string[];
-}
-
-interface ModifyData {
-  postId: number;
-  category: string;
-  post_type: string;
-  title: string;
-  content: string;
-  imgUrls?: string[];
-  hashTags: string[];
-  isNotice?: boolean;
-  isTemporarySave?: boolean;
 }
 
 // 글 작성 페이지 내 뒤로가기 버튼
@@ -57,35 +37,13 @@ function CustomBackButton({navigation}) {
   );
 }
 
-// 글 작성 페이지 내 x 버튼
-function CustomCloseButton({navigation}) {
-  return (
-    <TouchableOpacity
-      onPress={() => navigation.goBack()}
-      style={AppStyles.close_button}>
-      <SvgXml
-        xml={`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        `}
-      />
-    </TouchableOpacity>
-  );
-}
-
 const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
   const [postData, setPostData] = React.useState<PostData | null>(null);
-  const [modifyData, setModifyData] = React.useState<ModifyData | null>(null);
-
-  React.useEffect(() => {
-    ensureAsyncStorageDir();
-  }, []);
 
   const postTypeMapping: Record<string, string> = {
-    '게시판 선택 안함': 'NO_SELECT',
+    '게시판 선택 안함': '',
     '정보 게시판': 'INFORMATION',
     '후기 게시판': 'REVIEW',
     '배우 게시판': 'ACTOR',
@@ -93,31 +51,22 @@ export default function App() {
   };
 
   const categoryMapping: Record<string, string> = {
-    '카테고리 선택': 'NO_SELECT',
-    '선택 안함': 'NO_SELECT',
-    '오페라 글라스': 'OPERA_GLASS_RENTAL',
-    '뮤지컬 용어': 'MUSICAL_TERMS',
-    이벤트: 'EVENTS',
+    '선택 안함': '',
     '시야 후기': 'VIEW_REVIEW',
     '굿즈 후기': 'GOODS_REVIEW',
     '공연 감상': 'PERFORMANCE_REVIEW',
   };
 
-  const handleRegister = async navigation => {
+  const handleRegister = async () => {
     if (postData) {
       const apiPostType =
         postTypeMapping[postData.post_type] || postData.post_type;
       const apiCategory =
         categoryMapping[postData.category] || postData.category;
 
-      // console.log('전송 데이터: ', {
-      //   category: apiCategory,
-      //   post_type: apiPostType,
-      //   title: postData.title,
-      //   content: postData.content,
-      //   hashTags: postData.hashTags,
-      //   imgUrls: postData.imgUrls,
-      // });
+      console.log('전달받은 데이터: ', postData);
+      console.log('PostType: ', apiPostType);
+      console.log('Category: ', apiCategory);
 
       try {
         const response = await createPost(
@@ -126,73 +75,25 @@ export default function App() {
           postData.title,
           postData.content,
           postData.hashTags,
-          postData.imgUrls,
         );
-
-        // console.log('서버 응답: ', response.data);
-
-        if (response?.data?.code === 1000 && response?.data?.data?.post_id) {
-          const postId = response.data.data.post_id;
-
-          console.log('글이 성공적으로 등록되었습니다!');
-          alert('글이 성공적으로 등록되었습니다.');
-
-          setTimeout(() => {
-            navigation.navigate('PostPage', {postId});
-          }, 0);
+        console.log('API RESPONSE: ', response.data);
+      } catch (error) {
+        if (error.response) {
+          // 서버가 응답했지만, 상태 코드가 2xx 범위에 있지 않음
+          console.log('Error Response Data:', error.response.data);
+          console.log('Error Response Status:', error.response.status);
+          console.log('Error Response Headers:', error.response.headers);
+        } else if (error.request) {
+          // 요청이 이루어졌으나, 응답을 받지 못함
+          console.log('Error Request:', error.request);
         } else {
-          alert('게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.');
+          // 요청 설정 중 에러가 발생한 경우
+          console.log('Error Message:', error.message);
         }
-      } catch (error) {
-        alert('게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.');
+        console.log('Error Config:', error.config);
       }
     } else {
-      console.error('postData가 비어 있습니다.');
-      alert('등록할 데이터가 없습니다.');
-    }
-  };
-
-  const fetchPutPost = async navigation => {
-    if (modifyData) {
-      const {
-        postId,
-        category,
-        post_type,
-        title,
-        content,
-        imgUrls,
-        hashTags,
-        isNotice,
-        isTemporarySave,
-      } = modifyData;
-      try {
-        const apiPostType =
-          postTypeMapping[modifyData.post_type] || modifyData.post_type;
-        const apiCategory =
-          categoryMapping[modifyData.category] || modifyData.category;
-        const response = await putPost(postId, {
-          category: apiCategory,
-          post_type: apiPostType,
-          title,
-          content,
-          imgUrls: [],
-          hashTags,
-          isNotice: false,
-          isTemporarySave: false,
-        });
-        if (response.status === 201 || response.status === 200) {
-          console.log('글이 성공적으로 수정되었습니다!');
-          alert('글이 성공적으로 수정되었습니다.');
-
-          setTimeout(() => {
-            navigation.goBack();
-          }, 500);
-        }
-      } catch (error) {
-        console.error('게시글 수정 오류:', error);
-      }
-    } else {
-      console.log('No data from ModifyPage');
+      console.log('No data from WritePage');
     }
   };
 
@@ -202,44 +103,9 @@ export default function App() {
         <Stack.Navigator initialRouteName="Tabs">
           <Stack.Screen
             name="Tabs"
-            component={props => <Tabs {...props} postData={postData} />}
+            component={Tabs}
             options={{headerShown: false}}
           />
-          {/* 홈 검색 페이지 */}
-          <Stack.Screen
-            name="HomeSearchPage"
-            component={HomeSearchPage}
-            options={{
-              headerShown: false,
-              cardStyle: {backgroundColor: '#FBFBFB'},
-            }}
-          />
-          <Stack.Screen
-            name="HomeSearchDefaultPage"
-            component={HomeSearchDefaultPage}
-            options={{
-              headerShown: false,
-              cardStyle: {backgroundColor: '#FBFBFB'},
-            }}
-          />
-
-          {/* 프리미엄 후기 작성 페이지*/}
-          <Stack.Screen
-            name="PremiumWritePage"
-            options={({navigation}) => ({
-              headerStyle: {
-                height: 123,
-                backgroundColor: '#FBFBFB',
-              },
-              title: '프리미엄 리뷰 작성',
-              headerTitleStyle: {...AppStyles.title},
-              headerLeft: () => <CustomBackButton navigation={navigation} />,
-              headerRight: () => <CustomCloseButton navigation={navigation} />,
-            })}>
-            {props => <PremiumWritePage />}
-          </Stack.Screen>
-
-          {/* 게시판 작성 페이지*/}
           <Stack.Screen
             name="WritePage"
             options={({navigation}) => ({
@@ -252,7 +118,7 @@ export default function App() {
               headerLeft: () => <CustomBackButton navigation={navigation} />,
               headerRight: () => (
                 <TouchableOpacity
-                  onPress={() => handleRegister(navigation)}
+                  onPress={() => handleRegister()}
                   style={AppStyles.register_button}>
                   <View style={AppStyles.register_container}>
                     <Text style={AppStyles.register_text}>등록</Text>
@@ -262,37 +128,12 @@ export default function App() {
             })}>
             {props => <WritePage {...props} setPostData={setPostData} />}
           </Stack.Screen>
-          {/* 게시글 상세 페이지 */}
           <Stack.Screen
             name="PostPage"
             component={PostPage}
-            initialParams={{postId: 5}}
+            initialParams={{postId: 1}}
             options={{headerShown: false}}
           />
-          {/* 게시글 수정 페이지 */}
-          <Stack.Screen
-            name="ModifyPage"
-            options={({navigation}) => ({
-              headerStyle: {
-                height: 123,
-                backgroundColor: '#FBFBFB',
-              },
-              title: '글 수정하기',
-              headerTitleStyle: {...AppStyles.title},
-              headerLeft: () => <CustomBackButton navigation={navigation} />,
-              headerRight: () => (
-                <TouchableOpacity
-                  onPress={() => fetchPutPost(navigation)}
-                  style={AppStyles.register_button}>
-                  <View style={AppStyles.register_container}>
-                    <Text style={AppStyles.register_text}>수정</Text>
-                  </View>
-                </TouchableOpacity>
-              ),
-            })}>
-            {props => <ModifyPage {...props} setModifyData={setModifyData} />}
-          </Stack.Screen>
-          {/* 게시글 임시 저장 목록 페이지 */}
           <Stack.Screen
             name="SavePage"
             component={SavePage}
@@ -305,23 +146,6 @@ export default function App() {
               headerTitleStyle: {...AppStyles.title},
               headerLeft: () => <CustomBackButton navigation={navigation} />,
             })}
-          />
-          {/* 게시판 검색 페이지 */}
-          <Stack.Screen
-            name="DashboardSearchPage"
-            component={DashboardSearchPage}
-            options={{
-              headerShown: false,
-              cardStyle: {backgroundColor: '#FBFBFB'},
-            }}
-          />
-          <Stack.Screen
-            name="DashboardSearchDefaultPage"
-            component={DashboardSearchDefaultPage}
-            options={{
-              headerShown: false,
-              cardStyle: {backgroundColor: '#FBFBFB'},
-            }}
           />
         </Stack.Navigator>
       </NavigationContainer>

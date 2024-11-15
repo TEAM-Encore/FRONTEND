@@ -1,27 +1,19 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet, Alert, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
-import {useNavigation} from '@react-navigation/native';
 
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
 import {deletePost} from '@/api/post.api';
-import {deleteComment} from '@/api/comment.api';
-import CheckTempModal from '@/components/alertModal/CheckTempModal';
 
 const {subhead03} = typography;
-
-type NavigationProp = {
-  navigate: (screen: 'ModifyPage') => void;
-};
 
 type ModalModifyDeleteProps = {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
   position: any;
   postId: number;
-  commentId: number | null;
-  onNavigation: any | null;
+  onNavigation: any;
 };
 
 const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
@@ -29,28 +21,12 @@ const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
   setModalVisible,
   position,
   postId,
-  commentId,
   onNavigation,
 }) => {
-  const navigation = useNavigation<NavigationProp>();
-  const [checkTempModalVisible, setCheckTempModalVisible] = useState(false);
-  const [selectedTitle, setSelectedTitle] = useState('');
-  const [selectedSubTitle, setSelectedSubtitle] = useState('');
-  const [topButton, setTopButton] = useState('');
-  const [bottomButton, setBottomButton] = useState('');
-
-  const openCheckTempModal = () => {
-    setSelectedTitle('게시글을 삭제할까요?');
-    setSelectedSubtitle('게시글이 삭제되며,\n이는 돌이킬 수 없습니다.');
-    setTopButton('삭제하기');
-    setBottomButton('취소하기');
-    setCheckTempModalVisible(true);
-  };
-
   const fetchDeletePost = async (postId: number) => {
     try {
-      setModalVisible(false);
-      await deletePost(postId);
+      const response = await deletePost(postId);
+      console.log(response.data);
       onNavigation.goBack();
     } catch (error) {
       console.error('게시글 삭제 오류:', error);
@@ -58,34 +34,21 @@ const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
   };
 
   const handleDelete = () => {
-    if (postId === null) {
-      return;
-    }
-    openCheckTempModal();
-  };
-
-  const openCheckTempModalComment = () => {
-    setSelectedTitle('댓글을 삭제할까요?');
-    setSelectedSubtitle('댓글이 삭제되며,\n이는 돌이킬 수 없습니다.');
-    setTopButton('삭제하기');
-    setBottomButton('취소하기');
-    setCheckTempModalVisible(true);
-  };
-
-  const fetchDeleteComment = async (postId: number, commentId: number) => {
-    try {
-      setModalVisible(false);
-      await deleteComment(postId, commentId);
-    } catch (error) {
-      console.error('댓글 삭제 오류:', error);
-    }
-  };
-
-  const handleCommentDelete = () => {
-    if (postId === null || commentId === null) {
-      return;
-    }
-    openCheckTempModalComment();
+    setModalVisible(false);
+    Alert.alert(
+      '게시글을 삭제할까요?',
+      '게시글이 삭제되며, 이는 돌이킬 수 없습니다.',
+      [
+        {text: '취소하기', style: 'cancel'},
+        {
+          text: '삭제하기',
+          onPress: () => {
+            fetchDeletePost(postId);
+          },
+        },
+      ],
+      {cancelable: false},
+    );
   };
 
   return (
@@ -103,31 +66,13 @@ const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
       animationIn="fadeIn"
       animationOut="fadeOut">
       <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('ModifyPage', {postId: postId});
-            setModalVisible(false);
-          }}>
+        <TouchableOpacity>
           <Text style={styles.text}>수정</Text>
         </TouchableOpacity>
         <View style={styles.line} />
-        <TouchableOpacity
-          onPress={commentId ? handleCommentDelete : handleDelete}>
+        <TouchableOpacity onPress={handleDelete}>
           <Text style={[styles.text, {color: '#FF6464'}]}>삭제</Text>
         </TouchableOpacity>
-        <CheckTempModal
-          modalVisible={checkTempModalVisible}
-          setModalVisible={setCheckTempModalVisible}
-          title={selectedTitle}
-          subTitle={selectedSubTitle}
-          topButton={topButton}
-          bottomButton={bottomButton}
-          topButtonAction={() =>
-            commentId
-              ? fetchDeleteComment(postId, commentId)
-              : fetchDeletePost(postId)
-          }
-        />
       </View>
     </Modal>
   );
