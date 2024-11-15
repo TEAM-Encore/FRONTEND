@@ -20,6 +20,7 @@ import Colors from '@/assets/colors/Colors';
 import PostStyles from '@/pages/dashboard/post/PostStyles';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import {getPost} from '@/api/post.api';
+import {getComments, createComment} from '@/api/comment.api';
 import {timeAgo} from '@/util/timeAgo';
 
 import ModalModifyDelete from '@/components/modifyDeleteModal/ModalModifyDelete';
@@ -50,10 +51,22 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     num_of_comment?: number;
     num_of_like?: number;
   }>({});
+  const [commentData, setCommentData] = useState<
+    {
+      id: number;
+      is_my_comment: boolean;
+      is_post_owner: boolean;
+      created_at: string;
+      modified_at: string;
+      content: string;
+      post_id: number;
+    }[]
+  >([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalPosition, setModalPosition] = useState<ModalPosition | null>(
     null,
   );
+  const [valueComment, onChangeComment] = useState('');
 
   const categoryMapping: Record<
     string,
@@ -73,6 +86,12 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     return categoryMapping[category];
   };
 
+  const category = getMappedCategory(postData.category);
+
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
   const fetchGetPost = async () => {
     try {
       const response = await getPost(postId);
@@ -85,6 +104,31 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
   useEffect(() => {
     fetchGetPost();
   }, []);
+
+  const fetchGetComments = async () => {
+    try {
+      const response = await getComments(postId);
+      setCommentData(response.data.data);
+    } catch (error) {
+      console.error('댓글 조회 오류:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGetComments();
+  }, [commentData]);
+
+  const fetchCreateComment = async () => {
+    try {
+      if (valueComment.trim() === '') {
+        return;
+      }
+      await createComment(postId, {content: valueComment, parent_id: null});
+      onChangeComment('');
+    } catch (error) {
+      console.error('댓글 생성 오류:', error);
+    }
+  };
 
   const handleIconPress = () => {
     setModalVisible(true);
@@ -118,36 +162,6 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     },
   ];
 
-  const commentList = [
-    {
-      id: '1',
-      writer: '뮤사랑',
-      isWriter: true,
-      date: '11분전',
-      comment:
-        '벤자민 회전문 돌아서 궁금하신건 뭐든 물어봐 주시면 답해드릴게요!',
-      like: 3,
-      reply: 1,
-    },
-    {
-      id: '2',
-      writer: '뮤뮤',
-      isWriter: false,
-      date: '방금전',
-      comment: '아주 유익하네요!',
-      like: 10,
-      reply: 0,
-    },
-  ];
-
-  const [valueComment, onChangeComment] = useState('');
-
-  const category = getMappedCategory(postData.category);
-
-  const handleGoBack = () => {
-    navigation.goBack();
-  };
-
   return (
     <>
       <SafeAreaView style={PostStyles.container}>
@@ -171,6 +185,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
                   setModalVisible={setModalVisible}
                   position={modalPosition}
                   postId={postId}
+                  commentId={null}
                   onNavigation={navigation}
                 />
               )}
@@ -268,7 +283,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
             </View>
           </View>
 
-          <ItemComment commentList={commentList} />
+          <ItemComment commentList={commentData} />
         </ScrollView>
       </SafeAreaView>
       <View style={PostStyles.white} />
@@ -283,7 +298,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
             onChangeText={text => onChangeComment(text)}
             value={valueComment}
           />
-          <TouchableOpacity>
+          <TouchableOpacity onPress={fetchCreateComment}>
             <Text style={PostStyles.textCommentSend}>등록</Text>
           </TouchableOpacity>
         </View>

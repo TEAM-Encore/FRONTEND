@@ -6,6 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
 import {deletePost} from '@/api/post.api';
+import {deleteComment} from '@/api/comment.api';
 
 const {subhead03} = typography;
 
@@ -17,8 +18,9 @@ type ModalModifyDeleteProps = {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
   position: any;
-  postId: number;
-  onNavigation: any;
+  postId: number | null;
+  commentId: number | null;
+  onNavigation: any | null;
 };
 
 const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
@@ -26,6 +28,7 @@ const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
   setModalVisible,
   position,
   postId,
+  commentId,
   onNavigation,
 }) => {
   const navigation = useNavigation<NavigationProp>();
@@ -40,6 +43,9 @@ const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
   };
 
   const handleDelete = () => {
+    if (postId === null) {
+      return;
+    }
     setModalVisible(false);
     Alert.alert(
       '게시글을 삭제할까요?',
@@ -50,6 +56,35 @@ const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
           text: '삭제하기',
           onPress: () => {
             fetchDeletePost(postId);
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const fetchDeleteComment = async (postId: number, commentId: number) => {
+    try {
+      await deleteComment(postId, commentId);
+    } catch (error) {
+      console.error('댓글 삭제 오류:', error);
+    }
+  };
+
+  const handleCommentDelete = () => {
+    if (postId === null || commentId === null) {
+      return;
+    }
+    setModalVisible(false);
+    Alert.alert(
+      '댓글을 삭제할까요?',
+      '댓글이 삭제되며, 이는 돌이킬 수 없습니다.',
+      [
+        {text: '취소하기', style: 'cancel'},
+        {
+          text: '삭제하기',
+          onPress: () => {
+            fetchDeleteComment(postId, commentId);
           },
         },
       ],
@@ -74,13 +109,14 @@ const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('ModifyPage', {postId});
+            navigation.navigate('ModifyPage', {postId: postId});
             setModalVisible(false);
           }}>
           <Text style={styles.text}>수정</Text>
         </TouchableOpacity>
         <View style={styles.line} />
-        <TouchableOpacity onPress={handleDelete}>
+        <TouchableOpacity
+          onPress={commentId ? handleCommentDelete : handleDelete}>
           <Text style={[styles.text, {color: '#FF6464'}]}>삭제</Text>
         </TouchableOpacity>
       </View>

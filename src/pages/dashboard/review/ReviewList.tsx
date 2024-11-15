@@ -56,8 +56,6 @@ const ReviewList: React.FC<ReviewListProps> = ({selectedFilter, category}) => {
     fetchPostList();
   }, [selectedFilter, category]);
 
-  return (
-    <>{loading ? <Text>Loading...</Text> : <ItemPost postList={postList} />}</>
-  );
+  return <>{loading ? <></> : <ItemPost postList={postList} />}</>;
 };
 export default ReviewList;
