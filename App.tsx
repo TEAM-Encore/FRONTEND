@@ -2,17 +2,18 @@ import * as React from 'react';
 import AppStyles from './AppStyles';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
-
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
+import {RootStackParamList} from './types';
 import Tabs from './src/components/navigation/Tabs';
 import WritePage from './src/pages/write/WritePage';
 import PostPage from './src/pages/dashboard/post/PostPage';
+import ModifyPage from './src/pages/write/ModifyPage';
 import SavePage from './src/pages/write/save/SavePage';
 
-import {PostPost} from './src/api/post.api.tsx';
+import {createPost, putPost} from './src/api/post.api';
 
 interface PostData {
   title: string;
@@ -20,6 +21,18 @@ interface PostData {
   post_type: string;
   category: string;
   hashTags: string[];
+}
+
+interface ModifyData {
+  postId: number;
+  category: string;
+  post_type: string;
+  title: string;
+  content: string;
+  imgUrls?: string[];
+  hashTags: string[];
+  isNotice?: boolean;
+  isTemporarySave?: boolean;
 }
 
 // 글 작성 페이지 내 뒤로가기 버튼
@@ -37,10 +50,11 @@ function CustomBackButton({navigation}) {
   );
 }
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
   const [postData, setPostData] = React.useState<PostData | null>(null);
+  const [modifyData, setModifyData] = React.useState<ModifyData | null>(null);
 
   const postTypeMapping: Record<string, string> = {
     '게시판 선택 안함': '',
@@ -69,7 +83,7 @@ export default function App() {
       console.log('Category: ', apiCategory);
 
       try {
-        const response = await PostPost(
+        const response = await createPost(
           apiCategory,
           apiPostType,
           postData.title,
@@ -97,12 +111,44 @@ export default function App() {
     }
   };
 
+  const fetchPutPost = async () => {
+    if (modifyData) {
+      const {
+        postId,
+        category,
+        post_type,
+        title,
+        content,
+        imgUrls,
+        hashTags,
+        isNotice,
+        isTemporarySave,
+      } = modifyData;
+      try {
+        await putPost(postId, {
+          category,
+          post_type,
+          title,
+          content,
+          imgUrls: [],
+          hashTags,
+          isNotice: false,
+          isTemporarySave: false,
+        });
+      } catch (error) {
+        console.error('게시글 수정 오류:', error);
+      }
+    } else {
+      console.log('No data from ModifyPage');
+    }
+  };
+
   return (
     <SafeAreaProvider>
       <NavigationContainer independent={true}>
         <Stack.Navigator initialRouteName="Tabs">
           <Stack.Screen
-            name=" "
+            name="Tabs"
             component={Tabs}
             options={{headerShown: false}}
           />
@@ -131,8 +177,32 @@ export default function App() {
           <Stack.Screen
             name="PostPage"
             component={PostPage}
+            initialParams={{postId: 3}}
             options={{headerShown: false}}
           />
+          <Stack.Screen
+            name="ModifyPage"
+            // component={ModifyPage}
+            options={({navigation}) => ({
+              headerStyle: {
+                height: 123,
+                backgroundColor: '#FBFBFB',
+              },
+              title: '글 수정하기',
+              headerTitleStyle: {...AppStyles.title},
+              headerLeft: () => <CustomBackButton navigation={navigation} />,
+              headerRight: () => (
+                <TouchableOpacity
+                  onPress={() => fetchPutPost()}
+                  style={AppStyles.register_button}>
+                  <View style={AppStyles.register_container}>
+                    <Text style={AppStyles.register_text}>등록</Text>
+                  </View>
+                </TouchableOpacity>
+              ),
+            })}>
+            {props => <ModifyPage {...props} setModifyData={setModifyData} />}
+          </Stack.Screen>
           <Stack.Screen
             name="SavePage"
             component={SavePage}

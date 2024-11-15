@@ -10,6 +10,8 @@ module.exports = {
           '@/pages': './src/pages',
           '@/components': './src/components',
           '@/assets': './src/assets',
+          '@/util': './src/util',
+          '@/api': './src/api',
         },
       },
     ],

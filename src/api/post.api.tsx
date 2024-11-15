@@ -1,7 +1,6 @@
 import httpApi from './http.api';
 
-// 게시글 작성
-export const PostPost = (
+export const createPost = (
   category: string,
   post_type: string,
   title: string,
@@ -25,19 +24,46 @@ export const PostPost = (
   return httpApi.post(`/api/v1/post`, requestBody);
 };
 
-// 게시글 상세 조회
-export const GetPost = (post_id: number) => {
+export const getPost = (post_id: number) => {
   return httpApi.get(`/api/v1/post/${post_id}`);
 };
 
-// 게시글 수정
-export const PutPost = (post_id: number) => {
-  return httpApi.put(`/api/v1/post/${post_id}`);
+interface UpdatePostRequest {
+  category: string;
+  post_type: string;
+  title: string;
+  content: string;
+  imgUrls: string[];
+  hashTags: string[];
+  isNotice: boolean;
+  isTemporarySave: boolean;
+}
+
+export const putPost = (postId: number, data: UpdatePostRequest) => {
+  return httpApi.put(`/api/v1/post/${postId}`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
 };
 
-// 게시글 삭제
-export const DeletePost = (post_id: number) => {
+export const deletePost = (post_id: number) => {
   return httpApi.delete(`/api/v1/post/${post_id}`);
+};
+
+export const getPostHashtagList = (
+  cursor: number,
+  hashtag: string,
+  pageable: object,
+) => {
+  return httpApi.get(`/api/v1/post/hashtag-list`, {
+    params: {
+      cursor,
+      hashtag,
+      pageable,
+    },
+  });
 };
 
 // 게시글 페이징 조회
