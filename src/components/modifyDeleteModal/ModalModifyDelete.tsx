@@ -1,12 +1,17 @@
 import React from 'react';
 import {View, Text, StyleSheet, Alert, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
+import {useNavigation} from '@react-navigation/native';
 
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
 import {deletePost} from '@/api/post.api';
 
 const {subhead03} = typography;
+
+type NavigationProp = {
+  navigate: (screen: 'ModifyPage') => void;
+};
 
 type ModalModifyDeleteProps = {
   modalVisible: boolean;
@@ -23,10 +28,11 @@ const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
   postId,
   onNavigation,
 }) => {
+  const navigation = useNavigation<NavigationProp>();
+
   const fetchDeletePost = async (postId: number) => {
     try {
-      const response = await deletePost(postId);
-      console.log(response.data);
+      await deletePost(postId);
       onNavigation.goBack();
     } catch (error) {
       console.error('게시글 삭제 오류:', error);
@@ -66,7 +72,11 @@ const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
       animationIn="fadeIn"
       animationOut="fadeOut">
       <View style={styles.container}>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('ModifyPage', {postId});
+            setModalVisible(false);
+          }}>
           <Text style={styles.text}>수정</Text>
         </TouchableOpacity>
         <View style={styles.line} />

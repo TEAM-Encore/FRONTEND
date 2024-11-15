@@ -2,6 +2,7 @@ export type RootStackParamList = {
     Tabs: undefined;
     WritePage: { setPostData: React.Dispatch<React.SetStateAction<PostData | null>> };
     PostPage: { postId: number };
+    ModifyPage: { postId: number };
     SavePage: undefined;
 };
 
