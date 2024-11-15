@@ -101,20 +101,22 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     }
   };
 
+  useEffect(() => {
+    fetchGetPost();
+  }, []);
+
   const fetchGetComments = async () => {
     try {
       const response = await getComments(postId);
       setCommentData(response.data.data);
-      console.log(response.data);
     } catch (error) {
       console.error('댓글 조회 오류:', error);
     }
   };
 
   useEffect(() => {
-    fetchGetPost();
     fetchGetComments();
-  }, []);
+  }, [commentData]);
 
   const fetchCreateComment = async () => {
     try {
@@ -183,6 +185,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
                   setModalVisible={setModalVisible}
                   position={modalPosition}
                   postId={postId}
+                  commentId={null}
                   onNavigation={navigation}
                 />
               )}

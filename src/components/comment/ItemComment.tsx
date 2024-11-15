@@ -1,11 +1,20 @@
-import React from 'react';
-import {FlatList, View, Image, Text, StyleSheet} from 'react-native';
+import React, {useState, useRef} from 'react';
+import {
+  FlatList,
+  View,
+  Image,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
 import {timeAgo} from '@/util/timeAgo';
+
+import ModalModifyDelete from '@/components/modifyDeleteModal/ModalModifyDelete';
 
 const {caption, bodyLong01} = typography;
 
@@ -21,7 +30,29 @@ type CommentProps = {
   }[];
 };
 
+type ModalPosition = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
 const ItemComment: React.FC<CommentProps> = ({commentList}) => {
+  const iconRef = useRef<View>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalPosition, setModalPosition] = useState<ModalPosition | null>(
+    null,
+  );
+
+  const handleIconPress = () => {
+    setModalVisible(true);
+    if (iconRef.current) {
+      iconRef.current.measureInWindow((x, y, width, height) => {
+        setModalPosition({x, y, width, height});
+      });
+    }
+  };
+
   return (
     <FlatList
       data={commentList}
@@ -55,7 +86,21 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
                   </View>
                 </View>
               </View>
-              <SvgXml xml={PostIcon.moreVertical} />
+              <TouchableOpacity onPress={handleIconPress}>
+                <View ref={iconRef}>
+                  <SvgXml xml={PostIcon.moreVertical} />
+                </View>
+              </TouchableOpacity>
+              {modalPosition && (
+                <ModalModifyDelete
+                  modalVisible={modalVisible}
+                  setModalVisible={setModalVisible}
+                  position={modalPosition}
+                  postId={item.post_id}
+                  commentId={item.id}
+                  onNavigation={null}
+                />
+              )}
             </View>
 
             <Text style={styles.textContent}>{item.content}</Text>
