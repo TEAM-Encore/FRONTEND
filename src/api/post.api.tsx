@@ -40,11 +40,10 @@ interface UpdatePostRequest {
 }
 
 export const putPost = (postId: number, data: UpdatePostRequest) => {
-  return httpApi.put(`/api/v1/post/${postId}`, {
+  return httpApi.put(`/api/v1/post/${postId}`, data, {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(data),
   });
 };
 

@@ -5,18 +5,19 @@ import {SvgXml} from 'react-native-svg';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
+import {timeAgo} from '@/util/timeAgo';
 
 const {caption, bodyLong01} = typography;
 
 type CommentProps = {
   commentList: {
-    id: string;
-    writer: string;
-    isWriter: boolean;
-    date: string;
-    comment: string;
-    like: number;
-    reply: number;
+    id: number;
+    is_my_comment: boolean;
+    is_post_owner: boolean;
+    created_at: string;
+    modified_at: string;
+    content: string;
+    post_id: number;
   }[];
 };
 
@@ -24,7 +25,7 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
   return (
     <FlatList
       data={commentList}
-      keyExtractor={item => item.id}
+      keyExtractor={item => String(item.id)}
       renderItem={({item, index}) => (
         <>
           <View style={styles.container}>
@@ -40,14 +41,16 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
                 <View>
                   <View style={styles.containerWriterText}>
                     <View style={styles.containerRow}>
-                      <Text style={styles.textWriter}>{item.writer}</Text>
+                      <Text style={styles.textWriter}>{'뮤사랑'}</Text>
                       <SvgXml xml={PostIcon.Badge} />
                     </View>
                     <View style={styles.containerRow}>
-                      {item.isWriter && (
+                      {item.is_my_comment && (
                         <Text style={styles.textIsWriterDate}>작성자 · </Text>
                       )}
-                      <Text style={styles.textIsWriterDate}>{item.date}</Text>
+                      <Text style={styles.textIsWriterDate}>
+                        {timeAgo(item.created_at)}
+                      </Text>
                     </View>
                   </View>
                 </View>
@@ -55,15 +58,15 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
               <SvgXml xml={PostIcon.moreVertical} />
             </View>
 
-            <Text style={styles.textContent}>{item.comment}</Text>
+            <Text style={styles.textContent}>{item.content}</Text>
             <View style={styles.containerRow}>
               <View style={styles.containerLike}>
                 <SvgXml xml={PostIcon.commentLike} />
-                <Text style={styles.textLikeComment}>하트 {item.like}</Text>
+                <Text style={styles.textLikeComment}>하트 {10}</Text>
               </View>
               <View style={styles.containerRow}>
                 <SvgXml xml={PostIcon.commentComment} />
-                <Text style={styles.textLikeComment}>댓글 {item.reply}</Text>
+                <Text style={styles.textLikeComment}>댓글 {0}</Text>
               </View>
             </View>
           </View>
