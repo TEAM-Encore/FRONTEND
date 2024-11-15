@@ -21,13 +21,13 @@ const AppStyles = StyleSheet.create({
   register_container: {
     width: 48,
     height: 28,
-    backgroundColor: '#F2F2F2',
+    backgroundColor: '#FFF1BB',
     borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
   },
   register_text: {
-    color: '#8B8B8B',
+    color: '#333333',
   },
 });
 

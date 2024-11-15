@@ -24,14 +24,12 @@ const WriteStyles = StyleSheet.create({
   },
   input_title: {
     ...headline,
-    color: Colors.gray_07,
     width: 335,
     height: 28,
     marginTop: 29,
   },
   input_content: {
     ...bodyLong01,
-    color: Colors.gray_07,
     marginBottom: 20,
   },
   line: {
@@ -41,6 +39,9 @@ const WriteStyles = StyleSheet.create({
     marginTop: 12,
     marginBottom: 23,
   },
+  photos: {
+    flexDirection: 'row',
+  },
   photo_container: {
     marginHorizontal: 20,
     marginVertical: 20,
@@ -49,6 +50,12 @@ const WriteStyles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 18,
   },
+  photo_wrapper: {
+    position: 'relative',
+    width: 84,
+    height: 92,
+    marginRight: 8,
+  },
   photo: {
     width: 84,
     height: 92,
@@ -56,6 +63,7 @@ const WriteStyles = StyleSheet.create({
     backgroundColor: Colors.gray_03,
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 14,
   },
   photo_text: {
     ...caption,
@@ -67,7 +75,12 @@ const WriteStyles = StyleSheet.create({
     marginTop: 10, // 상단 여백
     padding: 5, // 내부 여백
   },
-
+  closeButton: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    borderRadius: 15,
+  },
   // Optional: 스타일을 추가하여 이미지 미리보기를 꾸밀 수 있음
   selected_photo: {
     width: 100,

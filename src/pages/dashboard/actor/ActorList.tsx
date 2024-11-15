@@ -19,12 +19,19 @@ const ActorList: React.FC<ActorListProps> = ({selectedFilter}) => {
   useEffect(() => {
     const fetchPostList = async () => {
       const sortFilter = filterMapping[selectedFilter] || 'createdat';
-      const pageable = {size: 3, sort: {sortFilter}};
       console.log('선택된 필터: ', selectedFilter);
 
       try {
         setLoading(true);
-        const response = await GetPostList(pageable, undefined, 'ACTOR');
+        const response = await GetPostList(
+          0,
+          100,
+          sortFilter,
+          undefined,
+          undefined,
+          'ACTOR',
+          undefined,
+        );
         console.log('API RESPONSE:', response.data);
 
         const postData = response.data.data.content;

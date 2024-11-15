@@ -14,11 +14,11 @@ type PostProps = {
     nickname: string;
     title: string;
     content: string;
-    image?: any;
     like_count: number;
     comment_count: number;
     category: string;
     created_at: string;
+    thumbnail: string;
   }[];
 };
 
@@ -67,15 +67,17 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
         return (
           <>
             <View style={styles.container}>
-              <View
-                style={[
-                  styles.containerCategory,
-                  {backgroundColor: style.backgroundColor},
-                ]}>
-                <Text style={[styles.textCategory, {color: style.textColor}]}>
-                  {item.category}
-                </Text>
-              </View>
+              {item.category !== '카테고리 미선택' && (
+                <View
+                  style={[
+                    styles.containerCategory,
+                    {backgroundColor: style.backgroundColor},
+                  ]}>
+                  <Text style={[styles.textCategory, {color: style.textColor}]}>
+                    {item.category}
+                  </Text>
+                </View>
+              )}
               <View style={styles.containerRow}>
                 <View style={{flex: 1}}>
                   <Text
@@ -115,8 +117,8 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
                     </View>
                   </View>
                 </View>
-                {item.image && (
-                  <Image style={styles.image} source={item.image} />
+                {item.thumbnail && (
+                  <Image style={styles.image} source={{uri: item.thumbnail}} />
                 )}
               </View>
             </View>

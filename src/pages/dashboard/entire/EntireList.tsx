@@ -19,11 +19,11 @@ const EntireList: React.FC<EntireListProps> = ({selectedFilter}) => {
   useEffect(() => {
     const fetchPostList = async () => {
       const sortFilter = filterMapping[selectedFilter] || 'createdat';
-      const pageable = {size: 3, sort: {sortFilter}};
       console.log('선택된 필터: ', selectedFilter);
       try {
         setLoading(true);
-        const response = await GetPostList(pageable);
+        // 일단 페이지네이션 구현 X
+        const response = await GetPostList(0, 100, sortFilter);
         console.log('API RESPONSE:', response.data);
 
         const postData = response.data.data.content;

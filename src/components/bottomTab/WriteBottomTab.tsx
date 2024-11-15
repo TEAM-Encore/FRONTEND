@@ -13,6 +13,7 @@ import {SvgXml} from 'react-native-svg';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import AlertModal from '../alertModal/AlertModal';
+import {SelectImage} from '../selectImage/SelectImage';
 
 type RootStackParamList = {
   SavePage: undefined;
@@ -20,9 +21,13 @@ type RootStackParamList = {
 
 type WriteBottomTabProps = {
   setContent: React.Dispatch<React.SetStateAction<string>>;
+  setPhotoCount: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const WriteBottomTab: React.FC<WriteBottomTabProps> = ({setContent}) => {
+const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
+  setContent,
+  setPhotoCount,
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState('');
   const [selectedSubTitle, setSelectedSubtitle] = useState('');
@@ -55,7 +60,11 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({setContent}) => {
       <KeyboardAvoidingView
         style={WriteStyles.containerCommentInput}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <TouchableOpacity style={WriteStyles.bottom_container}>
+        <TouchableOpacity
+          style={WriteStyles.bottom_container}
+          onPress={() => {
+            SelectImage(setPhotoCount);
+          }}>
           <SvgXml xml={PostIcon.commentImage} />
           <Text style={WriteStyles.bottom_icon_text}>사진</Text>
         </TouchableOpacity>
