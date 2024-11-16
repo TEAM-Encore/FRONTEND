@@ -30,6 +30,7 @@ type PostPageRouteProp = RouteProp<RootStackParamList, 'PostPage'>;
 
 interface PostPageProps {
   route: PostPageRouteProp;
+  images?: string[];
 }
 
 type ModalPosition = {
@@ -40,7 +41,7 @@ type ModalPosition = {
 };
 
 const PostPage: React.FC<PostPageProps> = ({route}) => {
-  const {postId} = route.params;
+  const {postId, images: itemImgUrls} = route.params; // imgUrls 추가
   const navigation = useNavigation();
   const iconRef = useRef<View>(null);
   const [postData, setPostData] = useState<{
@@ -181,7 +182,8 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     }
   };
 
-  const images = [
+  // 기본 이미지 리스트
+  const defaultImages = [
     {
       id: '1',
       image: require('@/assets/images/home/Musical4.jpeg'),
@@ -203,6 +205,14 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
       image: require('@/assets/images/home/Musical6.jpeg'),
     },
   ];
+
+  const imagesToRender =
+    itemImgUrls && itemImgUrls.length > 0
+      ? itemImgUrls.map((url: string, index: number) => ({
+          id: index.toString(),
+          image: {uri: url},
+        }))
+      : defaultImages;
 
   return (
     <>
@@ -251,13 +261,14 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
             <Text style={PostStyles.textContent}>{postData.content}</Text>
           </View>
 
+          {/* 이미지 렌더링 */}
           <FlatList
             contentContainerStyle={{marginHorizontal: 20}}
-            data={images}
+            data={imagesToRender} // 렌더링할 이미지 배열
             renderItem={({item}) => (
               <Image style={PostStyles.images} source={item.image} />
             )}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={item => item.id}
             horizontal={true}
             nestedScrollEnabled
           />

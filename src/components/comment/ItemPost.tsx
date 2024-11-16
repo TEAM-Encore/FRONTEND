@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   FlatList,
   View,
@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
+import {usePostStore} from '../../store/usePostStore';
 
 const {subhead03, body01, caption} = typography;
 
@@ -92,18 +93,28 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
     return categoryMapping[category];
   };
 
+  const imgUrls = usePostStore(state => state.imgUrls); // Zustand에서 모든 imgUrls 가져오기
+
   return (
     <FlatList
       data={postList}
       keyExtractor={item => item.id}
       renderItem={({item, index}) => {
         const category = getMappedCategory(item.category);
+
+        // Zustand에서 현재 item.id에 해당하는 imgUrls 가져오기
+        const itemImgUrls = imgUrls[parseInt(item.id)] || []; // imgUrls가 없으면 빈 배열
+        const thumbnail = itemImgUrls.length > 0 ? itemImgUrls[0] : null; // 첫 번째 이미지
+
         return (
           <>
             <TouchableOpacity
               style={styles.container}
               onPress={() =>
-                navigation.navigate('PostPage', {postId: item.id})
+                navigation.navigate('PostPage', {
+                  postId: item.id,
+                  images: itemImgUrls,
+                })
               }>
               {item.category !== '카테고리 미선택' && (
                 <View
@@ -155,8 +166,8 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
                     </View>
                   </View>
                 </View>
-                {item.thumbnail && (
-                  <Image style={styles.image} source={{uri: item.thumbnail}} />
+                {thumbnail && (
+                  <Image style={styles.image} source={{uri: thumbnail}} />
                 )}
               </View>
             </TouchableOpacity>

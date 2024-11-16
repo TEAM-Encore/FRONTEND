@@ -10,7 +10,6 @@ const HomeStyles = StyleSheet.create({
     backgroundColor: Colors.gray_01,
   },
   containerHeader: {
-    backgroundColor: '#1B1919',
     height: 283,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
@@ -31,6 +30,10 @@ const HomeStyles = StyleSheet.create({
   },
   containerRow: {
     flexDirection: 'row',
+    alignItems: 'center',
+  },
+  containerImage: {
+    justifyContent: 'center',
     alignItems: 'center',
   },
   containerCarouselTicket: {
@@ -63,7 +66,7 @@ const HomeStyles = StyleSheet.create({
     left: 20,
     width: 39,
     height: 18,
-    backgroundColor: '#F7F7F7',
+    backgroundColor: '#F2F2F2',
     borderRadius: 21,
     justifyContent: 'center',
     alignItems: 'center',
@@ -134,10 +137,10 @@ const HomeStyles = StyleSheet.create({
     alignItems: 'center',
     width: 335,
     height: 44,
-    backgroundColor: Colors.gray_01,
+    backgroundColor: '#F2F2F2',
     borderRadius: 5,
     paddingHorizontal: 14,
-    shadowColor: 'rgba(23, 23, 23, 0.1)',
+    shadowColor: 'rgba(23, 23, 23, 0)',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -172,7 +175,7 @@ const HomeStyles = StyleSheet.create({
     width: 335,
     height: 128,
     borderRadius: 5,
-    backgroundColor: Colors.sub_02,
+    backgroundColor: '#EDDCFF',
     shadowColor: 'rgba(23, 23, 23, 0.1)',
     shadowOffset: {
       width: 0,
@@ -201,11 +204,10 @@ const HomeStyles = StyleSheet.create({
     marginHorizontal: 4,
   },
   iconTodayBest: {
-    position: 'absolute',
-    right: 10.81,
-    bottom: 10,
-    width: 131.19,
-    height: 73,
+    alignSelf: 'flex-end',
+    height: undefined,
+    aspectRatio: 2,
+    resizeMode: 'contain',
   },
   imageMusical: {
     width: 125,

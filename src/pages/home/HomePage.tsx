@@ -13,8 +13,8 @@ import {
 
 import HomeStyles from '@/pages/home/HomeStyles';
 import Colors from '@/assets/colors/Colors';
-
-import IconTitle from '@/assets/icons/home/IconTitle';
+import {Svg, SvgXml} from 'react-native-svg';
+import {IconTitle} from '@/assets/icons/home/IconTitle';
 import IconSearch from '@/assets/icons/home/IconSearch';
 import IconNotification from '@/assets/icons/home/IconNotification';
 import IconLike from '@/assets/icons/home/IconLike';
@@ -64,26 +64,26 @@ const HomePage: React.FC<HomePageProps> = () => {
     },
   ];
 
-  const handleMomentumScrollEnd = (
-    event: NativeSyntheticEvent<NativeScrollEvent>,
-  ) => {
-    const contentOffsetX = event.nativeEvent.contentOffset.x;
-    const newIndex = Math.round(contentOffsetX / (CARD_WIDTH + PADDING * 2));
-    setCurrentIndex(newIndex);
+  // const handleMomentumScrollEnd = (
+  //   event: NativeSyntheticEvent<NativeScrollEvent>,
+  // ) => {
+  //   const contentOffsetX = event.nativeEvent.contentOffset.x;
+  //   const newIndex = Math.round(contentOffsetX / (CARD_WIDTH + PADDING * 2));
+  //   setCurrentIndex(newIndex);
 
-    if (newIndex === 0) {
-      flatListRef.current?.scrollToIndex({
-        index: carouselTicketList.length,
-        animated: false,
-      });
-      setCurrentIndex(carouselTicketList.length);
-    } else if (newIndex === circularCarouselTicketList.length - 1) {
-      flatListRef.current?.scrollToIndex({index: 1, animated: false});
-      setCurrentIndex(1);
-    } else {
-      setCurrentIndex(newIndex);
-    }
-  };
+  //   if (newIndex === 0) {
+  //     flatListRef.current?.scrollToIndex({
+  //       index: carouselTicketList.length,
+  //       animated: false,
+  //     });
+  //     setCurrentIndex(carouselTicketList.length);
+  //   } else if (newIndex === circularCarouselTicketList.length - 1) {
+  //     flatListRef.current?.scrollToIndex({index: 1, animated: false});
+  //     setCurrentIndex(1);
+  //   } else {
+  //     setCurrentIndex(newIndex);
+  //   }
+  // };
 
   const premiumReviewRanking = [
     {id: '1', title: '위키드 5회차 관람 후기'},
@@ -165,14 +165,14 @@ const HomePage: React.FC<HomePageProps> = () => {
       <ScrollView>
         <View style={HomeStyles.containerHeader}>
           <View style={HomeStyles.containerIcons}>
-            <IconTitle />
+            <SvgXml xml={IconTitle.iconTitle} />
             <View style={HomeStyles.containerRow}>
               <IconSearch style={{marginRight: 20}} />
               <IconNotification />
             </View>
           </View>
-          <View style={HomeStyles.containerRow}>
-            <FlatList
+          <View style={HomeStyles.containerImage}>
+            {/* <FlatList
               ref={flatListRef}
               data={circularCarouselTicketList}
               renderItem={({item}) => <Ticket image={item.image || null} />}
@@ -185,9 +185,10 @@ const HomePage: React.FC<HomePageProps> = () => {
               onMomentumScrollEnd={handleMomentumScrollEnd}
               scrollEventThrottle={16}
               nestedScrollEnabled
-            />
+            /> */}
+            <Image source={require('@/assets/images/home/ImageCarousel.png')} />
           </View>
-          <View style={HomeStyles.containerPagination}>
+          {/* <View style={HomeStyles.containerPagination}>
             {carouselTicketList.map((_, index) => (
               <View
                 key={index}
@@ -199,7 +200,7 @@ const HomePage: React.FC<HomePageProps> = () => {
                 ]}
               />
             ))}
-          </View>
+          </View> */}
         </View>
 
         <View style={[HomeStyles.containerTitle, {marginTop: 33}]}>
@@ -254,12 +255,7 @@ const HomePage: React.FC<HomePageProps> = () => {
                   style={[
                     HomeStyles.containerPremiumReviewRanking,
                     {
-                      backgroundColor:
-                        index === 0
-                          ? Colors.sub_04
-                          : index === 1
-                          ? Colors.sub_03
-                          : Colors.sub_02,
+                      backgroundColor: '#F2F2F2',
                     },
                   ]}>
                   <Text style={HomeStyles.textPremiumReviewRanking}>
@@ -295,7 +291,7 @@ const HomePage: React.FC<HomePageProps> = () => {
             </View>
             <Image
               style={HomeStyles.iconTodayBest}
-              source={require('@/assets/logo/logo3.png')}
+              source={require('@/assets/logo/logo5.png')}
             />
           </View>
         </View>
