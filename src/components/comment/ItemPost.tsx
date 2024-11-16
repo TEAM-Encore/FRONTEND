@@ -91,7 +91,10 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
             <TouchableOpacity
               style={styles.container}
               onPress={() =>
-                navigation.navigate('PostPage', {postId: item.id})
+                navigation.navigate('PostPage', {
+                  postId: item.id,
+                  images: itemImgUrls,
+                })
               }>
               {item.category !== '카테고리 미선택' && (
                 <View
