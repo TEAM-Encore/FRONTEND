@@ -67,6 +67,32 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
     }
   };
 
+  const categoryMapping: Record<string, {color: string; boxColor: string}> = {
+    '오페라 글래스': {
+      color: '#FFB200',
+      boxColor: Colors.sub_01,
+    },
+    '뮤지컬 용어': {
+      color: '#FF7163',
+      boxColor: '#FFEAE8',
+    },
+    이벤트: {color: '#FF853E', boxColor: '#FFE9DC'},
+    '시야 후기': {
+      color: '#FFB200',
+      boxColor: Colors.sub_01,
+    },
+    '굿즈 후기': {color: '#FF853E', boxColor: '#FFE9DC'},
+    '공연 감상 후기': {
+      color: '#FF4FB3',
+      boxColor: '#FFE6F4',
+    },
+  };
+
+  const getMappedCategory = (category: string | undefined) => {
+    if (!category) return null;
+    return categoryMapping[category];
+  };
+
   const imgUrls = usePostStore(state => state.imgUrls); // Zustand에서 모든 imgUrls 가져오기
 
   return (
@@ -74,13 +100,7 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
       data={postList}
       keyExtractor={item => item.id}
       renderItem={({item, index}) => {
-        // 카테고리 색상 지정
-        const style =
-          index % 3 === 0
-            ? {backgroundColor: Colors.sub_01, textColor: Colors.sub_05}
-            : index % 3 === 1
-            ? {backgroundColor: '#FFEAE8', textColor: '#FF7163'}
-            : {backgroundColor: '#FFE9DC', textColor: '#FF853E'};
+        const category = getMappedCategory(item.category);
 
         // Zustand에서 현재 item.id에 해당하는 imgUrls 가져오기
         const itemImgUrls = imgUrls[parseInt(item.id)] || []; // imgUrls가 없으면 빈 배열
@@ -100,9 +120,9 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
                 <View
                   style={[
                     styles.containerCategory,
-                    {backgroundColor: style.backgroundColor},
+                    {backgroundColor: category?.boxColor},
                   ]}>
-                  <Text style={[styles.textCategory, {color: style.textColor}]}>
+                  <Text style={[styles.textCategory, {color: category?.color}]}>
                     {item.category}
                   </Text>
                 </View>
@@ -175,11 +195,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   containerCategory: {
-    width: 55,
     height: 24,
     borderRadius: 4.27,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'flex-start',
+    backgroundColor: '#FFE9DC',
+    paddingHorizontal: 12,
+    paddingVertical: 2,
     marginBottom: 22,
   },
   textCategory: {

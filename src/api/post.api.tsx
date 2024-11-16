@@ -88,3 +88,21 @@ export const GetPostList = (
     params: requestParams,
   });
 };
+
+export const createLikePost = (user_id: number, post_id: number) => {
+  const requestBody = {
+    user_id,
+    post_id,
+  };
+
+  return httpApi.post(`/api/v1/post/likes`, requestBody);
+};
+
+export const deleteLikePost = (user_id: number, post_id: number) => {
+  const requestBody = {
+    user_id,
+    post_id,
+  };
+
+  return httpApi.delete(`/api/v1/post/likes`, {data: requestBody});
+};

@@ -24,3 +24,7 @@ export const updateComment = (post_id: number, comment_id: number) => {
 export const deleteComment = (post_id: number, comment_id: number) => {
   return httpApi.delete(`/api/v1/comment/${post_id}/${comment_id}`);
 };
+
+export const createLikeComment = (post_id: number, comment_id: number) => {
+  return httpApi.post(`/api/v1/comment/${post_id}/${comment_id}/like`);
+};
