@@ -1,12 +1,26 @@
-import React from 'react';
-import {FlatList, View, Image, Text, StyleSheet} from 'react-native';
+import React, {useEffect} from 'react';
+import {
+  FlatList,
+  View,
+  Image,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import moment from 'moment';
 import {SvgXml} from 'react-native-svg';
+import {useNavigation} from '@react-navigation/native';
+
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
+import {usePostStore} from '../../store/usePostStore';
 
 const {subhead03, body01, caption} = typography;
+
+type NavigationProp = {
+  navigate: (screen: 'PostPage') => void;
+};
 
 type PostProps = {
   postList: {
@@ -14,15 +28,17 @@ type PostProps = {
     nickname: string;
     title: string;
     content: string;
-    image?: any;
     like_count: number;
     comment_count: number;
     category: string;
     created_at: string;
+    thumbnail: string;
   }[];
 };
 
 const ItemPost: React.FC<PostProps> = ({postList}) => {
+  const navigation = useNavigation<NavigationProp>();
+
   const getTimeDifference = (created_at: string): string => {
     const created = moment(created_at, moment.ISO_8601);
 
@@ -51,31 +67,66 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
     }
   };
 
+  const categoryMapping: Record<string, {color: string; boxColor: string}> = {
+    '오페라 글래스': {
+      color: '#FFB200',
+      boxColor: Colors.sub_01,
+    },
+    '뮤지컬 용어': {
+      color: '#FF7163',
+      boxColor: '#FFEAE8',
+    },
+    이벤트: {color: '#FF853E', boxColor: '#FFE9DC'},
+    '시야 후기': {
+      color: '#FFB200',
+      boxColor: Colors.sub_01,
+    },
+    '굿즈 후기': {color: '#FF853E', boxColor: '#FFE9DC'},
+    '공연 감상 후기': {
+      color: '#FF4FB3',
+      boxColor: '#FFE6F4',
+    },
+  };
+
+  const getMappedCategory = (category: string | undefined) => {
+    if (!category) return null;
+    return categoryMapping[category];
+  };
+
+  const imgUrls = usePostStore(state => state.imgUrls); // Zustand에서 모든 imgUrls 가져오기
+
   return (
     <FlatList
       data={postList}
       keyExtractor={item => item.id}
       renderItem={({item, index}) => {
-        // 카테고리 색상 지정
-        const style =
-          index % 3 === 0
-            ? {backgroundColor: Colors.sub_01, textColor: Colors.sub_05}
-            : index % 3 === 1
-            ? {backgroundColor: '#FFEAE8', textColor: '#FF7163'}
-            : {backgroundColor: '#FFE9DC', textColor: '#FF853E'};
+        const category = getMappedCategory(item.category);
+
+        // Zustand에서 현재 item.id에 해당하는 imgUrls 가져오기
+        const itemImgUrls = imgUrls[parseInt(item.id)] || []; // imgUrls가 없으면 빈 배열
+        const thumbnail = itemImgUrls.length > 0 ? itemImgUrls[0] : null; // 첫 번째 이미지
 
         return (
           <>
-            <View style={styles.container}>
-              <View
-                style={[
-                  styles.containerCategory,
-                  {backgroundColor: style.backgroundColor},
-                ]}>
-                <Text style={[styles.textCategory, {color: style.textColor}]}>
-                  {item.category}
-                </Text>
-              </View>
+            <TouchableOpacity
+              style={styles.container}
+              onPress={() =>
+                navigation.navigate('PostPage', {
+                  postId: item.id,
+                  images: itemImgUrls,
+                })
+              }>
+              {item.category !== '카테고리 미선택' && (
+                <View
+                  style={[
+                    styles.containerCategory,
+                    {backgroundColor: category?.boxColor},
+                  ]}>
+                  <Text style={[styles.textCategory, {color: category?.color}]}>
+                    {item.category}
+                  </Text>
+                </View>
+              )}
               <View style={styles.containerRow}>
                 <View style={{flex: 1}}>
                   <Text
@@ -115,11 +166,11 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
                     </View>
                   </View>
                 </View>
-                {item.image && (
-                  <Image style={styles.image} source={item.image} />
+                {thumbnail && (
+                  <Image style={styles.image} source={{uri: thumbnail}} />
                 )}
               </View>
-            </View>
+            </TouchableOpacity>
 
             <View style={styles.containerRow}></View>
             {index < postList.length - 1 ? (
@@ -144,11 +195,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   containerCategory: {
-    width: 55,
     height: 24,
     borderRadius: 4.27,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'flex-start',
+    backgroundColor: '#FFE9DC',
+    paddingHorizontal: 12,
+    paddingVertical: 2,
     marginBottom: 22,
   },
   textCategory: {

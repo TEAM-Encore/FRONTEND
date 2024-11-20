@@ -1,7 +1,6 @@
 import httpApi from './http.api';
 
-// 게시글 작성
-export const PostPost = (
+export const createPost = (
   category: string,
   post_type: string,
   title: string,
@@ -25,8 +24,7 @@ export const PostPost = (
   return httpApi.post(`/api/v1/post`, requestBody);
 };
 
-// 게시글 상세 조회
-export const GetPost = (post_id: number) => {
+export const getPost = (post_id: number) => {
   return httpApi.get(`/api/v1/post/${post_id}`);
 };
 
@@ -47,27 +45,61 @@ export const putPost = (postId: number, data: UpdatePostRequest) => {
       'Content-Type': 'application/json',
     },
   });
+interface UpdatePostRequest {
+  category: string;
+  post_type: string;
+  title: string;
+  content: string;
+  imgUrls: string[];
+  hashTags: string[];
+  isNotice: boolean;
+  isTemporarySave: boolean;
+}
+
+export const putPost = (postId: number, data: UpdatePostRequest) => {
+  return httpApi.put(`/api/v1/post/${postId}`, data, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 };
 
-// 게시글 삭제
-export const DeletePost = (post_id: number) => {
+export const deletePost = (post_id: number) => {
   return httpApi.delete(`/api/v1/post/${post_id}`);
+};
+
+export const getPostHashtagList = (
+  cursor: number,
+  hashtag: string,
+  pageable: object,
+) => {
+  return httpApi.get(`/api/v1/post/hashtag-list`, {
+    params: {
+      cursor,
+      hashtag,
+      pageable,
+    },
+  });
 };
 
 // 게시글 페이징 조회
 export const GetPostList = (
-  pageable: object,
+  page: number,
+  size: number,
+  sort: string,
   cursor?: number,
   category?: string,
   type?: string,
   search_word?: string,
 ) => {
   const requestParams = {
+    page,
+    size,
+    sort,
     cursor,
     category,
     type,
     search_word,
-    pageable: JSON.stringify(pageable),
   };
   return httpApi.get(`/api/v1/post/list`, {
     params: requestParams,

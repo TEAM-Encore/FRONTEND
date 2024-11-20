@@ -1,6 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text} from 'react-native';
+import React, {useState, useEffect, useCallback} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+
 import {GetPostList} from '../../../api/post.api';
+
 import ItemPost from '@/components/comment/ItemPost';
 
 type ReviewListProps = {
@@ -24,39 +26,40 @@ const ReviewList: React.FC<ReviewListProps> = ({selectedFilter, category}) => {
     '공연 감상': 'PERFORMANCE_REVIEW',
   };
 
-  useEffect(() => {
-    const fetchPostList = async () => {
-      const sortFilter = filterMapping[selectedFilter] || 'createdat';
-      const sortCategory = categoryMapping[category] || '';
-      const pageable = {size: 3, sort: {sortFilter}};
-      console.log('선택된 필터: ', selectedFilter);
-      console.log('선택된 카테고리:', category);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchPostList = async () => {
+        const sortFilter = filterMapping[selectedFilter] || 'createdat';
+        const sortCategory = categoryMapping[category] || '';
+        console.log('선택된 필터: ', selectedFilter);
+        console.log('선택된 카테고리:', category);
 
-      try {
-        setLoading(true);
-        const response = await GetPostList(
-          pageable,
-          undefined,
-          sortCategory,
-          'REVIEW',
-        );
-        console.log('API RESPONSE:', response.data);
+        try {
+          setLoading(true);
+          const response = await GetPostList(
+            0,
+            100,
+            sortFilter,
+            undefined,
+            sortCategory,
+            'REVIEW',
+          );
+          console.log('API RESPONSE:', response.data);
 
-        const postData = response.data.data.content;
-        setPostList(postData);
-        console.log('postList:', postData);
-      } catch (error) {
-        console.error('Error fetching post list:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+          const postData = response.data.data.content;
+          setPostList(postData);
+          console.log('postList:', postData);
+        } catch (error) {
+          console.error('Error fetching post list:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    fetchPostList();
-  }, [selectedFilter, category]);
-
-  return (
-    <>{loading ? <Text>Loading...</Text> : <ItemPost postList={postList} />}</>
+      fetchPostList();
+    }, [selectedFilter, category]),
   );
+
+  return <>{loading ? <></> : <ItemPost postList={postList} />}</>;
 };
 export default ReviewList;

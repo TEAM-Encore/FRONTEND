@@ -72,9 +72,14 @@
 		<string>Pretendard-SemiBold.otf</string>
 		<string>Pretendard-Thin.otf</string>
 	</array>
-	<key>NSCameraUsageDescription</key>
-	<string>We need your permission to use your camera.</string>
+	<!--카메라 및 갤러리 사용 권한 추가-->
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need your permission to access your photo library.</string>
+	<string>$(PRODUCT_NAME) would like access to your photo gallery</string>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to use your camera</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to use your microphone (for videos)</string>
 </dict>
 </plist>

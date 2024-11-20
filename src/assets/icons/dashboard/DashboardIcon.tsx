@@ -61,4 +61,12 @@ export const DashboardIcon = {
 <path fill-rule="evenodd" clip-rule="evenodd" d="M8.0708 13.1282C8.0708 10.958 9.82959 9.19922 11.9998 9.19922C14.17 9.19922 15.9288 10.958 15.9288 13.1282C15.9288 15.2984 14.17 17.0572 11.9998 17.0572C9.82959 17.0572 8.0708 15.2984 8.0708 13.1282ZM14.4288 13.1282C14.4288 11.7864 13.3416 10.6992 11.9998 10.6992C10.658 10.6992 9.5708 11.7864 9.5708 13.1282C9.5708 14.47 10.658 15.5572 11.9998 15.5572C13.3416 15.5572 14.4288 14.47 14.4288 13.1282Z" fill="#8B8B8B"/>
 </svg>
 `,
+  close: `
+<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g opacity="0.64">
+<path d="M13.5 4.5L4.5 13.5" stroke="#F6F6F6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M4.5 4.5L13.5 13.5" stroke="#F6F6F6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg>
+`,
 };

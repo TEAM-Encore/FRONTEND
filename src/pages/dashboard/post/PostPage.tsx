@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -12,16 +12,178 @@ import {
   TextInput,
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
+import {RootStackParamList} from '../../../../types';
 
+import Colors from '@/assets/colors/Colors';
 import PostStyles from '@/pages/dashboard/post/PostStyles';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
+import {getPost, createLikePost, deleteLikePost} from '@/api/post.api';
+import {getComments, createComment} from '@/api/comment.api';
+import {timeAgo} from '@/util/timeAgo';
 
+import ModalModifyDelete from '@/components/modifyDeleteModal/ModalModifyDelete';
 import ItemComment from '@/components/comment/ItemComment';
 
-type PostPageProps = {};
+type PostPageRouteProp = RouteProp<RootStackParamList, 'PostPage'>;
 
-const PostPage: React.FC<PostPageProps> = () => {
-  const images = [
+interface PostPageProps {
+  route: PostPageRouteProp;
+  images?: string[];
+}
+
+type ModalPosition = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+const PostPage: React.FC<PostPageProps> = ({route}) => {
+  const {postId, images: itemImgUrls} = route.params; // imgUrls 추가
+  const navigation = useNavigation();
+  const iconRef = useRef<View>(null);
+  const [postData, setPostData] = useState<{
+    category?: string;
+    title?: string;
+    content?: string;
+    created_at?: string;
+    num_of_comment?: number;
+    num_of_like?: number;
+    hashtags?: [];
+  }>({});
+  const [commentData, setCommentData] = useState<
+    {
+      id: number;
+      nickname: string;
+      is_my_comment: boolean;
+      is_post_owner: boolean;
+      created_at: string;
+      modified_at: string;
+      content: string;
+      post_id: number;
+      is_liked: boolean;
+      like_count: number;
+      child_comment_count: number;
+    }[]
+  >([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalPosition, setModalPosition] = useState<ModalPosition | null>(
+    null,
+  );
+  const [valueComment, onChangeComment] = useState('');
+  const [postLike, setPostLike] = useState(false);
+
+  const categoryMapping: Record<
+    string,
+    {label: string; color: string; boxColor: string}
+  > = {
+    OPERA_GLASS_RENTAL: {
+      label: '오페라 글래스',
+      color: '#FFB200',
+      boxColor: Colors.sub_01,
+    },
+    MUSICAL_TERMS: {
+      label: '뮤지컬 용어',
+      color: '#FF7163',
+      boxColor: '#FFEAE8',
+    },
+    EVENTS: {label: '이벤트', color: '#FF853E', boxColor: '#FFE9DC'},
+    VIEW_REVIEW: {
+      label: '시야 후기',
+      color: '#FFB200',
+      boxColor: Colors.sub_01,
+    },
+    GOODS_REVIEW: {label: '굿즈 후기', color: '#FF853E', boxColor: '#FFE9DC'},
+    PERFORMANCE_REVIEW: {
+      label: '공연 감상',
+      color: '#FF4FB3',
+      boxColor: '#FFE6F4',
+    },
+  };
+
+  const getMappedCategory = (category: string | undefined) => {
+    if (!category) return null;
+    return categoryMapping[category];
+  };
+
+  const category = getMappedCategory(postData.category);
+
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
+  const fetchGetPost = async () => {
+    try {
+      const response = await getPost(postId);
+      setPostData(response.data.data);
+      console.log(response.data.data);
+    } catch (error) {
+      console.error('게시글 조회 오류:', error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchGetPost();
+    }, []),
+  );
+
+  const fetchCreateLikePost = async () => {
+    setPostLike(true);
+    try {
+      await createLikePost(1, postId);
+    } catch (error) {
+      console.error('게시글 좋아요 생성 오류:', error);
+    }
+  };
+
+  const fetchDeleteLikePost = async () => {
+    setPostLike(false);
+    try {
+      await deleteLikePost(1, postId);
+    } catch (error) {
+      console.error('게시글 좋아요 삭제 오류:', error);
+    }
+  };
+
+  const fetchGetComments = async () => {
+    try {
+      const response = await getComments(postId);
+      setCommentData(response.data.data);
+    } catch (error) {
+      console.error('댓글 조회 오류:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGetComments();
+  }, [commentData]);
+
+  const fetchCreateComment = async () => {
+    try {
+      if (valueComment.trim() === '') {
+        return;
+      }
+      await createComment(postId, {content: valueComment, parent_id: null});
+      onChangeComment('');
+    } catch (error) {
+      console.error('댓글 생성 오류:', error);
+    }
+  };
+
+  const handleIconPress = () => {
+    setModalVisible(true);
+    if (iconRef.current) {
+      iconRef.current.measureInWindow((x, y, width, height) => {
+        setModalPosition({x, y, width, height});
+      });
+    }
+  };
+
+  // 기본 이미지 리스트
+  const defaultImages = [
     {
       id: '1',
       image: require('@/assets/images/home/Musical4.jpeg'),
@@ -44,90 +206,99 @@ const PostPage: React.FC<PostPageProps> = () => {
     },
   ];
 
-  const commentList = [
-    {
-      id: '1',
-      writer: '뮤사랑',
-      isWriter: true,
-      date: '11분전',
-      comment:
-        '벤자민 회전문 돌아서 궁금하신건 뭐든 물어봐 주시면 답해드릴게요!',
-      like: 3,
-      reply: 1,
-    },
-    {
-      id: '2',
-      writer: '뮤뮤',
-      isWriter: false,
-      date: '방금전',
-      comment: '아주 유익하네요!',
-      like: 10,
-      reply: 0,
-    },
-  ];
-
-  const [valueComment, onChangeComment] = useState('');
+  const imagesToRender =
+    itemImgUrls && itemImgUrls.length > 0
+      ? itemImgUrls.map((url: string, index: number) => ({
+          id: index.toString(),
+          image: {uri: url},
+        }))
+      : defaultImages;
 
   return (
     <>
       <SafeAreaView style={PostStyles.container}>
         <ScrollView>
           <View style={PostStyles.containerHeader}>
-            <SvgXml xml={PostIcon.arrowLeft} />
+            <TouchableOpacity onPress={() => handleGoBack()}>
+              <SvgXml xml={PostIcon.arrowLeft} />
+            </TouchableOpacity>
             <View style={PostStyles.containerRow}>
-              <SvgXml style={{marginRight: 11}} xml={PostIcon.upload} />
-              <SvgXml xml={PostIcon.moreVertical} />
+              <TouchableOpacity>
+                <SvgXml style={{marginRight: 11}} xml={PostIcon.upload} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleIconPress}>
+                <View ref={iconRef}>
+                  <SvgXml xml={PostIcon.moreVertical} />
+                </View>
+              </TouchableOpacity>
+              {modalPosition && (
+                <ModalModifyDelete
+                  modalVisible={modalVisible}
+                  setModalVisible={setModalVisible}
+                  position={modalPosition}
+                  postId={postId}
+                  commentId={null}
+                  onNavigation={navigation}
+                />
+              )}
             </View>
           </View>
 
           <View style={{marginHorizontal: 20}}>
-            <View style={PostStyles.containerCategory}>
-              <Text style={PostStyles.textCategory}>이벤트</Text>
-            </View>
-            <Text style={PostStyles.textTitle}>
-              드레스 리허설 참관 및 MD 증정
-            </Text>
-            <Text style={PostStyles.textContent}>
-              추첨을 통해 드레스 리허설을 참관할 수 있는 기회가 있어 공유합니다.
-              벤자민 버튼 공연인데 너무 좋아서 회전문 돌았어서 다른 분들도 꼭
-              보셨으면 좋겠어요!
-              {'\n'}
-              {'\n'}
-              링아센에서 해서 시설도 꽤 좋은 편이라 강추합니다ㅎㅎ 링크로
-              들어가시면 이벤트 내용 나와요~
-            </Text>
+            {category && (
+              <View
+                style={[
+                  PostStyles.containerCategory,
+                  {backgroundColor: category?.boxColor},
+                ]}>
+                <Text
+                  style={[PostStyles.textCategory, {color: category?.color}]}>
+                  {category?.label}
+                </Text>
+              </View>
+            )}
+            <Text style={PostStyles.textTitle}>{postData.title}</Text>
+            <Text style={PostStyles.textContent}>{postData.content}</Text>
           </View>
 
+          {/* 이미지 렌더링 */}
           <FlatList
             contentContainerStyle={{marginHorizontal: 20}}
-            data={images}
+            data={imagesToRender} // 렌더링할 이미지 배열
             renderItem={({item}) => (
               <Image style={PostStyles.images} source={item.image} />
             )}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={item => item.id}
             horizontal={true}
             nestedScrollEnabled
           />
 
           <View style={{marginHorizontal: 20}}>
-            <View style={PostStyles.line} />
+            {postData.hashtags?.length !== 0 && (
+              <View style={PostStyles.line} />
+            )}
           </View>
 
           <TouchableOpacity style={PostStyles.containerHashtag}>
-            <Text style={PostStyles.textHashtag}>
-              #벤자민버튼 #MD #드레스리허설
-            </Text>
+            <Text style={PostStyles.textHashtag}>{postData.hashtags}</Text>
           </TouchableOpacity>
 
           <View style={PostStyles.containerCommentLikeItems}>
-            <View style={[PostStyles.containerCommentLike, {marginRight: 10}]}>
+            <TouchableOpacity
+              style={[PostStyles.containerCommentLike, {marginRight: 10}]}>
               <SvgXml xml={PostIcon.comment} />
-              <Text style={PostStyles.textCommentLike}>42</Text>
-            </View>
-            <View style={PostStyles.containerCommentLike}>
-              <SvgXml xml={PostIcon.like} />
-              <Text style={PostStyles.textCommentLike}>21</Text>
-            </View>
+              <Text style={PostStyles.textCommentLike}>
+                {postData.num_of_like}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={PostStyles.containerCommentLike}
+              onPress={postLike ? fetchDeleteLikePost : fetchCreateLikePost}>
+              <SvgXml xml={postLike ? PostIcon.fullLike : PostIcon.like} />
+              <Text style={PostStyles.textCommentLike}>
+                {postData.num_of_comment}
+              </Text>
+            </TouchableOpacity>
           </View>
 
           <View style={PostStyles.containerWriter}>
@@ -144,7 +315,9 @@ const PostPage: React.FC<PostPageProps> = () => {
                   <Text style={PostStyles.textWriter}>뮤사랑</Text>
                   <SvgXml xml={PostIcon.Badge} />
                 </View>
-                <Text style={PostStyles.textDate}>11분전</Text>
+                <Text style={PostStyles.textDate}>
+                  {timeAgo(postData.created_at)}
+                </Text>
               </View>
             </View>
             <View style={PostStyles.containerWriterButton}>
@@ -153,7 +326,9 @@ const PostPage: React.FC<PostPageProps> = () => {
           </View>
 
           <View style={PostStyles.containerCommentTitle}>
-            <Text style={PostStyles.textCommentTitle}>댓글 21</Text>
+            <Text style={PostStyles.textCommentTitle}>
+              댓글 {postData.num_of_comment}
+            </Text>
             <View style={PostStyles.containerRow}>
               <TouchableOpacity>
                 <Text
@@ -167,7 +342,7 @@ const PostPage: React.FC<PostPageProps> = () => {
             </View>
           </View>
 
-          <ItemComment commentList={commentList} />
+          <ItemComment commentList={commentData} />
         </ScrollView>
       </SafeAreaView>
       <View style={PostStyles.white} />
@@ -182,7 +357,7 @@ const PostPage: React.FC<PostPageProps> = () => {
             onChangeText={text => onChangeComment(text)}
             value={valueComment}
           />
-          <TouchableOpacity>
+          <TouchableOpacity onPress={fetchCreateComment}>
             <Text style={PostStyles.textCommentSend}>등록</Text>
           </TouchableOpacity>
         </View>
