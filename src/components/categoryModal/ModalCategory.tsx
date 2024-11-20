@@ -140,7 +140,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: Colors.sub_04,
     marginHorizontal: 20,
-    marginVertical: 19,
+    marginTop: 19,
+    marginBottom: 33,
   },
   textButton: {
     fontFamily: 'Pretendard-SemiBold',
