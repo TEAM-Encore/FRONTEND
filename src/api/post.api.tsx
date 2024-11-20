@@ -6,20 +6,20 @@ export const PostPost = (
   post_type: string,
   title: string,
   content: string,
-  hashtags: Array<string>,
-  imgUrls?: Array<string>,
-  isNotice?: boolean,
-  isTemporarySave?: boolean,
+  hash_tags: Array<string>,
+  img_urls?: Array<string>,
+  is_notice?: boolean,
+  is_temporarySave?: boolean,
 ) => {
   const requestBody = {
     category,
     post_type,
     title,
     content,
-    hashTags: hashtags,
-    imgUrls: imgUrls || [],
-    isNotice: isNotice || false,
-    isTemporarySave: isTemporarySave || false,
+    hash_tags: hash_tags,
+    img_urls: img_urls || [],
+    is_notice: is_notice || false,
+    is_temporarySave: is_temporarySave || false,
   };
 
   return httpApi.post(`/api/v1/post`, requestBody);
@@ -30,9 +30,23 @@ export const GetPost = (post_id: number) => {
   return httpApi.get(`/api/v1/post/${post_id}`);
 };
 
-// 게시글 수정
-export const PutPost = (post_id: number) => {
-  return httpApi.put(`/api/v1/post/${post_id}`);
+interface UpdatePostRequest {
+  category: string;
+  post_type: string;
+  title: string;
+  content: string;
+  imgUrls: string[];
+  hashTags: string[];
+  isNotice: boolean;
+  isTemporarySave: boolean;
+}
+
+export const putPost = (postId: number, data: UpdatePostRequest) => {
+  return httpApi.put(`/api/v1/post/${postId}`, data, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 };
 
 // 게시글 삭제
@@ -58,4 +72,8 @@ export const GetPostList = (
   return httpApi.get(`/api/v1/post/list`, {
     params: requestParams,
   });
+};
+
+export const postLike = (post_id: string) => {
+  return httpApi.post(`/api/v1/post/likes/${post_id}`);
 };
