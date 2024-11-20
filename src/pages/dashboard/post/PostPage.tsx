@@ -21,7 +21,8 @@ import PostStyles from '@/pages/dashboard/post/PostStyles';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import {getPost, createLikePost, deleteLikePost} from '@/api/post.api';
 import {getComments, createComment} from '@/api/comment.api';
-import {timeAgo} from '@/util/timeAgo';
+// import {timeAgo} from '@/util/timeAgo';
+import {timeAgo} from '../../../util/timeAgo';
 
 import ModalModifyDelete from '@/components/modifyDeleteModal/ModalModifyDelete';
 import ItemComment from '@/components/comment/ItemComment';

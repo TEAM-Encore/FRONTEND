@@ -33,27 +33,10 @@ interface UpdatePostRequest {
   post_type: string;
   title: string;
   content: string;
-  imgUrls: string[];
-  hashTags: string[];
-  isNotice: boolean;
-  isTemporarySave: boolean;
-}
-
-export const putPost = (postId: number, data: UpdatePostRequest) => {
-  return httpApi.put(`/api/v1/post/${postId}`, data, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-interface UpdatePostRequest {
-  category: string;
-  post_type: string;
-  title: string;
-  content: string;
-  imgUrls: string[];
-  hashTags: string[];
-  isNotice: boolean;
-  isTemporarySave: boolean;
+  img_urls: string[];
+  hash_tags: string[];
+  is_notice: boolean;
+  is_temporarySave: boolean;
 }
 
 export const putPost = (postId: number, data: UpdatePostRequest) => {
@@ -106,6 +89,20 @@ export const GetPostList = (
   });
 };
 
-export const postLike = (post_id: string) => {
-  return httpApi.post(`/api/v1/post/likes/${post_id}`);
+export const createLikePost = (user_id: number, post_id: number) => {
+  const requestBody = {
+    user_id,
+    post_id,
+  };
+
+  return httpApi.post(`/api/v1/post/likes`, requestBody);
+};
+
+export const deleteLikePost = (user_id: number, post_id: number) => {
+  const requestBody = {
+    user_id,
+    post_id,
+  };
+
+  return httpApi.delete(`/api/v1/post/likes`, {data: requestBody});
 };
