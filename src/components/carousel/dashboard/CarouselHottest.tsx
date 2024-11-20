@@ -16,7 +16,7 @@ import EntireStyles from '@/pages/dashboard/entire/EntireStyles';
 const windowWidth = Dimensions.get('window').width;
 const margin = 5; // 각 카드들 간격
 const cardSize = {width: 335, height: 128};
-const offset = cardSize.width + 15; // 넘길 때 간격
+const offset = cardSize.width + 10; // 넘길 때 간격
 type CarouselItem = {
   id: string;
   title: string;
@@ -69,9 +69,8 @@ const CarouselHottest: React.FC = () => {
         backgroundColor: item.color,
         borderRadius: 5,
         padding: 16,
-        marginHorizontal: margin,
+        marginRight: 10,
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
       }}>
       <View style={{flex: 1}}>
