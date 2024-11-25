@@ -57,7 +57,6 @@ const Stack = createStackNavigator<RootStackParamList>();
 export default function App() {
   const [postData, setPostData] = React.useState<PostData | null>(null);
   const [modifyData, setModifyData] = React.useState<ModifyData | null>(null);
-  const setPostResponse = usePostStore(state => state.setPostResponse); // Zustand의 상태 업데이트 함수
 
   const postTypeMapping: Record<string, string> = {
     '게시판 선택 안함': 'NO_SELECT',
@@ -106,25 +105,24 @@ export default function App() {
 
         console.log('서버 응답: ', response.data);
 
-        setPostResponse(response.data);
+        if (response?.data?.code === 1000 && response?.data?.data?.post_id) {
+          const postId = response.data.data.post_id;
 
-        if (response.data?.data) {
-          setImgUrls(response.data.data, postData.imgUrls);
-        }
-
-        if (response.status === 201 || response.status === 200) {
           console.log('글이 성공적으로 등록되었습니다!');
           alert('글이 성공적으로 등록되었습니다.');
 
           setTimeout(() => {
-            navigation.goBack(); // 뒤로 가기
-          }, 500); // 약간의 지연 추가
+            navigation.navigate('PostPage', {postId});
+          }, 0);
+        } else {
+          alert('게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.');
         }
       } catch (error) {
-        console.log('게시글 등록 오류:', error.response);
+        alert('게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.');
       }
     } else {
       console.error('postData가 비어 있습니다.');
+      alert('등록할 데이터가 없습니다.');
     }
   };
 
