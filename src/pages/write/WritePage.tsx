@@ -92,7 +92,6 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
   const handleContentChange = (text: string) => {
     setContent(text);
     setHashTags(text.match(/#[^\s#]+/g) || []);
-    console.log('해시태그:', hashTags);
   };
 
   const handleSelectImage = async () => {

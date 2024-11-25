@@ -44,11 +44,9 @@ const ReviewList: React.FC<ReviewListProps> = ({selectedFilter, category}) => {
             sortCategory,
             'REVIEW',
           );
-          console.log('API RESPONSE:', response.data);
 
           const postData = response.data.data.content;
           setPostList(postData);
-          console.log('postList:', postData);
         } catch (error) {
           console.error('Error fetching post list:', error);
         } finally {
