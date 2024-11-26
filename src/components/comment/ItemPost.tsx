@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   FlatList,
   View,
@@ -14,7 +14,8 @@ import {useNavigation} from '@react-navigation/native';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
-import {usePostStore} from '../../store/usePostStore';
+import {createLikePost, deleteLikePost} from '@/api/post.api';
+import {timeAgo} from '../../util/timeAgo';
 
 const {subhead03, body01, caption} = typography;
 
@@ -24,7 +25,7 @@ type NavigationProp = {
 
 type PostProps = {
   postList: {
-    id: string;
+    id: any;
     nickname: string;
     title: string;
     content: string;
@@ -38,62 +39,53 @@ type PostProps = {
 
 const ItemPost: React.FC<PostProps> = ({postList}) => {
   const navigation = useNavigation<NavigationProp>();
+  const [isLiked, setIsLiked] = useState(false);
 
-  const getTimeDifference = (created_at: string): string => {
-    const created = moment(created_at, moment.ISO_8601);
-
-    // 날짜 유효성 검증
-    if (!created.isValid()) {
-      console.error('Invalid date format:', created_at);
-      return '알 수 없음';
-    }
-
-    const now = moment();
-    const duration = moment.duration(now.diff(created));
-
-    const minutes = duration.asMinutes();
-    const hours = duration.asHours();
-    const days = duration.asDays();
-
-    if (minutes < 60) {
-      // 60분 이내라면 분 단위로 표시
-      return ` ${Math.floor(minutes)}분 전`;
-    } else if (hours < 24) {
-      // 24시간 이내라면 시간 단위로 표시
-      return ` ${Math.floor(hours)}시간 전`;
-    } else {
-      // 24시간 이상이라면 일 단위로 표시
-      return ` ${Math.floor(days)}일 전`;
-    }
-  };
-
-  const categoryMapping: Record<string, {color: string; boxColor: string}> = {
-    '오페라 글래스': {
+  const categoryMapping: Record<
+    string,
+    {label: string; color: string; boxColor: string}
+  > = {
+    OPERA_GLASS_RENTAL: {
+      label: '오페라 글라스',
       color: '#FFB200',
       boxColor: Colors.sub_01,
     },
-    '뮤지컬 용어': {
+    MUSICAL_TERMS: {
+      label: '뮤지컬 용어',
       color: '#FF7163',
       boxColor: '#FFEAE8',
     },
-    이벤트: {color: '#FF853E', boxColor: '#FFE9DC'},
-    '시야 후기': {
+    EVENTS: {label: '이벤트', color: '#FF853E', boxColor: '#FFE9DC'},
+    VIEW_REVIEW: {
+      label: '시야 후기',
       color: '#FFB200',
       boxColor: Colors.sub_01,
     },
-    '굿즈 후기': {color: '#FF853E', boxColor: '#FFE9DC'},
-    '공연 감상 후기': {
+    GOODS_REVIEW: {label: '굿즈 후기', color: '#FF853E', boxColor: '#FFE9DC'},
+    PERFORMANCE_REVIEW: {
+      label: '공연 감상',
       color: '#FF4FB3',
       boxColor: '#FFE6F4',
     },
   };
 
   const getMappedCategory = (category: string | undefined) => {
+    console.log('현재 카테고리: ', category);
     if (!category) return null;
     return categoryMapping[category];
   };
 
-  const imgUrls = usePostStore(state => state.imgUrls); // Zustand에서 모든 imgUrls 가져오기
+  // 일단 사용자 아이디 1로 고정
+  const user_id = 1;
+
+  const handleLike = async (user_id: number, post_id: number) => {
+    try {
+      await createLikePost(user_id, post_id);
+      setIsLiked(prev => !prev);
+    } catch (error) {
+      console.error('좋아요 토글 오류:', error);
+    }
+  };
 
   return (
     <FlatList
@@ -101,10 +93,7 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
       keyExtractor={item => item.id}
       renderItem={({item, index}) => {
         const category = getMappedCategory(item.category);
-
-        // Zustand에서 현재 item.id에 해당하는 imgUrls 가져오기
-        const itemImgUrls = imgUrls[parseInt(item.id)] || []; // imgUrls가 없으면 빈 배열
-        const thumbnail = itemImgUrls.length > 0 ? itemImgUrls[0] : null; // 첫 번째 이미지
+        const thumbnail = item.thumbnail;
 
         return (
           <>
@@ -113,7 +102,6 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
               onPress={() =>
                 navigation.navigate('PostPage', {
                   postId: item.id,
-                  images: itemImgUrls,
                 })
               }>
               {item.category !== '카테고리 미선택' && (
@@ -123,7 +111,7 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
                     {backgroundColor: category?.boxColor},
                   ]}>
                   <Text style={[styles.textCategory, {color: category?.color}]}>
-                    {item.category}
+                    {category?.label}
                   </Text>
                 </View>
               )}
@@ -150,12 +138,19 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
                         {item.nickname} ·
                       </Text>
                       <Text style={styles.textIsWriterDate}>
-                        {getTimeDifference(item.created_at)}
+                        {timeAgo(item.created_at)}
                       </Text>
                     </View>
 
                     <View style={styles.containerRow}>
-                      <SvgXml xml={PostIcon.commentLike} />
+                      <TouchableOpacity
+                        onPress={() => handleLike(user_id, item.id)}>
+                        <SvgXml
+                          xml={
+                            isLiked ? PostIcon.fullLike : PostIcon.commentLike
+                          }
+                        />
+                      </TouchableOpacity>
                       <Text style={styles.textLikeComment}>
                         {item.like_count}
                       </Text>
