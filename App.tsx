@@ -14,7 +14,6 @@ import ModifyPage from './src/pages/write/ModifyPage';
 import SavePage from './src/pages/write/save/SavePage';
 
 import {createPost, putPost} from './src/api/post.api';
-import {usePostStore} from './src/store/usePostStore';
 
 interface PostData {
   title: string;
