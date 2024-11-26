@@ -108,9 +108,9 @@ export default function App() {
 
         setPostResponse(response.data);
 
-        if (response.data?.data) {
-          setImgUrls(response.data.data, postData.imgUrls);
-        }
+        // if (response.data?.data) {
+        //   setImgUrls(response.data.data, postData.imgUrls);
+        // }
 
         if (response.status === 201 || response.status === 200) {
           console.log('글이 성공적으로 등록되었습니다!');
@@ -121,7 +121,7 @@ export default function App() {
           }, 500); // 약간의 지연 추가
         }
       } catch (error) {
-        console.log('게시글 등록 오류:', error.response);
+        console.log('게시글 등록 오류:', error);
       }
     } else {
       console.error('postData가 비어 있습니다.');
