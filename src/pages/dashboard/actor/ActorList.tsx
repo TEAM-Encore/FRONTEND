@@ -1,7 +1,7 @@
 import React, {useState, useCallback} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {GetPostList} from '../../../api/post.api';
-import ItemPost from '@/components/comment/ItemPost';
+import ItemPostNoCategory from '@/components/comment/ItemPostNoCategory';
 
 type ActorListProps = {
   selectedFilter: string;
@@ -46,6 +46,6 @@ const ActorList: React.FC<ActorListProps> = ({selectedFilter}) => {
     }, [selectedFilter]),
   );
 
-  return <>{loading ? <></> : <ItemPost postList={postList} />}</>;
+  return <>{loading ? <></> : <ItemPostNoCategory postList={postList} />}</>;
 };
 export default ActorList;
