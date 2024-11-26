@@ -23,6 +23,7 @@ type CarouselItem = {
   comments: number;
   likes: number;
   color: string;
+  src: any;
 };
 
 const data: CarouselItem[] = [
@@ -32,21 +33,24 @@ const data: CarouselItem[] = [
       '샤롯데시어터 오페라글라스 대여 현황 어떤가요?샤롯데시어터 오페라글라스 대여 현황 어떤가요?샤롯데시어터 오페라글라스 대여 현황 어떤가요?',
     comments: 5,
     likes: 10,
-    color: Colors.sub_02,
+    color: '#EDDCFF',
+    src: require('@/assets/logo/logo5.png'),
   },
   {
     id: '2',
     title: '샤롯데시어터 오페라글라스 대여 현황 어떤가요?',
     comments: 5,
     likes: 10,
-    color: '#FFD4C8',
+    color: '#FFF1BB',
+    src: require('@/assets/logo/logo6.png'),
   },
   {
     id: '3',
     title: '샤롯데시어터 오페라글라스 대여 현황 어떤가요?',
     comments: 5,
     likes: 10,
-    color: '#FFE4BF',
+    color: '#FFDFD6',
+    src: require('@/assets/logo/logo7.png'),
   },
 ];
 
@@ -68,7 +72,6 @@ const CarouselHottest: React.FC = () => {
         height: cardSize.height,
         backgroundColor: item.color,
         borderRadius: 5,
-        padding: 16,
         marginRight: 10,
         flexDirection: 'row',
         alignItems: 'center',
@@ -81,20 +84,19 @@ const CarouselHottest: React.FC = () => {
           {item.title}
         </Text>
         <View style={EntireStyles.footer}>
-          <SvgXml xml={DashboardIcon.message} />
-          <Text style={EntireStyles.hottest_icon}> {item.comments}</Text>
-
           <SvgXml xml={DashboardIcon.heart} />
           <Text style={EntireStyles.hottest_icon}> {item.likes}</Text>
+          <SvgXml xml={DashboardIcon.message} />
+          <Text style={EntireStyles.hottest_icon}> {item.comments}</Text>
         </View>
       </View>
       <Image
-        source={require('@/assets/logo/logo3.png')}
+        source={item.src}
         style={{
-          width: 131.19,
-          height: 73,
-          marginTop: 45,
-          marginBottom: 10,
+          width: 110,
+          height: 75,
+          alignSelf: 'flex-end',
+          marginRight: 13,
         }}
       />
     </View>
