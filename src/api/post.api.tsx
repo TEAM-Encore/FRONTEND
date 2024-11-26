@@ -1,14 +1,14 @@
 import httpApi from './http.api';
 
 export const createPost = (
-  category: string,
-  post_type: string,
-  title: string,
-  content: string,
-  hash_tags: Array<string>,
+  category?: string,
+  post_type?: string,
+  title?: string,
+  content?: string,
+  hash_tags?: Array<string>,
   img_urls?: Array<string>,
   is_notice?: boolean,
-  is_temporarySave?: boolean,
+  is_temporary_save?: boolean,
 ) => {
   const requestBody = {
     category,
@@ -17,8 +17,8 @@ export const createPost = (
     content,
     hash_tags: hash_tags,
     img_urls: img_urls || [],
-    is_notice: is_notice || false,
-    is_temporarySave: is_temporarySave || false,
+    is_notice: is_notice ?? false,
+    is_temporary_save: is_temporary_save ?? false,
   };
 
   return httpApi.post(`/api/v1/post`, requestBody);

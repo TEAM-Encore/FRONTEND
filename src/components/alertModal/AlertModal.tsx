@@ -5,8 +5,10 @@ import {
   Modal,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import AlertModalStyle from './AlertModalStyle';
+import {deletePost} from '@/api/post.api';
 
 type AlertModalProps = {
   modalVisible: boolean;
@@ -15,6 +17,7 @@ type AlertModalProps = {
   subTitle: string;
   topButton: string;
   bottomButton: string;
+  postId: number | null;
 };
 
 const AlertModal: React.FC<AlertModalProps> = ({
@@ -24,10 +27,24 @@ const AlertModal: React.FC<AlertModalProps> = ({
   subTitle,
   topButton,
   bottomButton,
+  postId,
 }) => {
-  // 추후 수정 필요
+  const fetchDeletePost = async (postId: number) => {
+    try {
+      await deletePost(postId);
+      Alert.alert('임시 저장된 글이 삭제되었습니다!');
+      setModalVisible(false);
+    } catch (error) {
+      console.error('게시글 삭제 오류:', error);
+    }
+  };
+
   const handleTopButton = () => {
-    setModalVisible(false);
+    if (postId !== null) {
+      fetchDeletePost(postId);
+    } else {
+      Alert.alert('삭제할 게시글의 ID를 찾을 수 없습니다!');
+    }
   };
 
   const handleBottomButton = () => {
@@ -37,6 +54,8 @@ const AlertModal: React.FC<AlertModalProps> = ({
   const closeModal = () => {
     setModalVisible(false);
   };
+
+  console.log('삭제할 postId: ', postId);
 
   return (
     <Modal
