@@ -19,7 +19,7 @@ type InformationScreenProps = {};
 const InformationScreen: React.FC<InformationScreenProps> = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [category, setCategory] = useState('카테고리');
-  const categoryList = ['전체보기', '오페라글라스', '뮤지컬 용어', '이벤트'];
+  const categoryList = ['전체보기', '오페라 글라스', '뮤지컬 용어', '이벤트'];
   const [selectedFilter, setSelectedFilter] = useState<'최신순' | '인기순'>(
     '최신순',
   );

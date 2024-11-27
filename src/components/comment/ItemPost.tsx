@@ -67,22 +67,29 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
     }
   };
 
-  const categoryMapping: Record<string, {color: string; boxColor: string}> = {
-    '오페라 글래스': {
+  const categoryMapping: Record<
+    string,
+    {label: string; color: string; boxColor: string}
+  > = {
+    OPERA_GLASS_RENTAL: {
+      label: '오페라 글래스',
       color: '#FFB200',
       boxColor: Colors.sub_01,
     },
-    '뮤지컬 용어': {
+    MUSICAL_TERMS: {
+      label: '뮤지컬 용어',
       color: '#FF7163',
       boxColor: '#FFEAE8',
     },
-    이벤트: {color: '#FF853E', boxColor: '#FFE9DC'},
-    '시야 후기': {
+    EVENTS: {label: '이벤트', color: '#FF853E', boxColor: '#FFE9DC'},
+    VIEW_REVIEW: {
+      label: '시야 후기',
       color: '#FFB200',
       boxColor: Colors.sub_01,
     },
-    '굿즈 후기': {color: '#FF853E', boxColor: '#FFE9DC'},
-    '공연 감상 후기': {
+    GOODS_REVIEW: {label: '굿즈 후기', color: '#FF853E', boxColor: '#FFE9DC'},
+    PERFORMANCE_REVIEW: {
+      label: '공연 감상',
       color: '#FF4FB3',
       boxColor: '#FFE6F4',
     },
@@ -116,14 +123,14 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
                   images: itemImgUrls,
                 })
               }>
-              {item.category !== '카테고리 미선택' && (
+              {category && (
                 <View
                   style={[
                     styles.containerCategory,
                     {backgroundColor: category?.boxColor},
                   ]}>
                   <Text style={[styles.textCategory, {color: category?.color}]}>
-                    {item.category}
+                    {category?.label}
                   </Text>
                 </View>
               )}
