@@ -52,6 +52,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     num_of_comment?: number;
     num_of_like?: number;
     hashtags?: [];
+    nick_name: string;
   }>({});
   const [commentData, setCommentData] = useState<
     {
@@ -127,7 +128,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
   useFocusEffect(
     useCallback(() => {
       fetchGetPost();
-    }, []),
+    }, [commentData]),
   );
 
   const fetchCreateLikePost = async () => {
@@ -286,7 +287,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
           <View style={PostStyles.containerCommentLikeItems}>
             <TouchableOpacity
               style={[PostStyles.containerCommentLike, {marginRight: 10}]}>
-              <SvgXml xml={PostIcon.comment} />
+              <SvgXml xml={postLike ? PostIcon.fullLike : PostIcon.like} />
               <Text style={PostStyles.textCommentLike}>
                 {postData.num_of_like}
               </Text>
@@ -294,7 +295,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
             <TouchableOpacity
               style={PostStyles.containerCommentLike}
               onPress={postLike ? fetchDeleteLikePost : fetchCreateLikePost}>
-              <SvgXml xml={postLike ? PostIcon.fullLike : PostIcon.like} />
+              <SvgXml xml={PostIcon.comment} />
               <Text style={PostStyles.textCommentLike}>
                 {postData.num_of_comment}
               </Text>
@@ -307,22 +308,21 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
                 <SvgXml xml={PostIcon.writerBackground} />
                 <Image
                   style={PostStyles.imageWriter}
-                  source={require('@/assets/logo/logo4.png')}
+                  source={require('@/assets/images/board/commentFace.png')}
                 />
               </>
               <View style={PostStyles.containerWriterText}>
                 <View style={PostStyles.containerRow}>
-                  <Text style={PostStyles.textWriter}>뮤사랑</Text>
+                  <Text style={PostStyles.textWriter}>
+                    {postData.nick_name}
+                  </Text>
                   <SvgXml xml={PostIcon.Badge} />
                 </View>
-                <Text style={PostStyles.textDate}>
-                  {timeAgo(postData.created_at)}
-                </Text>
               </View>
             </View>
-            <View style={PostStyles.containerWriterButton}>
-              <Text style={PostStyles.textWriterButton}>작성자</Text>
-            </View>
+            <Text style={PostStyles.textDate}>
+              {timeAgo(postData.created_at)}
+            </Text>
           </View>
 
           <View style={PostStyles.containerCommentTitle}>
