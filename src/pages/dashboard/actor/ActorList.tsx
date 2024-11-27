@@ -1,7 +1,7 @@
 import React, {useState, useCallback} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {GetPostList} from '../../../api/post.api';
-import ItemPost from '@/components/comment/ItemPost';
+import ItemPostNoCategory from '@/components/comment/ItemPostNoCategory';
 
 type ActorListProps = {
   selectedFilter: string;
@@ -33,11 +33,8 @@ const ActorList: React.FC<ActorListProps> = ({selectedFilter}) => {
             'ACTOR',
             undefined,
           );
-          console.log('API RESPONSE:', response.data);
-
           const postData = response.data.data.content;
           setPostList(postData);
-          console.log('postList:', postData);
         } catch (error) {
           console.error('Error fetching post list:', error);
         } finally {
@@ -49,6 +46,6 @@ const ActorList: React.FC<ActorListProps> = ({selectedFilter}) => {
     }, [selectedFilter]),
   );
 
-  return <>{loading ? <></> : <ItemPost postList={postList} />}</>;
+  return <>{loading ? <></> : <ItemPostNoCategory postList={postList} />}</>;
 };
 export default ActorList;

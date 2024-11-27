@@ -21,7 +21,8 @@ import PostStyles from '@/pages/dashboard/post/PostStyles';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import {getPost, createLikePost, deleteLikePost} from '@/api/post.api';
 import {getComments, createComment} from '@/api/comment.api';
-import {timeAgo} from '@/util/timeAgo';
+// import {timeAgo} from '@/util/timeAgo';
+import {timeAgo} from '../../../util/timeAgo';
 
 import ModalModifyDelete from '@/components/modifyDeleteModal/ModalModifyDelete';
 import ItemComment from '@/components/comment/ItemComment';
@@ -30,7 +31,6 @@ type PostPageRouteProp = RouteProp<RootStackParamList, 'PostPage'>;
 
 interface PostPageProps {
   route: PostPageRouteProp;
-  images?: string[];
 }
 
 type ModalPosition = {
@@ -41,7 +41,7 @@ type ModalPosition = {
 };
 
 const PostPage: React.FC<PostPageProps> = ({route}) => {
-  const {postId, images: itemImgUrls} = route.params; // imgUrls 추가
+  const {postId} = route.params; // imgUrls 추가
   const navigation = useNavigation();
   const iconRef = useRef<View>(null);
   const [postData, setPostData] = useState<{
@@ -52,6 +52,8 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     num_of_comment?: number;
     num_of_like?: number;
     hashtags?: [];
+    post_images?: [];
+    profile_image_url?: string;
   }>({});
   const [commentData, setCommentData] = useState<
     {
@@ -80,7 +82,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     {label: string; color: string; boxColor: string}
   > = {
     OPERA_GLASS_RENTAL: {
-      label: '오페라 글래스',
+      label: '오페라 글라스',
       color: '#FFB200',
       boxColor: Colors.sub_01,
     },
@@ -111,14 +113,24 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
   const category = getMappedCategory(postData.category);
 
   const handleGoBack = () => {
-    navigation.goBack();
+    const previousState = navigation.getState();
+    const previousRouteName =
+      previousState?.routes[previousState.routes.length - 2]?.name;
+
+    if (previousRouteName === 'WritePage') {
+      // 이전 화면이 WritePage일 경우 goBack() 두 번 호출
+      navigation.goBack();
+      navigation.goBack();
+    } else {
+      navigation.goBack();
+    }
   };
 
   const fetchGetPost = async () => {
     try {
       const response = await getPost(postId);
       setPostData(response.data.data);
-      console.log(response.data.data);
+      console.log('상세페이지 응답값:', response.data.data);
     } catch (error) {
       console.error('게시글 조회 오류:', error);
     }
@@ -182,38 +194,6 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     }
   };
 
-  // 기본 이미지 리스트
-  const defaultImages = [
-    {
-      id: '1',
-      image: require('@/assets/images/home/Musical4.jpeg'),
-    },
-    {
-      id: '2',
-      image: require('@/assets/images/home/Musical5.jpeg'),
-    },
-    {
-      id: '3',
-      image: require('@/assets/images/home/Musical6.jpeg'),
-    },
-    {
-      id: '4',
-      image: require('@/assets/images/home/Musical6.jpeg'),
-    },
-    {
-      id: '5',
-      image: require('@/assets/images/home/Musical6.jpeg'),
-    },
-  ];
-
-  const imagesToRender =
-    itemImgUrls && itemImgUrls.length > 0
-      ? itemImgUrls.map((url: string, index: number) => ({
-          id: index.toString(),
-          image: {uri: url},
-        }))
-      : defaultImages;
-
   return (
     <>
       <SafeAreaView style={PostStyles.container}>
@@ -261,17 +241,27 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
             <Text style={PostStyles.textContent}>{postData.content}</Text>
           </View>
 
-          {/* 이미지 렌더링 */}
-          <FlatList
-            contentContainerStyle={{marginHorizontal: 20}}
-            data={imagesToRender} // 렌더링할 이미지 배열
-            renderItem={({item}) => (
-              <Image style={PostStyles.images} source={item.image} />
-            )}
-            keyExtractor={item => item.id}
-            horizontal={true}
-            nestedScrollEnabled
-          />
+          <View style={PostStyles.photos}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {postData.post_images &&
+                postData.post_images.length > 0 &&
+                postData.post_images.map((url: string, index: number) =>
+                  url ? (
+                    <Image
+                      key={index}
+                      style={{
+                        width: 84,
+                        height: 92,
+                        borderRadius: 9,
+                        marginRight: 14,
+                      }}
+                      source={{uri: url}}
+                      resizeMode="cover"
+                    />
+                  ) : null,
+                )}
+            </ScrollView>
+          </View>
 
           <View style={{marginHorizontal: 20}}>
             {postData.hashtags?.length !== 0 && (
@@ -285,16 +275,16 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
 
           <View style={PostStyles.containerCommentLikeItems}>
             <TouchableOpacity
-              style={[PostStyles.containerCommentLike, {marginRight: 10}]}>
-              <SvgXml xml={PostIcon.comment} />
+              style={PostStyles.containerCommentLike}
+              onPress={postLike ? fetchDeleteLikePost : fetchCreateLikePost}>
+              <SvgXml xml={postLike ? PostIcon.fullLike : PostIcon.like} />
               <Text style={PostStyles.textCommentLike}>
                 {postData.num_of_like}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={PostStyles.containerCommentLike}
-              onPress={postLike ? fetchDeleteLikePost : fetchCreateLikePost}>
-              <SvgXml xml={postLike ? PostIcon.fullLike : PostIcon.like} />
+              style={[PostStyles.containerCommentLike, {marginRight: 10}]}>
+              <SvgXml xml={PostIcon.comment} />
               <Text style={PostStyles.textCommentLike}>
                 {postData.num_of_comment}
               </Text>
@@ -305,9 +295,10 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
             <View style={PostStyles.containerRow}>
               <>
                 <SvgXml xml={PostIcon.writerBackground} />
+                {/* 추후에 사용자의 profile_image_url로 변경 필요*/}
                 <Image
                   style={PostStyles.imageWriter}
-                  source={require('@/assets/logo/logo4.png')}
+                  source={require('@/assets/images/default-profile.png')}
                 />
               </>
               <View style={PostStyles.containerWriterText}>

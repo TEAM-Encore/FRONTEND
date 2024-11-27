@@ -5,26 +5,40 @@ import {
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-
 import WriteStyles from '@/pages/write/WriteStyles';
 import {SvgXml} from 'react-native-svg';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import AlertModal from '../alertModal/AlertModal';
 import {SelectImage} from '../selectImage/SelectImage';
+import {createPost} from '@/api/post.api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type RootStackParamList = {
   SavePage: undefined;
 };
 
 type WriteBottomTabProps = {
+  title: string;
+  content: string;
+  post_type: string;
+  category: string;
+  hashTags: string[];
+  imgUrls: string[];
   setContent: React.Dispatch<React.SetStateAction<string>>;
   setPhotoCount: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
+  title,
+  content,
+  post_type,
+  category,
+  hashTags,
+  imgUrls,
   setContent,
   setPhotoCount,
 }) => {
@@ -54,6 +68,76 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
     setContent(prevContent => prevContent + '#');
   };
 
+  console.log('Write Bottom Tab: ', {
+    title,
+    content,
+    post_type,
+    category,
+    hashTags,
+    imgUrls,
+  });
+
+  const postTypeMapping: Record<string, string> = {
+    '게시판 선택 안함': 'NO_SELECT',
+    '게시판 선택': 'NO_SELECT',
+    '정보 게시판': 'INFORMATION',
+    '후기 게시판': 'REVIEW',
+    '배우 게시판': 'ACTOR',
+    '자유 게시판': 'FREE',
+  };
+
+  const categoryMapping: Record<string, string> = {
+    '카테고리 선택': 'NO_SELECT',
+    '선택 안함': 'NO_SELECT',
+    '오페라 글라스': 'OPERA_GLASS_RENTAL',
+    '뮤지컬 용어': 'MUSICAL_TERMS',
+    이벤트: 'EVENTS',
+    '시야 후기': 'VIEW_REVIEW',
+    '굿즈 후기': 'GOODS_REVIEW',
+    '공연 감상': 'PERFORMANCE_REVIEW',
+  };
+
+  const handleTemporarySave = async () => {
+    try {
+      const mappedCategory = categoryMapping[category] || category;
+      const mappedPostType = postTypeMapping[post_type] || post_type;
+
+      const response = await createPost(
+        mappedCategory,
+        mappedPostType,
+        title,
+        content,
+        hashTags,
+        imgUrls,
+        false,
+        true,
+      );
+
+      console.log('임시 저장한 글 내용: ', response.data);
+
+      if (response?.data?.code === 1000 && response?.data?.data?.post_id) {
+        // AsyncStorage 임시 저장하기
+        const savedPosts = JSON.parse(
+          (await AsyncStorage.getItem('temporaryPosts')) || '[]',
+        );
+        const updatedPosts = [...savedPosts, response.data.data];
+
+        await AsyncStorage.setItem(
+          'temporaryPosts',
+          JSON.stringify(updatedPosts),
+        );
+
+        Alert.alert('임시 저장이 완료되었습니다.');
+        // navigation.navigate('SavePage');
+      } else {
+        Alert.alert('임시 저장 중 문제가 발생했습니다. 다시 시도해주세요.');
+      }
+    } catch (error) {
+      console.error('Temporary save error:', error);
+      Alert.alert('임시 저장 중 문제가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
+
   return (
     <>
       <View style={WriteStyles.white} />
@@ -77,7 +161,7 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
         </TouchableOpacity>
 
         <View style={WriteStyles.bottom_text_container}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() =>
               openModal(
                 selectedTitle,
@@ -85,7 +169,8 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
                 topButton,
                 bottomButton,
               )
-            }>
+            }> */}
+          <TouchableOpacity onPress={handleTemporarySave}>
             <Text style={{...WriteStyles.bottom_text, paddingRight: 12}}>
               임시저장
             </Text>

@@ -12,7 +12,8 @@ import {SvgXml} from 'react-native-svg';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
-import {timeAgo} from '@/util/timeAgo';
+// import {timeAgo} from '@/util/timeAgo';
+import {timeAgo} from '../../util/timeAgo';
 import {createLikeComment} from '@/api/comment.api';
 
 import ModalModifyDelete from '@/components/modifyDeleteModal/ModalModifyDelete';

@@ -85,7 +85,7 @@ const DashboardStyles = StyleSheet.create({
     backgroundColor: 'white',
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.75,
+    shadowOpacity: 0.1,
     shadowRadius: 1.5,
   },
   writeIcon: {

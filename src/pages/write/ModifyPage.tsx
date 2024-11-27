@@ -49,6 +49,7 @@ const ModifyPage: React.FC<ModifyPageRouteProps> = ({route, setModifyData}) => {
   const [dashboardModalVisible, setDashboardModalVisible] = useState(false);
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
+  const [imgUrls, setImgUrls] = useState<string[]>([]);
 
   const dashboardList = [
     '게시판 선택 안함',
@@ -212,7 +213,16 @@ const ModifyPage: React.FC<ModifyPageRouteProps> = ({route, setModifyData}) => {
         </ScrollView>
       </SafeAreaView>
 
-      <WriteBottomTab setContent={setContent} />
+      <WriteBottomTab
+        setContent={setContent}
+        setPhotoCount={setPhotoCount}
+        title={title}
+        content={content}
+        post_type={post_type}
+        category={category}
+        hashTags={hashTags}
+        imgUrls={imgUrls}
+      />
     </>
   );
 };
