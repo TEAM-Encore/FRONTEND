@@ -183,6 +183,7 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
               onChangeText={handleContentChange}
               value={content}
               multiline
+              numberOfLines={10}
             />
           </View>
 
@@ -244,7 +245,16 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
         </ScrollView>
       </SafeAreaView>
 
-      <WriteBottomTab setContent={setContent} setPhotoCount={setPhotoCount} />
+      <WriteBottomTab
+        setContent={setContent}
+        setPhotoCount={setPhotoCount}
+        title={title}
+        content={content}
+        post_type={post_type}
+        category={category}
+        hashTags={hashTags}
+        imgUrls={imgUrls}
+      />
     </>
   );
 };
