@@ -1,66 +1,74 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
   View,
   Text,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import SaveStyles from './SaveStyles';
 import AlertModal from '@/components/alertModal/AlertModal';
-
-const items = [
-  {
-    id: 1,
-    title: '프랑켄슈타인 막공 후기',
-    date: '2024.10.9',
-    expireDate: 3,
-  },
-  {
-    id: 2,
-    title: '프랑켄슈타인 막공 후기',
-    date: '2024.10.9',
-    expireDate: 5,
-  },
-  {
-    id: 3,
-    title: '프랑켄슈타인 막공 후기',
-    date: '2024.10.9',
-    expireDate: 7,
-  },
-  {
-    id: 4,
-    title: '프랑켄슈타인 막공 후기',
-    date: '2024.10.9',
-    expireDate: 10,
-  },
-];
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getPost} from '@/api/post.api';
+import {timeAgo} from '@/util/timeAgo';
 
 const SavePage: React.FC = () => {
-  //   const [count, setCount] = useState('4');
-  //   const [title, setTitle] = useState('프랑켄슈타인 막공 후기');
-  //   const [date, setDate] = useState('2024.10.9');
-  //   const [expireDate, setExpireDate] = useState('3');
-
   const [modalVisible, setModalVisible] = useState(false);
-
   const [selectedTitle, setSelectedTitle] = useState('');
   const [selectedSubTitle, setSelectedSubtitle] = useState('');
   const [topButton, setTopButton] = useState('');
   const [bottomButton, setBottomButton] = useState('');
+  const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
+
+  const [count, setCount] = useState(0);
+  const [savedPosts, setSavedPosts] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchSavedPosts = async () => {
+      try {
+        // AsyncStorage에 저장되어 있는 데이터 확인
+        const storedData = await AsyncStorage.getItem('temporaryPosts');
+        const parsedData = JSON.parse(storedData || '[]');
+
+        if (parsedData.length > 0) {
+          const fetchedPosts = await Promise.all(
+            parsedData.map(async (post: {post_id: number}) => {
+              const response = await getPost(post.post_id);
+              return response.data.data; // 각 post의 데이터
+            }),
+          );
+
+          setSavedPosts(fetchedPosts);
+          setCount(fetchedPosts.length);
+        }
+      } catch (error) {
+        console.error('Error fetching saved posts:', error);
+        Alert.alert(
+          '임시 저장 목록을 불러오는 도중 문제가 발생했습니다. 다시 시도해주세요.',
+        );
+      }
+    };
+
+    fetchSavedPosts();
+  }, []);
 
   const openModal = (
     title: string,
     subTitle: string,
     topButton: string,
     bottomButton: string,
+    postId: number,
   ) => {
     setModalVisible(true);
     setSelectedTitle('임시저장된 글을 삭제할까요?');
     setSelectedSubtitle(`삭제된 글은 복구할 수 없습니다`);
     setTopButton('삭제하기');
     setBottomButton('취소하기');
+    setSelectedPostId(postId); // 선택된 post_id 설정
   };
+
+  console.log('storageData: ', savedPosts);
 
   return (
     <>
@@ -68,10 +76,10 @@ const SavePage: React.FC = () => {
         <ScrollView>
           <View style={{flex: 1}}>
             <View style={SaveStyles.count_container}>
-              <Text style={SaveStyles.count_text}>총 {items.length}개</Text>
+              <Text style={SaveStyles.count_text}>총 {count}개</Text>
             </View>
 
-            {items.map(item => (
+            {savedPosts.map(item => (
               <View key={item.id} style={SaveStyles.list_container}>
                 <View style={SaveStyles.list}>
                   <View style={SaveStyles.sub_container}>
@@ -83,6 +91,7 @@ const SavePage: React.FC = () => {
                           selectedSubTitle,
                           topButton,
                           bottomButton,
+                          item.post_id,
                         )
                       }>
                       <View>
@@ -91,7 +100,9 @@ const SavePage: React.FC = () => {
                     </TouchableOpacity>
                   </View>
                   <View style={SaveStyles.sub_container}>
-                    <Text style={SaveStyles.list_date}>{item.date}</Text>
+                    <Text style={SaveStyles.list_date}>
+                      {timeAgo(item.modified_at)}
+                    </Text>
                     <Text style={SaveStyles.list_expire_date}>
                       {item.expireDate}일 뒤 자동 삭제
                     </Text>
@@ -116,6 +127,7 @@ const SavePage: React.FC = () => {
         subTitle={selectedSubTitle}
         topButton={topButton}
         bottomButton={bottomButton}
+        postId={selectedPostId}
       />
     </>
   );

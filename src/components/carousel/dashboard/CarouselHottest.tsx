@@ -11,15 +11,14 @@ import EntireStyles from '@/pages/dashboard/entire/EntireStyles';
 const windowWidth = Dimensions.get('window').width;
 const margin = 5; // 각 카드들 간격
 const cardSize = {width: 335, height: 128};
-const offset = cardSize.width + 15; // 넘길 때 간격
-
+const offset = cardSize.width + 10; // 넘길 때 간격
 type CarouselItem = {
   id: string;
   title: string;
   comments: number;
   likes: number;
   color: string;
-  icon: any;
+  src: any;
 };
 
 const data: CarouselItem[] = [
@@ -28,25 +27,24 @@ const data: CarouselItem[] = [
     title: '최고의 넘버, 어떤 곡이신가요?',
     comments: 5,
     likes: 10,
-
     color: '#EDDCFF',
-    icon: PostIcon.carousel3,
+    src: require('@/assets/logo/logo5.png'),
   },
   {
     id: '2',
     title: '샤롯데시어터 오페라글라스 대여 현황 어떤가요?',
     comments: 5,
     likes: 10,
-    color: Colors.sub_02,
-    icon: PostIcon.carousel1,
+    color: '#FFF1BB',
+    src: require('@/assets/logo/logo6.png'),
   },
   {
     id: '3',
     title: '킹키부츠 2회극 후기',
     comments: 5,
     likes: 10,
-    color: '#FFD4C8',
-    icon: PostIcon.carousel2,
+    color: '#FFDFD6',
+    src: require('@/assets/logo/logo7.png'),
   },
 ];
 
@@ -67,10 +65,8 @@ const CarouselHottest: React.FC = () => {
         height: cardSize.height,
         backgroundColor: item.color,
         borderRadius: 5,
-        padding: 16,
-        marginHorizontal: margin,
+        marginRight: 10,
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
       }}>
       <View style={{flex: 1}}>
@@ -81,16 +77,21 @@ const CarouselHottest: React.FC = () => {
           {item.title}
         </Text>
         <View style={EntireStyles.footer}>
-          <SvgXml xml={DashboardIcon.message} />
-          <Text style={EntireStyles.hottest_icon}> {item.comments}</Text>
-
           <SvgXml xml={DashboardIcon.heart} />
           <Text style={EntireStyles.hottest_icon}> {item.likes}</Text>
+          <SvgXml xml={DashboardIcon.message} />
+          <Text style={EntireStyles.hottest_icon}> {item.comments}</Text>
         </View>
       </View>
-      <View style={{marginBottom: -60}}>
-        <SvgXml xml={item.icon} />
-      </View>
+      <Image
+        source={item.src}
+        style={{
+          width: 110,
+          height: 75,
+          alignSelf: 'flex-end',
+          marginRight: 13,
+        }}
+      />
     </View>
   );
 

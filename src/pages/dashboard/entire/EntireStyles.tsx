@@ -60,6 +60,8 @@ const EntireStyles = StyleSheet.create({
     width: 187,
     height: 45,
     overflow: 'hidden',
+    marginTop: 20,
+    marginLeft: 24,
   },
   hottest_icon: {
     fontFamily: 'Pretendard-Regular',
@@ -73,6 +75,7 @@ const EntireStyles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     marginTop: 30,
+    marginLeft: 24,
     marginBottom: 13,
   },
   fiter_container: {

@@ -58,6 +58,16 @@ const HomeStyles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 6,
   },
+  photos: {
+    marginHorizontal: 20,
+    flexDirection: 'row',
+  },
+  photo_wrapper: {
+    position: 'relative',
+    width: 84,
+    height: 92,
+    marginRight: 8,
+  },
   line: {
     width: '100%',
     height: 0.75,

@@ -3,7 +3,7 @@ import {useFocusEffect} from '@react-navigation/native';
 
 import {GetPostList} from '../../../api/post.api';
 
-import ItemPost from '@/components/comment/ItemPost';
+import ItemPostNoCategory from '@/components/comment/ItemPostNoCategory';
 
 type FreeListProps = {
   selectedFilter: string;
@@ -35,11 +35,9 @@ const FreeList: React.FC<FreeListProps> = ({selectedFilter}) => {
             'FREE',
             undefined,
           );
-          console.log('API RESPONSE:', response.data);
 
           const postData = response.data.data.content;
           setPostList(postData);
-          console.log('postList:', postData);
         } catch (error) {
           console.error('Error fetching post list:', error);
         } finally {
@@ -51,6 +49,6 @@ const FreeList: React.FC<FreeListProps> = ({selectedFilter}) => {
     }, [selectedFilter]),
   );
 
-  return <>{loading ? <></> : <ItemPost postList={postList} />}</>;
+  return <>{loading ? <></> : <ItemPostNoCategory postList={postList} />}</>;
 };
 export default FreeList;

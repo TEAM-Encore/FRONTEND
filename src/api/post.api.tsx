@@ -1,24 +1,24 @@
 import httpApi from './http.api';
 
 export const createPost = (
-  category: string,
-  post_type: string,
-  title: string,
-  content: string,
-  hashtags: Array<string>,
-  imgUrls?: Array<string>,
-  isNotice?: boolean,
-  isTemporarySave?: boolean,
+  category?: string,
+  post_type?: string,
+  title?: string,
+  content?: string,
+  hash_tags?: Array<string>,
+  img_urls?: Array<string>,
+  is_notice?: boolean,
+  is_temporary_save?: boolean,
 ) => {
   const requestBody = {
     category,
     post_type,
     title,
     content,
-    hashTags: hashtags,
-    imgUrls: imgUrls || [],
-    isNotice: isNotice || false,
-    isTemporarySave: isTemporarySave || false,
+    hash_tags: hash_tags,
+    img_urls: img_urls || [],
+    is_notice: is_notice ?? false,
+    is_temporary_save: is_temporary_save ?? false,
   };
 
   return httpApi.post(`/api/v1/post`, requestBody);
@@ -33,10 +33,10 @@ interface UpdatePostRequest {
   post_type: string;
   title: string;
   content: string;
-  imgUrls: string[];
-  hashTags: string[];
-  isNotice: boolean;
-  isTemporarySave: boolean;
+  img_urls: string[];
+  hash_tags: string[];
+  is_notice: boolean;
+  is_temporarySave: boolean;
 }
 
 export const putPost = (postId: number, data: UpdatePostRequest) => {

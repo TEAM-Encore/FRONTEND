@@ -28,11 +28,10 @@ const EntireList: React.FC<EntireListProps> = ({selectedFilter}) => {
           setLoading(true);
           // 일단 페이지네이션 구현 X
           const response = await GetPostList(0, 100, sortFilter);
-          console.log('API RESPONSE:', response.data);
 
           const postData = response.data.data.content;
+          console.log('Entire List: ', postData);
           setPostList(postData);
-          console.log('postList:', postData);
         } catch (error) {
           console.error('Error fetching post list:', error);
         } finally {
