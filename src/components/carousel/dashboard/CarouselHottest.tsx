@@ -1,11 +1,16 @@
 import React, {useRef, useMemo} from 'react';
-import {View, Text, FlatList, Dimensions, ListRenderItem} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  Dimensions,
+  ListRenderItem,
+  Image,
+} from 'react-native';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
-import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 
 import {SvgXml} from 'react-native-svg';
 
-import Colors from '@/assets/colors/Colors';
 import EntireStyles from '@/pages/dashboard/entire/EntireStyles';
 
 const windowWidth = Dimensions.get('window').width;

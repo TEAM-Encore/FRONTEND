@@ -131,7 +131,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     try {
       const response = await getPost(postId);
       setPostData(response.data.data);
-      console.log('상세페이지 응답값:', response.data.data);
+      // console.log('상세페이지 응답값:', response.data.data);
     } catch (error) {
       console.error('게시글 조회 오류:', error);
     }
