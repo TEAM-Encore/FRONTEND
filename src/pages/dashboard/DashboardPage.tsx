@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   SafeAreaView,
-  ScrollView,
+  FlatList,
   View,
   Text,
   TouchableOpacity,
@@ -25,23 +25,26 @@ type RootStackParamList = {
 const DashboardPage: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
+  const renderHeader = () => (
+    <View style={DashboardStyles.containerHeader}>
+      <View style={DashboardStyles.containerIcons}>
+        <Text style={DashboardStyles.textTitle}>게시판</Text>
+        <View style={DashboardStyles.containerRow}>
+          <IconSearch style={{marginRight: 20}} />
+          <IconNotification />
+        </View>
+      </View>
+    </View>
+  );
+
   return (
     <SafeAreaView style={DashboardStyles.container}>
-      <ScrollView>
-        {/* 헤더 */}
-        <View style={DashboardStyles.containerHeader}>
-          <View style={DashboardStyles.containerIcons}>
-            <Text style={DashboardStyles.textTitle}>게시판</Text>
-            <View style={DashboardStyles.containerRow}>
-              <IconSearch style={{marginRight: 20}} />
-              <IconNotification />
-            </View>
-          </View>
-        </View>
-
-        {/* 탭 */}
-        <DashboardTabs />
-      </ScrollView>
+      <FlatList
+        data={[]}
+        ListHeaderComponent={renderHeader}
+        renderItem={null}
+        ListFooterComponent={<DashboardTabs />}
+      />
 
       {/* 글쓰기 버튼 */}
       <TouchableOpacity

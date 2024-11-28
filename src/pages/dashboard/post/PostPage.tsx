@@ -2,9 +2,9 @@ import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {
   SafeAreaView,
   ScrollView,
+  FlatList,
   View,
   Text,
-  FlatList,
   Image,
   TouchableOpacity,
   KeyboardAvoidingView,
@@ -197,145 +197,160 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
   return (
     <>
       <SafeAreaView style={PostStyles.container}>
-        <ScrollView>
-          <View style={PostStyles.containerHeader}>
-            <TouchableOpacity onPress={() => handleGoBack()}>
-              <SvgXml xml={PostIcon.arrowLeft} />
-            </TouchableOpacity>
-            <View style={PostStyles.containerRow}>
-              <TouchableOpacity>
-                <SvgXml style={{marginRight: 11}} xml={PostIcon.upload} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleIconPress}>
-                <View ref={iconRef}>
-                  <SvgXml xml={PostIcon.moreVertical} />
-                </View>
-              </TouchableOpacity>
-              {modalPosition && (
-                <ModalModifyDelete
-                  modalVisible={modalVisible}
-                  setModalVisible={setModalVisible}
-                  position={modalPosition}
-                  postId={postId}
-                  commentId={null}
-                  onNavigation={navigation}
-                />
-              )}
-            </View>
-          </View>
-
-          <View style={{marginHorizontal: 20}}>
-            {category && (
-              <View
-                style={[
-                  PostStyles.containerCategory,
-                  {backgroundColor: category?.boxColor},
-                ]}>
-                <Text
-                  style={[PostStyles.textCategory, {color: category?.color}]}>
-                  {category?.label}
-                </Text>
-              </View>
-            )}
-            <Text style={PostStyles.textTitle}>{postData.title}</Text>
-            <Text style={PostStyles.textContent}>{postData.content}</Text>
-          </View>
-
-          <View style={PostStyles.photos}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {postData.post_images &&
-                postData.post_images.length > 0 &&
-                postData.post_images.map((url: string, index: number) =>
-                  url ? (
-                    <Image
-                      key={index}
-                      style={{
-                        width: 84,
-                        height: 92,
-                        borderRadius: 9,
-                        marginRight: 14,
-                      }}
-                      source={{uri: url}}
-                      resizeMode="cover"
-                    />
-                  ) : null,
-                )}
-            </ScrollView>
-          </View>
-
-          <View style={{marginHorizontal: 20}}>
-            {postData.hashtags?.length !== 0 && (
-              <View style={PostStyles.line} />
-            )}
-          </View>
-
-          <TouchableOpacity style={PostStyles.containerHashtag}>
-            <Text style={PostStyles.textHashtag}>{postData.hashtags}</Text>
-          </TouchableOpacity>
-
-          <View style={PostStyles.containerCommentLikeItems}>
-            <TouchableOpacity
-              style={PostStyles.containerCommentLike}
-              onPress={postLike ? fetchDeleteLikePost : fetchCreateLikePost}>
-              <SvgXml xml={postLike ? PostIcon.fullLike : PostIcon.like} />
-              <Text style={PostStyles.textCommentLike}>
-                {postData.num_of_like}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[PostStyles.containerCommentLike, {marginRight: 10}]}>
-              <SvgXml xml={PostIcon.comment} />
-              <Text style={PostStyles.textCommentLike}>
-                {postData.num_of_comment}
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={PostStyles.containerWriter}>
-            <View style={PostStyles.containerRow}>
-              <>
-                <SvgXml xml={PostIcon.writerBackground} />
-                {/* 추후에 사용자의 profile_image_url로 변경 필요*/}
-                <Image
-                  style={PostStyles.imageWriter}
-                  source={require('@/assets/images/default-profile.png')}
-                />
-              </>
-              <View style={PostStyles.containerWriterText}>
+        <FlatList
+          data={commentData}
+          keyExtractor={item => String(item.id)}
+          renderItem={({item}) => <ItemComment commentList={[item]} />}
+          ListHeaderComponent={
+            <>
+              {/* 헤더 컴포넌트 */}
+              <View style={PostStyles.containerHeader}>
+                <TouchableOpacity onPress={() => handleGoBack()}>
+                  <SvgXml xml={PostIcon.arrowLeft} />
+                </TouchableOpacity>
                 <View style={PostStyles.containerRow}>
-                  <Text style={PostStyles.textWriter}>뮤사랑</Text>
-                  <SvgXml xml={PostIcon.Badge} />
+                  <TouchableOpacity>
+                    <SvgXml style={{marginRight: 11}} xml={PostIcon.upload} />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleIconPress}>
+                    <View ref={iconRef}>
+                      <SvgXml xml={PostIcon.moreVertical} />
+                    </View>
+                  </TouchableOpacity>
+                  {modalPosition && (
+                    <ModalModifyDelete
+                      modalVisible={modalVisible}
+                      setModalVisible={setModalVisible}
+                      position={modalPosition}
+                      postId={postId}
+                      commentId={null}
+                      onNavigation={navigation}
+                    />
+                  )}
                 </View>
-                <Text style={PostStyles.textDate}>
-                  {timeAgo(postData.created_at)}
-                </Text>
               </View>
-            </View>
-            <View style={PostStyles.containerWriterButton}>
-              <Text style={PostStyles.textWriterButton}>작성자</Text>
-            </View>
-          </View>
-
-          <View style={PostStyles.containerCommentTitle}>
-            <Text style={PostStyles.textCommentTitle}>
-              댓글 {postData.num_of_comment}
-            </Text>
-            <View style={PostStyles.containerRow}>
-              <TouchableOpacity>
-                <Text
-                  style={[PostStyles.textLatestRecommended, {marginRight: 12}]}>
-                  최신순
+              {/* 게시글 정보 */}
+              <View style={{marginHorizontal: 20}}>
+                {category && (
+                  <View
+                    style={[
+                      PostStyles.containerCategory,
+                      {backgroundColor: category?.boxColor},
+                    ]}>
+                    <Text
+                      style={[
+                        PostStyles.textCategory,
+                        {color: category?.color},
+                      ]}>
+                      {category?.label}
+                    </Text>
+                  </View>
+                )}
+                <Text style={PostStyles.textTitle}>{postData.title}</Text>
+                <Text style={PostStyles.textContent}>{postData.content}</Text>
+              </View>
+              {/* 이미지 */}
+              <View style={PostStyles.photos}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  {postData.post_images &&
+                    postData.post_images.length > 0 &&
+                    postData.post_images.map((url: string, index: number) =>
+                      url ? (
+                        <Image
+                          key={index}
+                          style={{
+                            width: 84,
+                            height: 92,
+                            borderRadius: 9,
+                            marginRight: 14,
+                          }}
+                          source={{uri: url}}
+                          resizeMode="cover"
+                        />
+                      ) : null,
+                    )}
+                </ScrollView>
+              </View>
+              {/* 해시태그 */}
+              {postData.hashtags?.length !== 0 && (
+                <View style={PostStyles.line} />
+              )}
+              <TouchableOpacity style={PostStyles.containerHashtag}>
+                <Text style={PostStyles.textHashtag}>
+                  {postData.hashtags?.join(' ') || ''}
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity>
-                <Text style={PostStyles.textLatestRecommended}>추천순</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <ItemComment commentList={commentData} />
-        </ScrollView>
+              {/* 좋아요 및 댓글 */}
+              <View style={PostStyles.containerCommentLikeItems}>
+                <TouchableOpacity
+                  style={PostStyles.containerCommentLike}
+                  onPress={
+                    postLike ? fetchDeleteLikePost : fetchCreateLikePost
+                  }>
+                  <SvgXml xml={postLike ? PostIcon.fullLike : PostIcon.like} />
+                  <Text style={PostStyles.textCommentLike}>
+                    {postData.num_of_like}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[PostStyles.containerCommentLike, {marginRight: 10}]}>
+                  <SvgXml xml={PostIcon.comment} />
+                  <Text style={PostStyles.textCommentLike}>
+                    {postData.num_of_comment}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              {/* 작성자 정보 */}
+              <View style={PostStyles.containerWriter}>
+                <View style={PostStyles.containerRow}>
+                  <>
+                    <SvgXml xml={PostIcon.writerBackground} />
+                    <Image
+                      style={PostStyles.imageWriter}
+                      source={require('@/assets/images/default-profile.png')}
+                    />
+                  </>
+                  <View style={PostStyles.containerWriterText}>
+                    <View style={PostStyles.containerRow}>
+                      <Text style={PostStyles.textWriter}>뮤사랑</Text>
+                      <SvgXml xml={PostIcon.Badge} />
+                    </View>
+                    <Text style={PostStyles.textDate}>
+                      {timeAgo(postData.created_at)}
+                    </Text>
+                  </View>
+                </View>
+                <View style={PostStyles.containerWriterButton}>
+                  <Text style={PostStyles.textWriterButton}>작성자</Text>
+                </View>
+              </View>
+              {/* 댓글 헤더 */}
+              <View style={PostStyles.containerCommentTitle}>
+                <Text style={PostStyles.textCommentTitle}>
+                  댓글 {postData.num_of_comment}
+                </Text>
+                <View style={PostStyles.containerRow}>
+                  <TouchableOpacity>
+                    <Text
+                      style={[
+                        PostStyles.textLatestRecommended,
+                        {marginRight: 12},
+                      ]}>
+                      최신순
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Text style={PostStyles.textLatestRecommended}>추천순</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </>
+          }
+          ListFooterComponent={<View style={{height: 20}} />}
+          contentContainerStyle={{paddingBottom: 20}}
+        />
       </SafeAreaView>
+
       <View style={PostStyles.white} />
       <KeyboardAvoidingView
         style={PostStyles.containerCommentInput}
