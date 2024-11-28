@@ -51,7 +51,7 @@ const ReviewList: React.FC<ReviewListProps> = ({selectedFilter, category}) => {
       if (postData.length > 0) {
         // 마지막 데이터의 ID를 cursor로 저장
         setCursor(postData[postData.length - 1].id);
-        console.log('cursor: ', cursor);
+        // console.log('cursor: ', cursor);
 
         // 기존 리스트에 추가하거나 새로고침으로 초기화
         setPostList(reset ? postData : [...postList, ...postData]);
