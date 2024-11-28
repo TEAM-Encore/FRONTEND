@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
   FlatList,
   View,
@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import moment from 'moment';
 import {SvgXml} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
 
@@ -37,42 +36,9 @@ type PostProps = {
   }[];
 };
 
-const ItemPost: React.FC<PostProps> = ({postList}) => {
+const ItemPostNoCategory: React.FC<PostProps> = ({postList}) => {
   const navigation = useNavigation<NavigationProp>();
   const [isLiked, setIsLiked] = useState(false);
-
-  const categoryMapping: Record<
-    string,
-    {label: string; color: string; boxColor: string}
-  > = {
-    OPERA_GLASS_RENTAL: {
-      label: '오페라 글라스',
-      color: '#FFB200',
-      boxColor: Colors.sub_01,
-    },
-    MUSICAL_TERMS: {
-      label: '뮤지컬 용어',
-      color: '#FF7163',
-      boxColor: '#FFEAE8',
-    },
-    EVENTS: {label: '이벤트', color: '#FF853E', boxColor: '#FFE9DC'},
-    VIEW_REVIEW: {
-      label: '시야 후기',
-      color: '#FFB200',
-      boxColor: Colors.sub_01,
-    },
-    GOODS_REVIEW: {label: '굿즈 후기', color: '#FF853E', boxColor: '#FFE9DC'},
-    PERFORMANCE_REVIEW: {
-      label: '공연 감상',
-      color: '#FF4FB3',
-      boxColor: '#FFE6F4',
-    },
-  };
-
-  const getMappedCategory = (category: string | undefined) => {
-    if (!category) return null;
-    return categoryMapping[category];
-  };
 
   // 일단 사용자 아이디 1로 고정
   const user_id = 1;
@@ -91,7 +57,6 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
       data={postList}
       keyExtractor={item => item.id}
       renderItem={({item, index}) => {
-        const category = getMappedCategory(item.category);
         const thumbnail = item.thumbnail;
 
         return (
@@ -103,17 +68,6 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
                   postId: item.id,
                 })
               }>
-              {item.category !== '카테고리 미선택' && (
-                <View
-                  style={[
-                    styles.containerCategory,
-                    {backgroundColor: category?.boxColor},
-                  ]}>
-                  <Text style={[styles.textCategory, {color: category?.color}]}>
-                    {category?.label}
-                  </Text>
-                </View>
-              )}
               <View style={styles.containerRow}>
                 <View style={{flex: 1}}>
                   <Text
@@ -246,4 +200,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ItemPost;
+export default ItemPostNoCategory;

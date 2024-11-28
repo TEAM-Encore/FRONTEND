@@ -2,7 +2,7 @@ import React, {useState, useCallback} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {FlatList, View, ActivityIndicator} from 'react-native';
 import {GetPostList} from '@/api/post.api';
-import ItemPostNoCategory from '@/components/comment/ItemPostNoCategory';
+import ItemPostNoCategory from '@/components/list/ItemPostNoCategory';
 
 type ActorListProps = {
   selectedFilter: string;

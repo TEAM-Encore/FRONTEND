@@ -2,7 +2,7 @@ import React, {useState, useCallback} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {FlatList, View, ActivityIndicator} from 'react-native';
 import {GetPostList} from '../../../api/post.api';
-import ItemPost from '@/components/comment/ItemPost';
+import ItemPost from '@/components/list/ItemPost';
 
 type InformationListProps = {
   selectedFilter: string;
