@@ -1,8 +1,7 @@
 import React, {useState, useCallback} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
-
+import {FlatList, View, ActivityIndicator} from 'react-native';
 import {GetPostList} from '../../../api/post.api';
-
 import ItemPost from '@/components/comment/ItemPost';
 
 type InformationListProps = {
@@ -15,7 +14,10 @@ const InformationList: React.FC<InformationListProps> = ({
   category,
 }) => {
   const [postList, setPostList] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // 초기 로딩 상태
+  const [isFetching, setIsFetching] = useState<boolean>(false); // 추가 데이터 로딩 상태
+  const [hasMore, setHasMore] = useState<boolean>(true); // 마지막 데이터인지 확인
+  const [cursor, setCursor] = useState<number | undefined>(undefined);
 
   const filterMapping: Record<string, string> = {
     최신순: 'createdat',
@@ -29,73 +31,79 @@ const InformationList: React.FC<InformationListProps> = ({
     이벤트: 'EVENTS',
   };
 
+  const fetchPostList = async (reset = false) => {
+    const sortFilter = filterMapping[selectedFilter] || 'createdat';
+    const sortCategory = categoryMapping[category] || '';
+
+    try {
+      if (reset) {
+        setIsLoading(true);
+      } else {
+        setIsFetching(true);
+      }
+      const response = await GetPostList(
+        3,
+        sortFilter,
+        cursor,
+        sortCategory,
+        'INFORMATION',
+        undefined,
+      );
+      const postData = response.data.data.content;
+
+      if (postData.length > 0) {
+        // 마지막 데이터의 ID를 cursor로 저장
+        setCursor(postData[postData.length - 1].id);
+        console.log('cursor: ', cursor);
+
+        // 기존 리스트에 추가하거나 새로고침으로 초기화
+        setPostList(reset ? postData : [...postList, ...postData]);
+      } else {
+        setHasMore(false); // 더 이상 데이터가 없음을 표시
+      }
+    } catch (error) {
+      console.error('Error fetching post list:', error);
+    } finally {
+      if (reset) {
+        setIsLoading(false);
+      } else {
+        setIsFetching(false);
+      }
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
-      const fetchPostList = async () => {
-        const sortFilter = filterMapping[selectedFilter] || 'createdat';
-        const sortCategory = categoryMapping[category] || '';
-        console.log('선택된 필터: ', selectedFilter);
-        console.log('선택된 카테고리:', category);
-
-        try {
-          setLoading(true);
-          const response = await GetPostList(
-            0,
-            100,
-            sortFilter,
-            undefined,
-            sortCategory,
-            'INFORMATION',
-          );
-          console.log('API RESPONSE:', response.data);
-
-          const postData = response.data.data.content;
-          setPostList(postData);
-          console.log('postList:', postData);
-        } catch (error) {
-          console.error('Error fetching post list:', error);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchPostList();
+      setCursor(undefined); // 카테고리가 변경될 때 초기화
+      setPostList([]); // 기존 데이터 초기화
+      setHasMore(true); // 새 요청 가능하도록 초기화
+      fetchPostList(true);
     }, [selectedFilter, category]),
   );
 
-  return <>{loading ? <></> : <ItemPost postList={postList} />}</>;
+  const handleLoadMore = () => {
+    if (!isFetching && hasMore) {
+      fetchPostList(false);
+    }
+  };
+
+  return (
+    <View>
+      {isLoading ? (
+        <ActivityIndicator size="large" />
+      ) : (
+        <FlatList
+          data={postList}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({item}) => <ItemPost postList={[item]} />}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5} // 스크롤이 50% 남았을 때 호출
+          ListFooterComponent={
+            isFetching && hasMore ? <ActivityIndicator size="small" /> : null
+          }
+        />
+      )}
+    </View>
+  );
 };
 export default InformationList;
-
-// const postList = [
-//     {
-//       id: '1',
-//       nickname: '뮤사랑',
-//       date: '11분전',
-//       title: '샤롯데시어터 오페라글라스 대여',
-//       content:
-//         '방금 가보니 5개 정도 남아있다고 하네요. 빨리 가셔야 할 거 같아요.',
-//       image: require('@/assets/images/home/Musical1.jpeg'),
-//       like_count: 3,
-//       comment_count: 1,
-//     },
-//     {
-//       id: '2',
-//       nickname: '뮤뮤',
-//       date: '방금전',
-//       title: '회전문이 어떤 뜻인가요?',
-//       content: '다들 공연 회전문 돈다 이런 말씀들을 하시던데, 무슨 뜻인가요?',
-//       like_count: 10,
-//       comment_count: 0,
-//     },
-//     {
-//       id: '2',
-//       nickname: '뮤덕',
-//       date: '방금전',
-//       title: '소극장 뮤지컬 빨래 티켓권 이벤트',
-//       content: '저번에 엄청 좋게 봤던 뮤지컬 이벤트를 열고자 합니다!',
-//       image: require('@/assets/images/home/Musical2.jpeg'),
-//       like_count: 10,
-//       comment_count: 0,
-//     },
-//   ];

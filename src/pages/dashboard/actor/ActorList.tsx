@@ -1,6 +1,7 @@
 import React, {useState, useCallback} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
-import {GetPostList} from '../../../api/post.api';
+import {FlatList, View, ActivityIndicator} from 'react-native';
+import {GetPostList} from '@/api/post.api';
 import ItemPostNoCategory from '@/components/comment/ItemPostNoCategory';
 
 type ActorListProps = {
@@ -9,43 +10,83 @@ type ActorListProps = {
 
 const ActorList: React.FC<ActorListProps> = ({selectedFilter}) => {
   const [postList, setPostList] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // 초기 로딩 상태
+  const [isFetching, setIsFetching] = useState<boolean>(false); // 추가 데이터 로딩 상태
+  const [hasMore, setHasMore] = useState<boolean>(true); // 마지막 데이터인지 확인
+  const [cursor, setCursor] = useState<number | undefined>(undefined);
 
   const filterMapping: Record<string, string> = {
     최신순: 'createdat',
     인기순: 'likecount',
   };
+  const fetchPostList = async (reset = false) => {
+    const sortFilter = filterMapping[selectedFilter] || 'createdat';
+    try {
+      if (reset) {
+        setIsLoading(true);
+      } else {
+        setIsFetching(true);
+      }
+      const response = await GetPostList(
+        3,
+        sortFilter,
+        cursor,
+        undefined,
+        'ACTOR',
+        undefined,
+      );
+      const postData = response.data.data.content;
+
+      if (postData.length > 0) {
+        // 마지막 데이터의 ID를 cursor로 저장
+        setCursor(postData[postData.length - 1].id);
+        console.log('cursor: ', cursor);
+
+        // 기존 리스트에 추가하거나 새로고침으로 초기화
+        setPostList(reset ? postData : [...postList, ...postData]);
+      } else {
+        setHasMore(false); // 더 이상 데이터가 없음을 표시
+      }
+    } catch (error) {
+      console.error('Error fetching post list:', error);
+    } finally {
+      if (reset) {
+        setIsLoading(false);
+      } else {
+        setIsFetching(false);
+      }
+    }
+  };
 
   useFocusEffect(
     useCallback(() => {
-      const fetchPostList = async () => {
-        const sortFilter = filterMapping[selectedFilter] || 'createdat';
-        console.log('선택된 필터: ', selectedFilter);
-
-        try {
-          setLoading(true);
-          const response = await GetPostList(
-            0,
-            100,
-            sortFilter,
-            undefined,
-            undefined,
-            'ACTOR',
-            undefined,
-          );
-          const postData = response.data.data.content;
-          setPostList(postData);
-        } catch (error) {
-          console.error('Error fetching post list:', error);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchPostList();
+      fetchPostList(true);
     }, [selectedFilter]),
   );
 
-  return <>{loading ? <></> : <ItemPostNoCategory postList={postList} />}</>;
+  const handleLoadMore = () => {
+    if (!isFetching && hasMore) {
+      fetchPostList(false);
+    }
+  };
+
+  return (
+    <View>
+      {isLoading ? (
+        <ActivityIndicator size="large" />
+      ) : (
+        <FlatList
+          data={postList}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({item}) => <ItemPostNoCategory postList={[item]} />}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5} // 스크롤이 50% 남았을 때 호출
+          ListFooterComponent={
+            isFetching && hasMore ? <ActivityIndicator size="small" /> : null
+          }
+        />
+      )}
+    </View>
+  );
 };
 export default ActorList;

@@ -67,7 +67,6 @@ export const getPostHashtagList = (
 
 // 게시글 페이징 조회
 export const GetPostList = (
-  page: number,
   size: number,
   sort: string,
   cursor?: number,
@@ -76,7 +75,6 @@ export const GetPostList = (
   search_word?: string,
 ) => {
   const requestParams = {
-    page,
     size,
     sort,
     cursor,
