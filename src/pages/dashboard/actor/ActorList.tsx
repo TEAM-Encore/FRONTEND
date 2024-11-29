@@ -20,7 +20,7 @@ const ActorList: React.FC<ActorListProps> = ({selectedFilter}) => {
     useCallback(() => {
       const fetchPostList = async () => {
         const sortFilter = filterMapping[selectedFilter] || 'createdat';
-        console.log('선택된 필터: ', selectedFilter);
+        // console.log('선택된 필터: ', selectedFilter);
 
         try {
           setLoading(true);

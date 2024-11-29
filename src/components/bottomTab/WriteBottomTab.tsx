@@ -68,14 +68,14 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
     setContent(prevContent => prevContent + '#');
   };
 
-  console.log('Write Bottom Tab: ', {
-    title,
-    content,
-    post_type,
-    category,
-    hashTags,
-    imgUrls,
-  });
+  // console.log('Write Bottom Tab: ', {
+  //   title,
+  //   content,
+  //   post_type,
+  //   category,
+  //   hashTags,
+  //   imgUrls,
+  // });
 
   const postTypeMapping: Record<string, string> = {
     '게시판 선택 안함': 'NO_SELECT',
@@ -113,7 +113,7 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
         true,
       );
 
-      console.log('임시 저장한 글 내용: ', response.data);
+      // console.log('임시 저장한 글 내용: ', response.data);
 
       if (response?.data?.code === 1000 && response?.data?.data?.post_id) {
         // AsyncStorage 임시 저장하기

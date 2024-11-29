@@ -52,6 +52,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     num_of_comment?: number;
     num_of_like?: number;
     hashtags?: [];
+    nick_name: string;
     post_images?: [];
     profile_image_url?: string;
   }>({});
@@ -130,7 +131,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     try {
       const response = await getPost(postId);
       setPostData(response.data.data);
-      console.log('상세페이지 응답값:', response.data.data);
+      // console.log('상세페이지 응답값:', response.data.data);
     } catch (error) {
       console.error('게시글 조회 오류:', error);
     }
@@ -139,7 +140,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
   useFocusEffect(
     useCallback(() => {
       fetchGetPost();
-    }, []),
+    }, [commentData]),
   );
 
   const fetchCreateLikePost = async () => {
@@ -275,7 +276,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
 
           <View style={PostStyles.containerCommentLikeItems}>
             <TouchableOpacity
-              style={PostStyles.containerCommentLike}
+              style={[PostStyles.containerCommentLike, {marginRight: 10}]}>
               onPress={postLike ? fetchDeleteLikePost : fetchCreateLikePost}>
               <SvgXml xml={postLike ? PostIcon.fullLike : PostIcon.like} />
               <Text style={PostStyles.textCommentLike}>
@@ -283,7 +284,8 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[PostStyles.containerCommentLike, {marginRight: 10}]}>
+              style={PostStyles.containerCommentLike}
+              onPress={postLike ? fetchDeleteLikePost : fetchCreateLikePost}>
               <SvgXml xml={PostIcon.comment} />
               <Text style={PostStyles.textCommentLike}>
                 {postData.num_of_comment}
@@ -298,22 +300,21 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
                 {/* 추후에 사용자의 profile_image_url로 변경 필요*/}
                 <Image
                   style={PostStyles.imageWriter}
-                  source={require('@/assets/images/default-profile.png')}
+                  source={require('@/assets/images/board/commentFace.png')}
                 />
               </>
               <View style={PostStyles.containerWriterText}>
                 <View style={PostStyles.containerRow}>
-                  <Text style={PostStyles.textWriter}>뮤사랑</Text>
+                  <Text style={PostStyles.textWriter}>
+                    {postData.nick_name}
+                  </Text>
                   <SvgXml xml={PostIcon.Badge} />
                 </View>
-                <Text style={PostStyles.textDate}>
-                  {timeAgo(postData.created_at)}
-                </Text>
               </View>
             </View>
-            <View style={PostStyles.containerWriterButton}>
-              <Text style={PostStyles.textWriterButton}>작성자</Text>
-            </View>
+            <Text style={PostStyles.textDate}>
+              {timeAgo(postData.created_at)}
+            </Text>
           </View>
 
           <View style={PostStyles.containerCommentTitle}>

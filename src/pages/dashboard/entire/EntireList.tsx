@@ -23,14 +23,14 @@ const EntireList: React.FC<EntireListProps> = ({selectedFilter}) => {
     useCallback(() => {
       const fetchPostList = async () => {
         const sortFilter = filterMapping[selectedFilter] || 'createdat';
-        console.log('선택된 필터: ', selectedFilter);
+        // console.log('선택된 필터: ', selectedFilter);
         try {
           setLoading(true);
           // 일단 페이지네이션 구현 X
           const response = await GetPostList(0, 100, sortFilter);
 
           const postData = response.data.data.content;
-          console.log('Entire List: ', postData);
+          // console.log('Entire List: ', postData);
           setPostList(postData);
         } catch (error) {
           console.error('Error fetching post list:', error);

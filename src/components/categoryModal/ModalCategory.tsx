@@ -45,7 +45,7 @@ const ModalCategory: React.FC<ModalCategoryProps> = ({
   const handleConfirm = () => {
     if (selectedItem) {
       onSelect(selectedItem); // 부모 컴포넌트로 선택한 항목 전달
-      console.log('선택된 항목:', selectedItem);
+      // console.log('선택된 항목:', selectedItem);
     }
     closeModal();
   };

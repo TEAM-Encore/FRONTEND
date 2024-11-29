@@ -83,14 +83,14 @@ export default function App() {
       const apiCategory =
         categoryMapping[postData.category] || postData.category;
 
-      console.log('전송 데이터: ', {
-        category: apiCategory,
-        post_type: apiPostType,
-        title: postData.title,
-        content: postData.content,
-        hashTags: postData.hashTags,
-        imgUrls: postData.imgUrls,
-      });
+      // console.log('전송 데이터: ', {
+      //   category: apiCategory,
+      //   post_type: apiPostType,
+      //   title: postData.title,
+      //   content: postData.content,
+      //   hashTags: postData.hashTags,
+      //   imgUrls: postData.imgUrls,
+      // });
 
       try {
         const response = await createPost(
@@ -102,7 +102,7 @@ export default function App() {
           postData.imgUrls,
         );
 
-        console.log('서버 응답: ', response.data);
+        // console.log('서버 응답: ', response.data);
 
         if (response?.data?.code === 1000 && response?.data?.data?.post_id) {
           const postId = response.data.data.post_id;

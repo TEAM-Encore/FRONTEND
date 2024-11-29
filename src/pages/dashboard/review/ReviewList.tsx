@@ -31,8 +31,8 @@ const ReviewList: React.FC<ReviewListProps> = ({selectedFilter, category}) => {
       const fetchPostList = async () => {
         const sortFilter = filterMapping[selectedFilter] || 'createdat';
         const sortCategory = categoryMapping[category] || '';
-        console.log('선택된 필터: ', selectedFilter);
-        console.log('선택된 카테고리:', category);
+        // console.log('선택된 필터: ', selectedFilter);
+        // console.log('선택된 카테고리:', category);
 
         try {
           setLoading(true);
