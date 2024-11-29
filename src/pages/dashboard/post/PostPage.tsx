@@ -52,6 +52,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     num_of_comment?: number;
     num_of_like?: number;
     hashtags?: [];
+    nick_name: string;
     post_images?: [];
     profile_image_url?: string;
   }>({});
@@ -130,7 +131,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     try {
       const response = await getPost(postId);
       setPostData(response.data.data);
-      console.log('상세페이지 응답값:', response.data.data);
+      // console.log('상세페이지 응답값:', response.data.data);
     } catch (error) {
       console.error('게시글 조회 오류:', error);
     }
@@ -139,7 +140,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
   useFocusEffect(
     useCallback(() => {
       fetchGetPost();
-    }, []),
+    }, [commentData]),
   );
 
   const fetchCreateLikePost = async () => {
@@ -283,7 +284,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
               {/* 좋아요 및 댓글 */}
               <View style={PostStyles.containerCommentLikeItems}>
                 <TouchableOpacity
-                  style={PostStyles.containerCommentLike}
+                  style={[PostStyles.containerCommentLike, {marginRight: 10}]}
                   onPress={
                     postLike ? fetchDeleteLikePost : fetchCreateLikePost
                   }>
@@ -307,12 +308,14 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
                     <SvgXml xml={PostIcon.writerBackground} />
                     <Image
                       style={PostStyles.imageWriter}
-                      source={require('@/assets/images/default-profile.png')}
+                      source={require('@/assets/images/board/commentFace.png')}
                     />
                   </>
                   <View style={PostStyles.containerWriterText}>
                     <View style={PostStyles.containerRow}>
-                      <Text style={PostStyles.textWriter}>뮤사랑</Text>
+                      <Text style={PostStyles.textWriter}>
+                        {postData.nick_name}
+                      </Text>
                       <SvgXml xml={PostIcon.Badge} />
                     </View>
                     <Text style={PostStyles.textDate}>

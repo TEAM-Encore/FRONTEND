@@ -69,6 +69,7 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
   };
 
   const getMappedCategory = (category: string | undefined) => {
+    // console.log('현재 카테고리: ', category);
     if (!category) return null;
     return categoryMapping[category];
   };
@@ -102,7 +103,7 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
                   postId: item.id,
                 })
               }>
-              {item.category !== '카테고리 미선택' && (
+              {category && (
                 <View
                   style={[
                     styles.containerCategory,

@@ -84,7 +84,7 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
                     <SvgXml xml={PostIcon.writerBackground} />
                     <Image
                       style={styles.imageWriter}
-                      source={require('@/assets/logo/logo4.png')}
+                      source={require('@/assets/images/board/commentFace.png')}
                     />
                   </>
                   <View>

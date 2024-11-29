@@ -1,4 +1,4 @@
-import React, {useState, useRef, useMemo, useEffect} from 'react';
+import React, {useRef, useMemo} from 'react';
 import {
   View,
   Text,
@@ -8,9 +8,9 @@ import {
   Image,
 } from 'react-native';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
+
 import {SvgXml} from 'react-native-svg';
 
-import Colors from '@/assets/colors/Colors';
 import EntireStyles from '@/pages/dashboard/entire/EntireStyles';
 
 const windowWidth = Dimensions.get('window').width;
@@ -29,8 +29,7 @@ type CarouselItem = {
 const data: CarouselItem[] = [
   {
     id: '1',
-    title:
-      '샤롯데시어터 오페라글라스 대여 현황 어떤가요?샤롯데시어터 오페라글라스 대여 현황 어떤가요?샤롯데시어터 오페라글라스 대여 현황 어떤가요?',
+    title: '최고의 넘버, 어떤 곡이신가요?',
     comments: 5,
     likes: 10,
     color: '#EDDCFF',
@@ -46,7 +45,7 @@ const data: CarouselItem[] = [
   },
   {
     id: '3',
-    title: '샤롯데시어터 오페라글라스 대여 현황 어떤가요?',
+    title: '킹키부츠 2회극 후기',
     comments: 5,
     likes: 10,
     color: '#FFDFD6',
@@ -55,7 +54,6 @@ const data: CarouselItem[] = [
 ];
 
 const CarouselHottest: React.FC = () => {
-  //   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList<CarouselItem>>(null);
 
   // 스냅 오프셋 설정
@@ -114,7 +112,7 @@ const CarouselHottest: React.FC = () => {
         keyExtractor={item => item.id}
         snapToOffsets={snapToOffsets}
         decelerationRate="fast"
-        contentContainerStyle={{paddingHorizontal: 20}}
+        contentContainerStyle={{paddingHorizontal: 30}}
       />
     </View>
   );

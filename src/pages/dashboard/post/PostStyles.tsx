@@ -104,7 +104,7 @@ const HomeStyles = StyleSheet.create({
   containerWriter: {
     flexDirection: 'row',
     width: '100%',
-    height: 102,
+    height: 71,
     backgroundColor: Colors.gray_03,
     justifyContent: 'space-between',
     alignItems: 'center',

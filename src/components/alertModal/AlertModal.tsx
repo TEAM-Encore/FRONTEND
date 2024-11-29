@@ -55,7 +55,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
     setModalVisible(false);
   };
 
-  console.log('삭제할 postId: ', postId);
+  // console.log('삭제할 postId: ', postId);
 
   return (
     <Modal

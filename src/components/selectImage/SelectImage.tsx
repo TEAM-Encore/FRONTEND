@@ -10,7 +10,7 @@ export const SelectImage = async (
         mediaType: 'photo',
       },
       async res => {
-        console.log('사진 결과 데이터: ', res);
+        // console.log('사진 결과 데이터: ', res);
 
         if (res.assets && res.assets.length > 0) {
           const imageFileName = res.assets[0].fileName || 'default_image.jpg';
@@ -39,7 +39,7 @@ export const SelectImage = async (
             });
 
             if (putResponse.ok) {
-              console.log('이미지 업로드 성공:', urlWithoutQuery);
+              // console.log('이미지 업로드 성공:', urlWithoutQuery);
               resolve(urlWithoutQuery); // URL 반환
             } else {
               console.error(

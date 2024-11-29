@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useMemo} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -12,8 +12,7 @@ import {
 } from 'react-native';
 
 import HomeStyles from '@/pages/home/HomeStyles';
-import Colors from '@/assets/colors/Colors';
-import {Svg, SvgXml} from 'react-native-svg';
+import {SvgXml} from 'react-native-svg';
 import {IconTitle} from '@/assets/icons/home/IconTitle';
 import IconSearch from '@/assets/icons/home/IconSearch';
 import IconNotification from '@/assets/icons/home/IconNotification';
@@ -21,6 +20,7 @@ import IconLike from '@/assets/icons/home/IconLike';
 import IconComment from '@/assets/icons/home/IconComment';
 import IconDate from '@/assets/icons/home/IconDate';
 import IconActor from '@/assets/icons/home/IconActor';
+import {HomeIcon} from '@/assets/icons/dashboard/HomeIcon';
 
 type HomePageProps = {};
 
@@ -36,6 +36,7 @@ const Ticket = ({image}: {image: any}) => (
 const HomePage: React.FC<HomePageProps> = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
   const flatListRef = useRef<FlatList<any>>(null);
+  const screenWidth = Dimensions.get('window').width;
 
   const carouselTicketList = [
     {
@@ -51,39 +52,6 @@ const HomePage: React.FC<HomePageProps> = () => {
       image: require('@/assets/images/home/ImageCarouselColor2.png'),
     },
   ];
-
-  const circularCarouselTicketList = [
-    {
-      id: '0',
-      image: require('@/assets/images/home/ImageCarouselColor2.png'),
-    },
-    ...carouselTicketList,
-    {
-      id: '4',
-      image: require('@/assets/images/home/ImageCarouselColor.png'),
-    },
-  ];
-
-  // const handleMomentumScrollEnd = (
-  //   event: NativeSyntheticEvent<NativeScrollEvent>,
-  // ) => {
-  //   const contentOffsetX = event.nativeEvent.contentOffset.x;
-  //   const newIndex = Math.round(contentOffsetX / (CARD_WIDTH + PADDING * 2));
-  //   setCurrentIndex(newIndex);
-
-  //   if (newIndex === 0) {
-  //     flatListRef.current?.scrollToIndex({
-  //       index: carouselTicketList.length,
-  //       animated: false,
-  //     });
-  //     setCurrentIndex(carouselTicketList.length);
-  //   } else if (newIndex === circularCarouselTicketList.length - 1) {
-  //     flatListRef.current?.scrollToIndex({index: 1, animated: false});
-  //     setCurrentIndex(1);
-  //   } else {
-  //     setCurrentIndex(newIndex);
-  //   }
-  // };
 
   const premiumReviewRanking = [
     {id: '1', title: '위키드 5회차 관람 후기'},
@@ -160,6 +128,14 @@ const HomePage: React.FC<HomePageProps> = () => {
     },
   ];
 
+  const snapToOffsets = useMemo(
+    () =>
+      Array.from(Array(carouselTicketList.length)).map(
+        (_, index) => index * CARD_WIDTH + 15,
+      ),
+    [carouselTicketList],
+  );
+
   return (
     <SafeAreaView style={HomeStyles.container}>
       <ScrollView>
@@ -171,39 +147,42 @@ const HomePage: React.FC<HomePageProps> = () => {
               <IconNotification />
             </View>
           </View>
-          <View style={HomeStyles.containerImage}>
-            {/* <FlatList
-              ref={flatListRef}
-              data={circularCarouselTicketList}
-              renderItem={({item}) => <Ticket image={item.image || null} />}
-              keyExtractor={item => item.id}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              snapToAlignment="center"
-              snapToInterval={CARD_WIDTH + PADDING * 2}
-              decelerationRate="fast"
-              onMomentumScrollEnd={handleMomentumScrollEnd}
-              scrollEventThrottle={16}
-              nestedScrollEnabled
-            /> */}
-            <Image source={require('@/assets/images/home/ImageCarousel.png')} />
-          </View>
-          {/* <View style={HomeStyles.containerPagination}>
-            {carouselTicketList.map((_, index) => (
-              <View
-                key={index}
-                style={[
-                  HomeStyles.paginationDot,
-                  index === currentIndex - 1
-                    ? HomeStyles.activeDot
-                    : HomeStyles.inactiveDot,
-                ]}
-              />
-            ))}
-          </View> */}
+          <FlatList
+            ref={flatListRef}
+            data={carouselTicketList}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item}) => <Ticket image={item.image || null} />}
+            keyExtractor={item => item.id}
+            snapToOffsets={snapToOffsets}
+            decelerationRate="fast"
+            contentContainerStyle={{paddingHorizontal: 52, paddingTop: 10}}
+            initialScrollIndex={1}
+            getItemLayout={(data, index) => ({
+              length: 170,
+              offset:
+                (CARD_WIDTH + PADDING * 2) * index -
+                (screenWidth - CARD_WIDTH) / 2,
+              index,
+            })}
+          />
+        </View>
+        <View style={HomeStyles.containerPagination}>
+          {carouselTicketList.map((_, index) => (
+            <View
+              key={index}
+              style={[
+                HomeStyles.paginationDot,
+                index === currentIndex
+                  ? HomeStyles.activeDot
+                  : HomeStyles.inactiveDot,
+              ]}
+            />
+          ))}
         </View>
 
-        <View style={[HomeStyles.containerTitle, {marginTop: 33}]}>
+        <View style={[HomeStyles.containerTitle, {marginTop: 36}]}>
           <Text style={HomeStyles.textTitle}>최근 관람한 공연</Text>
           <Text style={HomeStyles.textWriteReview}>리뷰쓰기 {'>'}</Text>
         </View>
@@ -215,7 +194,6 @@ const HomePage: React.FC<HomePageProps> = () => {
                 source={require('@/assets/images/home/TicketBackground.png')}
                 resizeMode="cover"
               />
-
               <View style={HomeStyles.containerTicketText}>
                 <Text style={HomeStyles.textTicketTitle}>뮤지컬[위키드]</Text>
                 <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
@@ -230,16 +208,14 @@ const HomePage: React.FC<HomePageProps> = () => {
                 </View>
               </View>
             </View>
-            <Image
-              style={HomeStyles.imageTicketLine}
-              source={require('@/assets/images/home/TicketLine.png')}
-              resizeMode="cover"
-            />
-            <Image
-              style={HomeStyles.ticket2}
-              source={require('@/assets/images/home/Musical1.jpeg')}
-              resizeMode="cover"
-            />
+            <View style={HomeStyles.ticket2}>
+              <SvgXml xml={HomeIcon.star} />
+              <SvgXml xml={HomeIcon.star} />
+              <SvgXml xml={HomeIcon.star} />
+              <SvgXml xml={HomeIcon.star} />
+              <SvgXml xml={HomeIcon.star} />
+              <Text style={HomeStyles.textReview}>총평 4.0</Text>
+            </View>
           </View>
         </View>
 
