@@ -51,10 +51,14 @@ const DashboardStyles = StyleSheet.create({
   tabButton: {
     paddingVertical: 10,
     paddingHorizontal: 20,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   tabText: {
     ...subhead03,
     color: Colors.gray_06,
+    textAlign: 'center',
   },
   activeTabText: {
     ...subhead03,
@@ -65,16 +69,16 @@ const DashboardStyles = StyleSheet.create({
   },
   activeTabUnderline: {
     position: 'absolute',
-    bottom: -1,
-    height: 1.5,
-    width: 74,
+    bottom: 0,
+    height: 2,
+    width: 67.3,
     backgroundColor: Colors.sub_04,
   },
   // 글쓰기 버튼
   writeButton: {
     position: 'absolute',
-    bottom: 14, // 하단 바 위 14px 간격
-    right: 20, // 오른쪽 끝에서 20px 간격
+    bottom: 14,
+    right: 20,
     width: 105,
     height: 41,
     borderRadius: 49,

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
   FlatList,
   View,
@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import moment from 'moment';
 import {SvgXml} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
 
