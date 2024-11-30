@@ -9,18 +9,21 @@ import {
 } from 'react-native';
 import AlertModalStyle from './AlertModalStyle';
 import {deletePost} from '@/api/post.api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type AlertModalProps = {
+// 임시 저장 글 삭제 시 뜨는 모달
+type DeleteTempModalProps = {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
   title: string;
   subTitle: string;
   topButton: string;
   bottomButton: string;
-  postId: number | null;
+  postId: any;
+  fetchSavedPosts: () => Promise<void>;
 };
 
-const AlertModal: React.FC<AlertModalProps> = ({
+const DeleteTempModal: React.FC<DeleteTempModalProps> = ({
   modalVisible,
   setModalVisible,
   title,
@@ -28,10 +31,23 @@ const AlertModal: React.FC<AlertModalProps> = ({
   topButton,
   bottomButton,
   postId,
+  fetchSavedPosts,
 }) => {
-  const fetchDeletePost = async (postId: number) => {
+  const fetchDeletePost = async (postId: any) => {
     try {
+      console.log('삭제할 postId: ', postId);
       await deletePost(postId);
+      const storedData = await AsyncStorage.getItem('temporaryPosts');
+      const parsedData = JSON.parse(storedData || '[]');
+      const updatedPosts = parsedData.filter(
+        (post: {post_id: number}) => post.post_id !== postId,
+      );
+      await AsyncStorage.setItem(
+        'temporaryPosts',
+        JSON.stringify(updatedPosts),
+      );
+      await fetchSavedPosts();
+
       Alert.alert('임시 저장된 글이 삭제되었습니다!');
       setModalVisible(false);
     } catch (error) {
@@ -54,8 +70,6 @@ const AlertModal: React.FC<AlertModalProps> = ({
   const closeModal = () => {
     setModalVisible(false);
   };
-
-  // console.log('삭제할 postId: ', postId);
 
   return (
     <Modal
@@ -86,4 +100,4 @@ const AlertModal: React.FC<AlertModalProps> = ({
   );
 };
 
-export default AlertModal;
+export default DeleteTempModal;
