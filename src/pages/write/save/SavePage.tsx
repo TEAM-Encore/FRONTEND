@@ -31,7 +31,10 @@ type RootStackParamList = {
 };
 
 const SavePage: React.FC = () => {
+<<<<<<< HEAD
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+=======
+>>>>>>> 5a75c98 (feat: 임시저장 목록 로딩 화면 추가 및 데이터가 없을 때 예외 처리)
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState('');
@@ -42,6 +45,7 @@ const SavePage: React.FC = () => {
   const [count, setCount] = useState(0);
   const [savedPosts, setSavedPosts] = useState<any[]>([]);
 
+<<<<<<< HEAD
   // const fetchSavedPosts = async () => {
   //   try {
   //     const storedData = await AsyncStorage.getItem('temporaryPosts');
@@ -127,6 +131,45 @@ const SavePage: React.FC = () => {
     }
   };
 
+=======
+  const fetchSavedPosts = async () => {
+    try {
+      const storedData = await AsyncStorage.getItem('temporaryPosts');
+      console.log('스토리지에 저장된 임시 저장 글: ', storedData);
+      const parsedData = JSON.parse(storedData || '[]');
+
+      const fetchedPosts = await Promise.all(
+        parsedData.map(async (post: {post_id: number}) => {
+          const response = await getPost(post.post_id);
+          // console.log('getPost 호출 결과값: ', response.data.data);
+          return response.data.data;
+        }),
+      );
+
+      setSavedPosts(fetchedPosts);
+      setCount(fetchedPosts.length);
+      // console.log('Fetched Posts:', fetchedPosts);
+
+      if (parsedData.length === 0) {
+        setCount(0);
+        setSavedPosts([]);
+        return;
+      }
+    } catch (error) {
+      if (count === 0) {
+        setSavedPosts([]);
+      } else {
+        console.error('Error fetching saved posts:', error);
+        Alert.alert(
+          '임시 저장 목록을 불러오는 도중 문제가 발생했습니다. 다시 시도해주세요.',
+        );
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+>>>>>>> 5a75c98 (feat: 임시저장 목록 로딩 화면 추가 및 데이터가 없을 때 예외 처리)
   // 삭제 시 UI에 반영하기 위한 함수
   useEffect(() => {
     fetchSavedPosts();
@@ -147,6 +190,7 @@ const SavePage: React.FC = () => {
     setSelectedPostId(postId);
   };
 
+<<<<<<< HEAD
   console.log('storageData: ', savedPosts);
   // console.log('저장된 임시 저장글 개수: ', count);
 
@@ -164,6 +208,16 @@ const SavePage: React.FC = () => {
       <View style={{marginTop: 20}}>
         <ActivityIndicator size="large" />
       </View>
+=======
+  // console.log('storageData: ', savedPosts);
+  // console.log('저장된 임시 저장글 개수: ', count);
+
+  if (isLoading) {
+    return (
+      <>
+        <ActivityIndicator size="large" />
+      </>
+>>>>>>> 5a75c98 (feat: 임시저장 목록 로딩 화면 추가 및 데이터가 없을 때 예외 처리)
     );
   }
 
@@ -186,11 +240,15 @@ const SavePage: React.FC = () => {
                 <View key={item.post_id} style={SaveStyles.list_container}>
                   <View style={SaveStyles.list}>
                     <View style={SaveStyles.sub_container}>
+<<<<<<< HEAD
                       <TouchableOpacity
                         onPress={() => handleClick(item.post_id)}>
                         <Text style={SaveStyles.list_title}>{item.title}</Text>
                       </TouchableOpacity>
 
+=======
+                      <Text style={SaveStyles.list_title}>{item.title}</Text>
+>>>>>>> 5a75c98 (feat: 임시저장 목록 로딩 화면 추가 및 데이터가 없을 때 예외 처리)
                       <TouchableOpacity
                         onPress={() =>
                           openModal(
@@ -211,7 +269,11 @@ const SavePage: React.FC = () => {
                         {timeAgo(item.modified_at)}
                       </Text>
                       <Text style={SaveStyles.list_expire_date}>
+<<<<<<< HEAD
                         {deleteTimeAgo(item.modified_at).message}
+=======
+                        {item.expireDate}일 뒤 자동 삭제
+>>>>>>> 5a75c98 (feat: 임시저장 목록 로딩 화면 추가 및 데이터가 없을 때 예외 처리)
                       </Text>
                     </View>
                   </View>
@@ -219,11 +281,14 @@ const SavePage: React.FC = () => {
                 </View>
               ))
             )}
+<<<<<<< HEAD
           </View>
           <View style={{marginTop: 60}}>
             <Text style={SaveStyles.notice}>
               2주가 지난 임시저장글은 자동으로 삭제됩니다.
             </Text>
+=======
+>>>>>>> 5a75c98 (feat: 임시저장 목록 로딩 화면 추가 및 데이터가 없을 때 예외 처리)
           </View>
         </ScrollView>
       </SafeAreaView>
