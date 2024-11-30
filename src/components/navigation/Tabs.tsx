@@ -77,18 +77,11 @@ export default function Tabs() {
               ),
               headerShown: true,
               headerTitle: '',
-              headerStyle:
-                item.name === '홈'
-                  ? {
-                      backgroundColor: '#1B1919',
-                      height: top,
-                      shadowColor: 'transparent',
-                    }
-                  : {
-                      backgroundColor: Colors.gray_01,
-                      height: top,
-                      shadowColor: 'transparent',
-                    },
+              headerStyle: {
+                backgroundColor: Colors.gray_01,
+                height: top,
+                shadowColor: 'transparent',
+              },
             }}
           />
         ))}

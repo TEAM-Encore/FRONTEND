@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {FlatList, StyleSheet} from 'react-native';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
 
@@ -10,16 +10,8 @@ const HomeStyles = StyleSheet.create({
     backgroundColor: Colors.gray_01,
   },
   containerHeader: {
-    height: 283,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    height: 280,
     overflow: 'hidden',
-  },
-  carouselBackground: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    marginTop: -100,
   },
   containerIcons: {
     flexDirection: 'row',
@@ -32,18 +24,19 @@ const HomeStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  containerImage: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   containerCarouselTicket: {
     marginHorizontal: 6,
+    shadowColor: '#171717',
+    shadowOffset: {width: 0, height: 0},
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
   },
   containerPagination: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: -15,
+    marginBottom: 15,
   },
   paginationDot: {
     width: 6,
@@ -52,10 +45,10 @@ const HomeStyles = StyleSheet.create({
     margin: 3.5,
   },
   activeDot: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.sub_04,
   },
   inactiveDot: {
-    backgroundColor: Colors.gray_07,
+    backgroundColor: Colors.gray_05,
   },
   containerAdImage: {
     marginTop: 39,
@@ -98,7 +91,7 @@ const HomeStyles = StyleSheet.create({
     height: 150,
     borderRadius: 8,
     justifyContent: 'flex-end',
-    marginRight: 1,
+    backgroundColor: Colors.gray_11,
   },
   imageTicket1: {
     position: 'absolute',
@@ -117,18 +110,25 @@ const HomeStyles = StyleSheet.create({
   },
   textTicketTitle: {
     ...subhead03,
-    color: Colors.gray_01,
+    color: Colors.gray_12,
     marginBottom: 9,
   },
   textTicketDateActor: {
     ...caption,
-    color: Colors.gray_01,
+    color: Colors.gray_12,
     marginLeft: 6,
   },
   ticket2: {
     width: 84,
     height: 150,
+    backgroundColor: '#F1F1F1',
     borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textReview: {
+    ...caption,
+    marginTop: 6,
   },
   containerPremiumReviews: {
     flexDirection: 'row',

@@ -89,7 +89,7 @@ const ModifyPage: React.FC<ModifyPageRouteProps> = ({route, setModifyData}) => {
   const handleContentChange = (text: string) => {
     setContent(text);
     setHashTags(text.match(/#[^\s#]+/g) || []); // 해시태그 감지
-    console.log('해시태그:', hashTags);
+    // console.log('해시태그:', hashTags);
   };
 
   const fetchGetPost = async () => {

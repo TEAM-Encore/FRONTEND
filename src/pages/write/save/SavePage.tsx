@@ -68,7 +68,7 @@ const SavePage: React.FC = () => {
     setSelectedPostId(postId); // 선택된 post_id 설정
   };
 
-  console.log('storageData: ', savedPosts);
+  // console.log('storageData: ', savedPosts);
 
   return (
     <>
