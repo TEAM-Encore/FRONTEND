@@ -111,7 +111,16 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
         );
 
         if (savedPosts.length >= 10) {
+<<<<<<< HEAD
           openModal(selectedTitle, selectedSubTitle, topButton, bottomButton);
+=======
+          openModal(
+            '10개를 초과해' + '\n' + '마지막 글을 삭제합니다.',
+            '삭제하시겠어요?',
+            '삭제하기',
+            '취소하기',
+          );
+>>>>>>> dd613af (feat: 임시저장 글 개수 10개 초과 모달 수정)
           return;
         }
 
