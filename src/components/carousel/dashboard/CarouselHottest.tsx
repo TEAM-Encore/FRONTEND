@@ -112,7 +112,7 @@ const CarouselHottest: React.FC = () => {
         keyExtractor={item => item.id}
         snapToOffsets={snapToOffsets}
         decelerationRate="fast"
-        contentContainerStyle={{paddingHorizontal: 30}}
+        contentContainerStyle={{paddingHorizontal: 20}}
       />
     </View>
   );
