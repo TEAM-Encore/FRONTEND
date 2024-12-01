@@ -9,11 +9,13 @@ import {
   Image,
 } from 'react-native';
 import WriteStyles from './WriteStyles';
-import {SvgXml} from 'react-native-svg';
+import {parse, SvgXml} from 'react-native-svg';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import ModalCategory from '@/components/categoryModal/ModalCategory';
 import WriteBottomTab from '@/components/bottomTab/WriteBottomTab';
 import {SelectImage} from '@/components/selectImage/SelectImage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CheckTempModal from '@/components/alertModal/CheckTempModal';
 
 interface PostData {
   title: string;
@@ -33,13 +35,18 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
   const [content, setContent] = useState('');
   const [post_type, setPostType] = useState('게시판 선택');
   const [category, setCategory] = useState('카테고리 선택');
-  const [categoryDisabled, setCategoryDisabled] = useState(true); // 카테고리 활성화 여부
+  const [categoryDisabled, setCategoryDisabled] = useState(true);
   const [dashboardModalVisible, setDashboardModalVisible] = useState(false);
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [hashTags, setHashTags] = useState<string[]>([]);
   const [photoCount, setPhotoCount] = useState(0);
   const [imgUrls, setImgUrls] = useState<string[]>([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedTitle, setSelectedTitle] = useState('');
+  const [selectedSubTitle, setSelectedSubtitle] = useState('');
+  const [topButton, setTopButton] = useState('');
+  const [bottomButton, setBottomButton] = useState('');
 
   const dashboardList = [
     '게시판 선택 안함',
@@ -67,19 +74,47 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
   ];
   const [categoryList, setCategoryList] = useState(infoCategoryList);
 
-  // 게시판 선택에 따라 카테고리 선택 활성화/비활성화
+  const openModal = (
+    title: string,
+    subTitle: string,
+    topButton: string,
+    bottomButton: string,
+  ) => {
+    setModalVisible(true);
+    setSelectedTitle('작성 중인 글이 있어요');
+    setSelectedSubtitle('이어서 쓰시겠어요?');
+    setTopButton('이어 쓰기');
+    setBottomButton('새로 쓰기');
+  };
+
+  // 임시저장 글 유무에 따라 띄우는 모달
+  const handleJudgeTempList = async () => {
+    const storedData = await AsyncStorage.getItem('temporaryPosts');
+    console.log('스토리지에 저장된 임시 저장 글: ', storedData);
+    const parsedData = JSON.parse(storedData || '[]');
+
+    if (parsedData.length > 0) {
+      openModal(selectedTitle, selectedSubTitle, topButton, bottomButton);
+    }
+  };
+
   useEffect(() => {
     if (post_type === '정보 게시판') {
-      setCategoryDisabled(false); // 활성화
+      setCategoryDisabled(false);
       setCategoryList(infoCategoryList);
     } else if (post_type == '후기 게시판') {
       setCategoryDisabled(false);
       setCategoryList(reviewCategoryList);
     } else {
-      setCategoryDisabled(true); // 비활성화
-      setCategory('카테고리 선택'); // 기본값으로 초기화
+      setCategoryDisabled(true);
+      setCategory('카테고리 선택');
     }
   }, [post_type]);
+
+  // 임시저장 목록에서 뒤로 가기 눌렀을 때도 "작성 중인 글이 있어요" 모달 띄우게끔 수정 필요
+  useEffect(() => {
+    handleJudgeTempList();
+  }, []);
 
   const pressCategory = () => {
     if (!categoryDisabled) {
@@ -88,7 +123,6 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
     }
   };
 
-  // 해시태그 추출하는 함수
   const handleContentChange = (text: string) => {
     setContent(text);
     setHashTags(text.match(/#[^\s#]+/g) || []);
@@ -254,6 +288,16 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
         category={category}
         hashTags={hashTags}
         imgUrls={imgUrls}
+      />
+
+      {/* 모달 컴포넌트 */}
+      <CheckTempModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        title={selectedTitle}
+        subTitle={selectedSubTitle}
+        topButton={topButton}
+        bottomButton={bottomButton}
       />
     </>
   );
