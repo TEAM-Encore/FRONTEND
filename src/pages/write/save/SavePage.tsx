@@ -13,6 +13,7 @@ import DeleteTempModal from '@/components/alertModal/DeleteTempModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getPost} from '@/api/post.api';
 import {timeAgo} from '@/util/timeAgo';
+import {deleteTimeAgo} from '@/util/deleteTimeAgo';
 
 const SavePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -25,38 +26,87 @@ const SavePage: React.FC = () => {
   const [count, setCount] = useState(0);
   const [savedPosts, setSavedPosts] = useState<any[]>([]);
 
+  // const fetchSavedPosts = async () => {
+  //   try {
+  //     const storedData = await AsyncStorage.getItem('temporaryPosts');
+  //     console.log('스토리지에 저장된 임시 저장 글: ', storedData);
+  //     const parsedData = JSON.parse(storedData || '[]');
+
+  //     const fetchedPosts = await Promise.all(
+  //       parsedData.map(async (post: {post_id: number}) => {
+  //         const response = await getPost(post.post_id);
+  //         // console.log('getPost 호출 결과값: ', response.data.data);
+  //         return response.data.data;
+  //       }),
+  //     );
+
+  //     setSavedPosts(fetchedPosts);
+  //     setCount(fetchedPosts.length);
+  //     // console.log('Fetched Posts:', fetchedPosts);
+
+  //     if (parsedData.length === 0) {
+  //       setCount(0);
+  //       setSavedPosts([]);
+  //       return;
+  //     }
+  //   } catch (error) {
+  //     if (count === 0) {
+  //       setSavedPosts([]);
+  //     } else {
+  //       console.error('Error fetching saved posts:', error);
+  //       Alert.alert(
+  //         '임시 저장 목록을 불러오는 도중 문제가 발생했습니다. 다시 시도해주세요.',
+  //       );
+  //     }
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const fetchSavedPosts = async () => {
     try {
       const storedData = await AsyncStorage.getItem('temporaryPosts');
       console.log('스토리지에 저장된 임시 저장 글: ', storedData);
       const parsedData = JSON.parse(storedData || '[]');
 
-      const fetchedPosts = await Promise.all(
-        parsedData.map(async (post: {post_id: number}) => {
-          const response = await getPost(post.post_id);
-          // console.log('getPost 호출 결과값: ', response.data.data);
-          return response.data.data;
-        }),
-      );
+      const validPosts: any[] = [];
+      const now = new Date();
 
-      setSavedPosts(fetchedPosts);
-      setCount(fetchedPosts.length);
-      // console.log('Fetched Posts:', fetchedPosts);
+      for (const post of parsedData) {
+        const postId = post.post_id;
+        const postModifiedAt = post.modified_at;
+        const past = new Date(postModifiedAt);
+        const diffInSeconds = Math.floor(
+          (now.getTime() - past.getTime()) / 1000,
+        );
+        const twoWeeksInSeconds = 14 * 24 * 60 * 60;
 
-      if (parsedData.length === 0) {
+        if (diffInSeconds >= twoWeeksInSeconds) {
+          // 만료된 데이터: 스토리지에서 삭제
+          console.log(
+            `Post ${postId}가 만료되었습니다. 스토리지에서 삭제합니다.`,
+          );
+          continue;
+        }
+
+        // 유효한 데이터: UI에 반영
+        const response = await getPost(postId);
+        validPosts.push(response.data.data);
+      }
+
+      await AsyncStorage.setItem('temporaryPosts', JSON.stringify(validPosts));
+      setSavedPosts(validPosts);
+      setCount(validPosts.length);
+
+      if (validPosts.length === 0) {
         setCount(0);
         setSavedPosts([]);
-        return;
       }
     } catch (error) {
-      if (count === 0) {
-        setSavedPosts([]);
-      } else {
-        console.error('Error fetching saved posts:', error);
-        Alert.alert(
-          '임시 저장 목록을 불러오는 도중 문제가 발생했습니다. 다시 시도해주세요.',
-        );
-      }
+      console.error('Error fetching saved posts:', error);
+      Alert.alert(
+        '임시 저장 목록을 불러오는 도중 문제가 발생했습니다. 다시 시도해주세요.',
+      );
     } finally {
       setIsLoading(false);
     }
@@ -82,7 +132,7 @@ const SavePage: React.FC = () => {
     setSelectedPostId(postId);
   };
 
-  // console.log('storageData: ', savedPosts);
+  console.log('storageData: ', savedPosts);
   // console.log('저장된 임시 저장글 개수: ', count);
 
   if (isLoading) {
@@ -112,7 +162,10 @@ const SavePage: React.FC = () => {
                 <View key={item.post_id} style={SaveStyles.list_container}>
                   <View style={SaveStyles.list}>
                     <View style={SaveStyles.sub_container}>
-                      <Text style={SaveStyles.list_title}>{item.title}</Text>
+                      <TouchableOpacity>
+                        <Text style={SaveStyles.list_title}>{item.title}</Text>
+                      </TouchableOpacity>
+
                       <TouchableOpacity
                         onPress={() =>
                           openModal(
@@ -133,7 +186,7 @@ const SavePage: React.FC = () => {
                         {timeAgo(item.modified_at)}
                       </Text>
                       <Text style={SaveStyles.list_expire_date}>
-                        {item.expireDate}일 뒤 자동 삭제
+                        {deleteTimeAgo(item.modified_at).message}
                       </Text>
                     </View>
                   </View>
@@ -142,12 +195,13 @@ const SavePage: React.FC = () => {
               ))
             )}
           </View>
+          <View style={{marginTop: 60}}>
+            <Text style={SaveStyles.notice}>
+              2주가 지난 임시저장글은 자동으로 삭제됩니다.
+            </Text>
+          </View>
         </ScrollView>
       </SafeAreaView>
-
-      <Text style={SaveStyles.notice}>
-        2주가 지난 임시저장글은 자동으로 삭제됩니다.
-      </Text>
 
       {/* 모달 컴포넌트 */}
       <DeleteTempModal
