@@ -42,6 +42,7 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
   setContent,
   setPhotoCount,
 }) => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState('');
   const [selectedSubTitle, setSelectedSubtitle] = useState('');
@@ -49,7 +50,6 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
   const [bottomButton, setBottomButton] = useState('');
   const [savedPosts, setSavedPosts] = useState<any[]>([]);
 
-  // 임시 저장한 글 상태 관리로 개수가 10개 넘으면 실행하도록 수정 필요
   const openModal = (
     title: string,
     subTitle: string,
@@ -63,20 +63,9 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
     setBottomButton('취소하기');
   };
 
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
   const addHashTag = () => {
     setContent(prevContent => prevContent + '#');
   };
-
-  // console.log('Write Bottom Tab: ', {
-  //   title,
-  //   content,
-  //   post_type,
-  //   category,
-  //   hashTags,
-  //   imgUrls,
-  // });
 
   const postTypeMapping: Record<string, string> = {
     '게시판 선택 안함': 'NO_SELECT',
@@ -122,12 +111,7 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
         );
 
         if (savedPosts.length >= 10) {
-          openModal(
-            '10개를 초과해' + '\n' + '마지막 글을 삭제합니다.',
-            '삭제하시겠어요?',
-            '삭제하기',
-            '취소하기',
-          );
+          openModal(selectedTitle, selectedSubTitle, topButton, bottomButton);
           return;
         }
 
