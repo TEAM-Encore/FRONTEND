@@ -12,7 +12,7 @@ import WriteStyles from '@/pages/write/WriteStyles';
 import {SvgXml} from 'react-native-svg';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
-import AlertModal from '../alertModal/AlertModal';
+import DeleteFirstTempModal from '../alertModal/DeleteFirstTempModal';
 import {SelectImage} from '../selectImage/SelectImage';
 import {createPost} from '@/api/post.api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -42,13 +42,14 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
   setContent,
   setPhotoCount,
 }) => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState('');
   const [selectedSubTitle, setSelectedSubtitle] = useState('');
   const [topButton, setTopButton] = useState('');
   const [bottomButton, setBottomButton] = useState('');
+  const [savedPosts, setSavedPosts] = useState<any[]>([]);
 
-  // 임시 저장한 글 상태 관리로 개수가 10개 넘으면 실행하도록 수정 필요
   const openModal = (
     title: string,
     subTitle: string,
@@ -62,20 +63,9 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
     setBottomButton('취소하기');
   };
 
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
   const addHashTag = () => {
     setContent(prevContent => prevContent + '#');
   };
-
-  // console.log('Write Bottom Tab: ', {
-  //   title,
-  //   content,
-  //   post_type,
-  //   category,
-  //   hashTags,
-  //   imgUrls,
-  // });
 
   const postTypeMapping: Record<string, string> = {
     '게시판 선택 안함': 'NO_SELECT',
@@ -113,13 +103,18 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
         true,
       );
 
-      // console.log('임시 저장한 글 내용: ', response.data);
+      console.log('임시 저장한 글 내용: ', response.data);
 
       if (response?.data?.code === 1000 && response?.data?.data?.post_id) {
-        // AsyncStorage 임시 저장하기
         const savedPosts = JSON.parse(
           (await AsyncStorage.getItem('temporaryPosts')) || '[]',
         );
+
+        if (savedPosts.length >= 10) {
+          openModal(selectedTitle, selectedSubTitle, topButton, bottomButton);
+          return;
+        }
+
         const updatedPosts = [...savedPosts, response.data.data];
 
         await AsyncStorage.setItem(
@@ -128,7 +123,6 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
         );
 
         Alert.alert('임시 저장이 완료되었습니다.');
-        // navigation.navigate('SavePage');
       } else {
         Alert.alert('임시 저장 중 문제가 발생했습니다. 다시 시도해주세요.');
       }
@@ -161,15 +155,6 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
         </TouchableOpacity>
 
         <View style={WriteStyles.bottom_text_container}>
-          {/* <TouchableOpacity
-            onPress={() =>
-              openModal(
-                selectedTitle,
-                selectedSubTitle,
-                topButton,
-                bottomButton,
-              )
-            }> */}
           <TouchableOpacity onPress={handleTemporarySave}>
             <Text style={{...WriteStyles.bottom_text, paddingRight: 12}}>
               임시저장
@@ -183,13 +168,15 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
       </KeyboardAvoidingView>
 
       {/* 모달 컴포넌트 */}
-      <AlertModal
+      <DeleteFirstTempModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title={selectedTitle}
         subTitle={selectedSubTitle}
         topButton={topButton}
         bottomButton={bottomButton}
+        savedPosts={savedPosts} // 현재 저장된 게시글 목록 전달
+        setSavedPosts={setSavedPosts} // 상태 업데이트 함수 전달
       />
     </>
   );

@@ -72,6 +72,14 @@ const SaveStyles = StyleSheet.create({
     bottom: 40,
     alignSelf: 'center',
   },
+  no_container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  no_text: {
+    ...caption,
+  },
 });
 
 export default SaveStyles;

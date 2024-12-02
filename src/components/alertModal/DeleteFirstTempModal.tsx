@@ -8,43 +8,62 @@ import {
   Alert,
 } from 'react-native';
 import AlertModalStyle from './AlertModalStyle';
-import {deletePost} from '@/api/post.api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type AlertModalProps = {
+// 임시 저장 글 개수가 10개 초과 시 뜨는 모달
+type DeleteFirstTempModalProps = {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
   title: string;
   subTitle: string;
   topButton: string;
   bottomButton: string;
-  postId: number | null;
+  savedPosts: any[];
+  setSavedPosts: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
-const AlertModal: React.FC<AlertModalProps> = ({
+const DeleteFirstTempModal: React.FC<DeleteFirstTempModalProps> = ({
   modalVisible,
   setModalVisible,
   title,
   subTitle,
   topButton,
   bottomButton,
-  postId,
+  savedPosts,
+  setSavedPosts,
 }) => {
-  const fetchDeletePost = async (postId: number) => {
+  const deleteFirstPost = async () => {
     try {
-      await deletePost(postId);
-      Alert.alert('임시 저장된 글이 삭제되었습니다!');
+      const storedData = await AsyncStorage.getItem('temporaryPosts');
+      const savedPosts = JSON.parse(storedData || '[]');
+
+      if (savedPosts.length === 0) {
+        Alert.alert('삭제할 게시글이 없습니다!');
+        return;
+      }
+
+      // 첫 번째 게시글 삭제
+      const updatedPosts = savedPosts.slice(1);
+
+      // 업데이트된 savedPosts를 상태에 반영
+      setSavedPosts(updatedPosts);
+
+      // AsyncStorage에 저장
+      await AsyncStorage.setItem(
+        'temporaryPosts',
+        JSON.stringify(updatedPosts),
+      );
+
+      Alert.alert('임시 저장된 첫 번째 글이 삭제되었습니다!');
       setModalVisible(false);
     } catch (error) {
       console.error('게시글 삭제 오류:', error);
+      Alert.alert('글 삭제 중 문제가 발생했습니다. 다시 시도해주세요.');
     }
   };
 
   const handleTopButton = () => {
-    if (postId !== null) {
-      fetchDeletePost(postId);
-    } else {
-      Alert.alert('삭제할 게시글의 ID를 찾을 수 없습니다!');
-    }
+    deleteFirstPost(); // 첫 번째 게시글 삭제
   };
 
   const handleBottomButton = () => {
@@ -54,8 +73,6 @@ const AlertModal: React.FC<AlertModalProps> = ({
   const closeModal = () => {
     setModalVisible(false);
   };
-
-  // console.log('삭제할 postId: ', postId);
 
   return (
     <Modal
@@ -86,4 +103,4 @@ const AlertModal: React.FC<AlertModalProps> = ({
   );
 };
 
-export default AlertModal;
+export default DeleteFirstTempModal;

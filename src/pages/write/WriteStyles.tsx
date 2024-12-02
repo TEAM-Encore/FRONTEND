@@ -31,6 +31,7 @@ const WriteStyles = StyleSheet.create({
   input_content: {
     ...bodyLong01,
     marginBottom: 20,
+    minHeight: 230,
   },
   line: {
     height: 1,
