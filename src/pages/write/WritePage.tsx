@@ -16,6 +16,7 @@ import WriteBottomTab from '@/components/bottomTab/WriteBottomTab';
 import {SelectImage} from '@/components/selectImage/SelectImage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CheckTempModal from '@/components/alertModal/CheckTempModal';
+import {useRoute, RouteProp} from '@react-navigation/native';
 
 interface PostData {
   title: string;
@@ -24,24 +25,42 @@ interface PostData {
   category: string;
   hashTags: string[];
   imgUrls: string[];
+  post_images?: string[];
 }
 
 interface WritePageProps {
   setPostData: React.Dispatch<React.SetStateAction<PostData | null>>;
 }
 
+type RootStackParamList = {
+  SavePage: undefined;
+  WritePage: {
+    postData: PostData;
+  };
+};
+
+type WritePageRouteProp = RouteProp<RootStackParamList, 'WritePage'>;
+
 const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [post_type, setPostType] = useState('게시판 선택');
-  const [category, setCategory] = useState('카테고리 선택');
+  const route = useRoute<WritePageRouteProp>();
+  const postData = route.params?.postData;
+  console.log('임시저장 글에서 넘어온 데이터: ', postData);
+
+  const [title, setTitle] = useState(postData?.title || '');
+  const [content, setContent] = useState(postData?.content || '');
+  const [post_type, setPostType] = useState(
+    postData?.post_type || '게시판 선택',
+  );
+  const [category, setCategory] = useState(
+    postData?.category || '카테고리 선택',
+  );
+  const [hashTags, setHashTags] = useState<string[]>(postData?.hashTags || []);
+  const [imgUrls, setImgUrls] = useState<string[]>(postData?.imgUrls || []);
   const [categoryDisabled, setCategoryDisabled] = useState(true);
   const [dashboardModalVisible, setDashboardModalVisible] = useState(false);
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
-  const [hashTags, setHashTags] = useState<string[]>([]);
   const [photoCount, setPhotoCount] = useState(0);
-  const [imgUrls, setImgUrls] = useState<string[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState('');
   const [selectedSubTitle, setSelectedSubtitle] = useState('');
@@ -73,6 +92,24 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
     '공연 감상',
   ];
   const [categoryList, setCategoryList] = useState(infoCategoryList);
+
+  const postTypeMapping: Record<string, string> = {
+    NO_SELECT: '게시판 선택',
+    INFORMATION: '정보 게시판',
+    REVIEW: '후기 게시판',
+    ACTOR: '배우 게시판',
+    FREE: '자유 게시판',
+  };
+
+  const categoryMapping: Record<string, string> = {
+    NO_SELECT: '카테고리 선택',
+    OPERA_GLASS_RENTAL: '오페라 글라스',
+    MUSICAL_TERMS: '뮤지컬 용어',
+    EVENTS: '이벤트',
+    VIEW_REVIEW: '시야 후기',
+    GOODS_REVIEW: '굿즈 후기',
+    PERFORMANCE_REVIEW: '공연 감상',
+  };
 
   const openModal = (
     title: string,
@@ -111,7 +148,6 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
     }
   }, [post_type]);
 
-  // 임시저장 목록에서 뒤로 가기 눌렀을 때도 "작성 중인 글이 있어요" 모달 띄우게끔 수정 필요
   useEffect(() => {
     handleJudgeTempList();
   }, []);
@@ -151,6 +187,24 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
       imgUrls,
     });
   }, [title, content, post_type, category, imgUrls]);
+
+  // 상태 업데이트
+  useEffect(() => {
+    if (route.params?.postData) {
+      const postData = route.params?.postData;
+      const mappedCategory = categoryMapping[postData.category] || '';
+      const mappedPostType = postTypeMapping[postData.post_type] || '';
+
+      console.log('임시저장 글에서 넘어온 데이터: ', postData);
+
+      setTitle(postData.title);
+      setContent(postData.content);
+      setPostType(mappedPostType);
+      setCategory(mappedCategory);
+      setHashTags(postData.hashTags || []);
+      setImgUrls(postData.post_images || []);
+    }
+  }, [route.params?.postData]);
 
   return (
     <>

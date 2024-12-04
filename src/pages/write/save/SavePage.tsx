@@ -14,8 +14,24 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getPost} from '@/api/post.api';
 import {timeAgo} from '@/util/timeAgo';
 import {deleteTimeAgo} from '@/util/deleteTimeAgo';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
+
+type RootStackParamList = {
+  SavePage: undefined;
+  WritePage: {
+    postData: {
+      title: string;
+      content: string;
+      post_type: string;
+      category: string;
+      hashTags: string[];
+      imgUrls: string[];
+    };
+  };
+};
 
 const SavePage: React.FC = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState('');
@@ -66,7 +82,6 @@ const SavePage: React.FC = () => {
   const fetchSavedPosts = async () => {
     try {
       const storedData = await AsyncStorage.getItem('temporaryPosts');
-      console.log('스토리지에 저장된 임시 저장 글: ', storedData);
       const parsedData = JSON.parse(storedData || '[]');
 
       const validPosts: any[] = [];
@@ -135,11 +150,20 @@ const SavePage: React.FC = () => {
   console.log('storageData: ', savedPosts);
   // console.log('저장된 임시 저장글 개수: ', count);
 
+  const handleClick = (postId: number) => {
+    const postData = savedPosts.find(post => post.post_id === postId);
+    if (postData) {
+      navigation.navigate('WritePage', {postData});
+    } else {
+      Alert.alert('해당 임시 저장글을 찾지 못했습니다.');
+    }
+  };
+
   if (isLoading) {
     return (
-      <>
+      <View style={{marginTop: 20}}>
         <ActivityIndicator size="large" />
-      </>
+      </View>
     );
   }
 
@@ -162,7 +186,8 @@ const SavePage: React.FC = () => {
                 <View key={item.post_id} style={SaveStyles.list_container}>
                   <View style={SaveStyles.list}>
                     <View style={SaveStyles.sub_container}>
-                      <TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => handleClick(item.post_id)}>
                         <Text style={SaveStyles.list_title}>{item.title}</Text>
                       </TouchableOpacity>
 
