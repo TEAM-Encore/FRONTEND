@@ -32,9 +32,13 @@ type RootStackParamList = {
 
 const SavePage: React.FC = () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 =======
 >>>>>>> 5a75c98 (feat: 임시저장 목록 로딩 화면 추가 및 데이터가 없을 때 예외 처리)
+=======
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+>>>>>>> e8335b8 (feat: 임시 저장 목록 데이터를 작성 페이지로 불러오기)
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState('');
@@ -203,6 +207,7 @@ const SavePage: React.FC = () => {
     }
   };
 
+<<<<<<< HEAD
   if (isLoading) {
     return (
       <View style={{marginTop: 20}}>
@@ -212,12 +217,18 @@ const SavePage: React.FC = () => {
   // console.log('storageData: ', savedPosts);
   // console.log('저장된 임시 저장글 개수: ', count);
 
+=======
+>>>>>>> e8335b8 (feat: 임시 저장 목록 데이터를 작성 페이지로 불러오기)
   if (isLoading) {
     return (
-      <>
+      <View style={{marginTop: 20}}>
         <ActivityIndicator size="large" />
+<<<<<<< HEAD
       </>
 >>>>>>> 5a75c98 (feat: 임시저장 목록 로딩 화면 추가 및 데이터가 없을 때 예외 처리)
+=======
+      </View>
+>>>>>>> e8335b8 (feat: 임시 저장 목록 데이터를 작성 페이지로 불러오기)
     );
   }
 
@@ -241,6 +252,9 @@ const SavePage: React.FC = () => {
                   <View style={SaveStyles.list}>
                     <View style={SaveStyles.sub_container}>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e8335b8 (feat: 임시 저장 목록 데이터를 작성 페이지로 불러오기)
                       <TouchableOpacity
                         onPress={() => handleClick(item.post_id)}>
                         <Text style={SaveStyles.list_title}>{item.title}</Text>
