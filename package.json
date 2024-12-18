@@ -24,6 +24,7 @@
     "react-native": "0.76.1",
     "react-native-asset": "^2.1.1",
     "react-native-fonts": "^0.0.0",
+    "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.20.2",
     "react-native-image-picker": "^7.1.2",
     "react-native-modal": "^13.0.1",
