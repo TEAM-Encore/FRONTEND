@@ -2,7 +2,8 @@ import {FlatList, StyleSheet} from 'react-native';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
 
-const {subhead02, subhead03, headline, body01, caption} = typography;
+const {subhead02, subhead03, headline, body01, bodyLong01, caption} =
+  typography;
 
 const HomeStyles = StyleSheet.create({
   container: {
@@ -83,6 +84,45 @@ const HomeStyles = StyleSheet.create({
     ...body01,
     color: Colors.gray_08,
   },
+  containerReviewModal: {
+    position: 'absolute',
+    zIndex: 2,
+    right: 0,
+    marginRight: 19.8,
+  },
+  triangle: {
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderLeftWidth: 6,
+    borderRightWidth: 6,
+    borderBottomWidth: 10,
+    bottom: -3,
+    right: -172,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: Colors.gray_12,
+  },
+  reviewModal: {
+    flexDirection: 'row',
+    width: 196,
+    minHeight: 32,
+    paddingHorizontal: 11.75,
+    paddingVertical: 7.23,
+    borderRadius: 8.14,
+    backgroundColor: Colors.gray_12,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  textReviewModal: {
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 10.847,
+    lineHeight: 16.271,
+    letterSpacing: -0.271,
+    color: Colors.gray_01,
+    marginRight: 3.62,
+  },
   containerTicket: {
     flexDirection: 'row',
   },
@@ -97,7 +137,7 @@ const HomeStyles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
-    borderRadius: 8,
+    borderRadius: 7,
   },
   imageTicketLine: {
     position: 'absolute',
@@ -121,14 +161,16 @@ const HomeStyles = StyleSheet.create({
   ticket2: {
     width: 84,
     height: 150,
-    backgroundColor: '#F1F1F1',
+    backgroundColor: Colors.sub_03,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
   textReview: {
     ...caption,
-    marginTop: 6,
+    marginTop: 10,
+    textAlign: 'center',
+    color: Colors.gray_09,
   },
   containerPremiumReviews: {
     flexDirection: 'row',
@@ -208,6 +250,35 @@ const HomeStyles = StyleSheet.create({
     height: undefined,
     aspectRatio: 2,
     resizeMode: 'contain',
+  },
+  eventBanner: {
+    flexDirection: 'row',
+    height: 94,
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+  },
+  textEventBannerTitle: {
+    ...subhead03,
+    color: Colors.gray_12,
+  },
+  textEventBannerSubTitle: {
+    ...bodyLong01,
+    color: Colors.gray_08,
+  },
+  eventBannerPagination: {
+    position: 'absolute',
+    width: 39,
+    height: 18,
+    borderRadius: 21,
+    bottom: 15,
+    right: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textEventBannerPagination: {
+    ...caption,
+    color: Colors.gray_10,
   },
   imageMusical: {
     width: 125,

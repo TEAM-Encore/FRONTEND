@@ -5,8 +5,6 @@ import {
   View,
   Text,
   FlatList,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
   Image,
   Dimensions,
   TouchableOpacity,
@@ -14,7 +12,7 @@ import {
 
 import HomeStyles from '@/pages/home/HomeStyles';
 import {SvgXml} from 'react-native-svg';
-import {IconTitle} from '@/assets/icons/home/IconTitle';
+import {HomeIcon} from '@/assets/icons/home/HomeIcon';
 import IconSearch from '@/assets/icons/home/IconSearch';
 import IconNotification from '@/assets/icons/home/IconNotification';
 import IconLike from '@/assets/icons/home/IconLike';
@@ -45,6 +43,8 @@ const HomePage: React.FC<HomePageProps> = () => {
   const flatListRef = useRef<FlatList<any>>(null);
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [reviewModalPosition, setReviewModalPosition] = useState({top: 0});
+  const [reviewModalVisible, setReviewModalVisible] = useState(true);
 
   const carouselTicketList = [
     {
@@ -115,24 +115,30 @@ const HomePage: React.FC<HomePageProps> = () => {
     },
   ];
 
-  const point = [
+  const eventBanner = [
     {
       id: '1',
-      image: require('@/assets/images/home/IconPoint.png'),
-      title: '+10 포인트',
-      content: '댓글 3번 작성하기',
+      icon: HomeIcon.bannerHeart,
+      color: '#EDDCFF',
+      subColor: '#D6AFFF',
+      title: '댓글로 마음 전하면 30포인트',
+      subTitle: '댓글 3번 작성하기',
     },
     {
       id: '2',
-      image: require('@/assets/images/home/IconPoint.png'),
-      title: '+10 포인트',
-      content: '댓글 3번 작성하기',
+      icon: HomeIcon.bannerGift,
+      color: '#FFF8DB',
+      subColor: '#FFF1BB',
+      title: '오늘의 깜짝 선물 10포인트',
+      subTitle: '로그인 후 20분 경과 시',
     },
     {
       id: '3',
-      image: require('@/assets/images/home/IconPoint.png'),
-      title: '+10 포인트',
-      content: '댓글 3번 작성하기',
+      icon: HomeIcon.bannerTrophy,
+      color: '#FFDFD6',
+      subColor: '#FFB19B',
+      title: '댓글로 마음 전하면 30포인트',
+      subTitle: '좋아요 10개 이상 누를 시',
     },
   ];
 
@@ -144,12 +150,21 @@ const HomePage: React.FC<HomePageProps> = () => {
     [carouselTicketList],
   );
 
+  const handleLayout = (event: any) => {
+    const {y, height} = event.nativeEvent.layout;
+    setReviewModalPosition({top: y + height});
+  };
+
+  const handleModalCancel = () => {
+    setReviewModalVisible(false);
+  };
+
   return (
     <SafeAreaView style={HomeStyles.container}>
       <ScrollView>
         <View style={HomeStyles.containerHeader}>
           <View style={HomeStyles.containerIcons}>
-            <SvgXml xml={IconTitle.iconTitle} />
+            <SvgXml xml={HomeIcon.iconTitle} />
             <View style={HomeStyles.containerRow}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('HomeSearchDefaultPage')}>
@@ -193,10 +208,33 @@ const HomePage: React.FC<HomePageProps> = () => {
           ))}
         </View>
 
-        <View style={[HomeStyles.containerTitle, {marginTop: 36}]}>
+        <View
+          style={[HomeStyles.containerTitle, {marginTop: 36}]}
+          onLayout={handleLayout}>
           <Text style={HomeStyles.textTitle}>최근 관람한 공연</Text>
           <Text style={HomeStyles.textWriteReview}>리뷰쓰기 {'>'}</Text>
         </View>
+
+        {reviewModalVisible && (
+          <View
+            style={[
+              HomeStyles.containerReviewModal,
+              {top: reviewModalPosition.top},
+            ]}>
+            <View style={HomeStyles.triangle} />
+            <View style={HomeStyles.reviewModal}>
+              <Text style={HomeStyles.textReviewModal}>
+                리뷰 작성하고{' '}
+                <Text style={{fontFamily: 'Pretendard-Bold'}}>20포인트</Text>{' '}
+                받아가세요!
+              </Text>
+              <TouchableOpacity onPress={handleModalCancel}>
+                <SvgXml xml={HomeIcon.modalCancel} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
         <View style={{alignItems: 'center'}}>
           <View style={HomeStyles.containerTicket}>
             <View style={HomeStyles.ticket1}>
@@ -220,12 +258,14 @@ const HomePage: React.FC<HomePageProps> = () => {
               </View>
             </View>
             <View style={HomeStyles.ticket2}>
-              <SvgXml xml={HomeIcon.star} />
-              <SvgXml xml={HomeIcon.star} />
-              <SvgXml xml={HomeIcon.star} />
-              <SvgXml xml={HomeIcon.star} />
-              <SvgXml xml={HomeIcon.star} />
-              <Text style={HomeStyles.textReview}>총평 4.0</Text>
+              <View style={{flexDirection: 'row'}}>
+                <SvgXml xml={HomeIcon.star} />
+                <SvgXml xml={HomeIcon.star} />
+                <SvgXml xml={HomeIcon.star} />
+                <SvgXml xml={HomeIcon.star} />
+                <SvgXml xml={HomeIcon.star} />
+              </View>
+              <Text style={HomeStyles.textReview}>리뷰를{'\n'}남겨주세요</Text>
             </View>
           </View>
         </View>
@@ -283,6 +323,50 @@ const HomePage: React.FC<HomePageProps> = () => {
           </View>
         </View>
 
+        <View style={{marginTop: 48}}>
+          <FlatList
+            ref={flatListRef}
+            data={eventBanner}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item}) => (
+              <View
+                style={[
+                  HomeStyles.eventBanner,
+                  {width: screenWidth, backgroundColor: item.color},
+                ]}>
+                <SvgXml xml={item.icon} />
+                <View style={{marginLeft: 18}}>
+                  <Text style={HomeStyles.textEventBannerTitle}>
+                    {item.title}
+                  </Text>
+                  <Text style={HomeStyles.textEventBannerSubTitle}>
+                    {item.subTitle}
+                  </Text>
+                </View>
+                <View
+                  style={[
+                    HomeStyles.eventBannerPagination,
+                    {backgroundColor: item.subColor},
+                  ]}>
+                  <Text style={HomeStyles.textEventBannerPagination}>
+                    {item.id}/3
+                  </Text>
+                </View>
+              </View>
+            )}
+            keyExtractor={item => item.id}
+            decelerationRate="fast"
+            initialScrollIndex={0}
+            getItemLayout={(data, index) => ({
+              length: 94,
+              offset: 94 * index,
+              index,
+            })}
+          />
+        </View>
+
         <View style={HomeStyles.containerTitle}>
           <Text style={HomeStyles.textTitle}>이달의 인기 뮤지컬</Text>
         </View>
@@ -312,7 +396,7 @@ const HomePage: React.FC<HomePageProps> = () => {
           <Text style={HomeStyles.textTitle}>개봉 예정 뮤지컬</Text>
         </View>
         <FlatList
-          style={{marginHorizontal: 12.5}}
+          style={{marginHorizontal: 12.5, marginBottom: 37}}
           ref={flatListRef}
           data={notReleaseMusicals}
           renderItem={({item}) => (
@@ -332,39 +416,6 @@ const HomePage: React.FC<HomePageProps> = () => {
           showsHorizontalScrollIndicator={false}
           nestedScrollEnabled
         />
-
-        <View style={HomeStyles.containerAdImage}>
-          <Image
-            style={{width: '100%', height: 94}}
-            source={require('@/assets/images/home/ExampleAd.png')}
-          />
-          <View style={HomeStyles.containerAd}>
-            <Text style={HomeStyles.textAd}>AD</Text>
-          </View>
-        </View>
-
-        <View style={[HomeStyles.containerTitle, {marginBottom: 12.5}]}>
-          <Text style={HomeStyles.textTitle}>놓칠 수 없는 포인트</Text>
-          <Text style={HomeStyles.textWriteReview}>전체보기 {'>'}</Text>
-        </View>
-        <View style={{alignItems: 'center', marginBottom: 141}}>
-          {point.map(point => (
-            <View key={point.id} style={HomeStyles.containerPoint}>
-              <View style={HomeStyles.containerRow}>
-                <Image source={point.image} />
-                <View>
-                  <Text style={HomeStyles.textPointTitle}>{point.title}</Text>
-                  <Text style={HomeStyles.textPointContent}>
-                    {point.content}
-                  </Text>
-                </View>
-              </View>
-              <View style={HomeStyles.containerPointShortcut}>
-                <Text style={HomeStyles.textPointShortcut}>바로가기</Text>
-              </View>
-            </View>
-          ))}
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
