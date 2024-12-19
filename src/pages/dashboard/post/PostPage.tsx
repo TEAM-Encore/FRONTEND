@@ -21,7 +21,6 @@ import PostStyles from '@/pages/dashboard/post/PostStyles';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import {getPost, createLikePost, deleteLikePost} from '@/api/post.api';
 import {getComments, createComment} from '@/api/comment.api';
-// import {timeAgo} from '@/util/timeAgo';
 import {timeAgo} from '../../../util/timeAgo';
 
 import ModalModifyDelete from '@/components/modifyDeleteModal/ModalModifyDelete';
@@ -55,7 +54,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     nick_name: string;
     post_images?: [];
     profile_image_url?: string;
-  }>({});
+  }>();
   const [commentData, setCommentData] = useState<
     {
       id: number;
@@ -111,7 +110,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     return categoryMapping[category];
   };
 
-  const category = getMappedCategory(postData.category);
+  const category = getMappedCategory(postData?.category);
 
   const handleGoBack = () => {
     const previousState = navigation.getState();
@@ -247,13 +246,13 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
                     </Text>
                   </View>
                 )}
-                <Text style={PostStyles.textTitle}>{postData.title}</Text>
-                <Text style={PostStyles.textContent}>{postData.content}</Text>
+                <Text style={PostStyles.textTitle}>{postData?.title}</Text>
+                <Text style={PostStyles.textContent}>{postData?.content}</Text>
               </View>
               {/* 이미지 */}
               <View style={PostStyles.photos}>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  {postData.post_images &&
+                  {postData?.post_images &&
                     postData.post_images.length > 0 &&
                     postData.post_images.map((url: string, index: number) =>
                       url ? (
@@ -273,12 +272,12 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
                 </ScrollView>
               </View>
               {/* 해시태그 */}
-              {postData.hashtags?.length !== 0 && (
+              {postData?.hashtags?.length !== 0 && (
                 <View style={PostStyles.line} />
               )}
               <TouchableOpacity style={PostStyles.containerHashtag}>
                 <Text style={PostStyles.textHashtag}>
-                  {postData.hashtags?.join(' ') || ''}
+                  {postData?.hashtags?.join(' ') || ''}
                 </Text>
               </TouchableOpacity>
               {/* 좋아요 및 댓글 */}
@@ -290,14 +289,14 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
                   }>
                   <SvgXml xml={postLike ? PostIcon.fullLike : PostIcon.like} />
                   <Text style={PostStyles.textCommentLike}>
-                    {postData.num_of_like}
+                    {postData?.num_of_like}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[PostStyles.containerCommentLike, {marginRight: 10}]}>
                   <SvgXml xml={PostIcon.comment} />
                   <Text style={PostStyles.textCommentLike}>
-                    {postData.num_of_comment}
+                    {postData?.num_of_comment}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -314,12 +313,12 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
                   <View style={PostStyles.containerWriterText}>
                     <View style={PostStyles.containerRow}>
                       <Text style={PostStyles.textWriter}>
-                        {postData.nick_name}
+                        {postData?.nick_name}
                       </Text>
                       <SvgXml xml={PostIcon.Badge} />
                     </View>
                     <Text style={PostStyles.textDate}>
-                      {timeAgo(postData.created_at)}
+                      {timeAgo(postData?.created_at)}
                     </Text>
                   </View>
                 </View>
@@ -330,7 +329,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
               {/* 댓글 헤더 */}
               <View style={PostStyles.containerCommentTitle}>
                 <Text style={PostStyles.textCommentTitle}>
-                  댓글 {postData.num_of_comment}
+                  댓글 {postData?.num_of_comment}
                 </Text>
                 <View style={PostStyles.containerRow}>
                   <TouchableOpacity>

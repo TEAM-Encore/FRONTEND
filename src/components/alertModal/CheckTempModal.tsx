@@ -1,16 +1,13 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
   Modal,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import AlertModalStyle from './AlertModalStyle';
-import {useNavigation, NavigationProp} from '@react-navigation/native';
 
-// 임시 저장 글 유무 판단 시 뜨는 모달
 type CheckTempModalProps = {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
@@ -18,11 +15,7 @@ type CheckTempModalProps = {
   subTitle: string;
   topButton: string;
   bottomButton: string;
-};
-
-type RootStackParamList = {
-  WritePage: undefined;
-  SavePage: undefined;
+  topButtonAction: () => void;
 };
 
 const CheckTempModal: React.FC<CheckTempModalProps> = ({
@@ -32,11 +25,10 @@ const CheckTempModal: React.FC<CheckTempModalProps> = ({
   subTitle,
   topButton,
   bottomButton,
+  topButtonAction,
 }) => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
   const handleTopButton = () => {
-    navigation.navigate('SavePage');
+    topButtonAction();
     setModalVisible(false);
   };
 
