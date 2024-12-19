@@ -8,18 +8,16 @@ import {
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
-
 import DashboardTabs from '@/components/navigation/DashboardTabs';
 import DashboardStyles from './DashboardStyles';
-
-// App.js에서 정의한 네비게이션 스택의 타입 설정
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-
 import IconSearch from '@/assets/icons/dashboard/IconSearch';
 import IconNotification from '@/assets/icons/dashboard/IconNotification';
+import {GetPostList} from '@/api/post.api';
 
 type RootStackParamList = {
   WritePage: undefined;
+  SearchDefaultPage: undefined;
 };
 
 const DashboardPage: React.FC = () => {
@@ -30,7 +28,10 @@ const DashboardPage: React.FC = () => {
       <View style={DashboardStyles.containerIcons}>
         <Text style={DashboardStyles.textTitle}>게시판</Text>
         <View style={DashboardStyles.containerRow}>
-          <IconSearch style={{marginRight: 20}} />
+          <TouchableOpacity
+            onPress={() => navigation.navigate('SearchDefaultPage')}>
+            <IconSearch style={{marginRight: 20}} />
+          </TouchableOpacity>
           <IconNotification />
         </View>
       </View>
