@@ -96,8 +96,7 @@ const DashboardStyles = StyleSheet.create({
     marginRight: 6,
   },
   buttonText: {
-    fontSize: 16,
-    fontWeight: 'semibold',
+    ...subhead03,
   },
 });
 
