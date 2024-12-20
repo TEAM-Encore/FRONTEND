@@ -3,6 +3,7 @@ export type RootStackParamList = {
   WritePage: {
     setPostData: React.Dispatch<React.SetStateAction<PostData | null>>;
   };
+  PremiumWritePage: undefined;
   PostPage: {postId: number};
   ModifyPage: {postId: number};
   SavePage: undefined;
