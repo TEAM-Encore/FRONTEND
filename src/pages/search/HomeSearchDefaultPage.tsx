@@ -22,10 +22,10 @@ const MAX_HISTORY = 10;
 
 type SearchDefaultPageNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'DashboardSearchDefaultPage'
+  'HomeSearchDefaultPage'
 >;
 
-const DashboardSearchDefaultPage: React.FC<RootStackParamList> = () => {
+const HomeSearchDefaultPage: React.FC<RootStackParamList> = () => {
   const navigation = useNavigation<SearchDefaultPageNavigationProp>();
   const [loading, setLoading] = useState(true);
   const [text, setText] = useState<string>('');
@@ -96,7 +96,7 @@ const DashboardSearchDefaultPage: React.FC<RootStackParamList> = () => {
       // 검색 기록 저장
       await saveSearchHistory(searchText);
 
-      navigation.navigate('DashboardSearchPage', {postData, text: searchText});
+      navigation.navigate('HomeSearchPage', {postData, text: searchText});
     } catch (error) {
       console.error('Error fetching post list:', error);
     } finally {
@@ -240,4 +240,4 @@ const DashboardSearchDefaultPage: React.FC<RootStackParamList> = () => {
   );
 };
 
-export default DashboardSearchDefaultPage;
+export default HomeSearchDefaultPage;
