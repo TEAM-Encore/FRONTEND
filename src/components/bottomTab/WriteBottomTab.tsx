@@ -8,7 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import WriteStyles from '@/pages/write/WriteStyles';
+import WriteStyles from '@/pages/write/post/WriteStyles';
 import {SvgXml} from 'react-native-svg';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
