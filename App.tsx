@@ -12,8 +12,10 @@ import WritePage from './src/pages/write/WritePage';
 import PostPage from './src/pages/dashboard/post/PostPage';
 import ModifyPage from './src/pages/write/ModifyPage';
 import SavePage from './src/pages/write/save/SavePage';
-import SearchPage from './src/pages/dashboard/search/SearchPage';
-import SearchDefaultPage from './src/pages/search/SearchDefaultPage';
+import DashboardSearchPage from './src/pages/dashboard/search/DashboardSearchPage';
+import DashboardSearchDefaultPage from './src/pages/search/DashboardSearchDefaultPage';
+import HomeSearchPage from './src/pages/home/search/HomeSearchPage';
+import HomeSearchDefaultPage from './src/pages/search/HomeSearchDefaultPage';
 
 import {createPost, putPost} from './src/api/post.api';
 import {ensureAsyncStorageDir} from './src/util/ensureAsyncStorageDir';
@@ -249,16 +251,32 @@ export default function App() {
             })}
           />
           <Stack.Screen
-            name="SearchPage"
-            component={SearchPage}
+            name="DashboardSearchPage"
+            component={DashboardSearchPage}
             options={{
               headerShown: false,
               cardStyle: {backgroundColor: '#FBFBFB'},
             }}
           />
           <Stack.Screen
-            name="SearchDefaultPage"
-            component={SearchDefaultPage}
+            name="DashboardSearchDefaultPage"
+            component={DashboardSearchDefaultPage}
+            options={{
+              headerShown: false,
+              cardStyle: {backgroundColor: '#FBFBFB'},
+            }}
+          />
+          <Stack.Screen
+            name="HomeSearchPage"
+            component={HomeSearchPage}
+            options={{
+              headerShown: false,
+              cardStyle: {backgroundColor: '#FBFBFB'},
+            }}
+          />
+          <Stack.Screen
+            name="HomeSearchDefaultPage"
+            component={HomeSearchDefaultPage}
             options={{
               headerShown: false,
               cardStyle: {backgroundColor: '#FBFBFB'},

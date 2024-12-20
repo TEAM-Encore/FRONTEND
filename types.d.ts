@@ -6,8 +6,10 @@ export type RootStackParamList = {
   PostPage: {postId: number};
   ModifyPage: {postId: number};
   SavePage: undefined;
-  SearchPage: {postData: any; text: string};
-  SearchDefaultPage: undefined;
+  DashboardSearchPage: {postData: any; text: string};
+  DashboardSearchDefaultPage: undefined;
+  HomeSearchPage: {postData: any; text: string};
+  HomeSearchDefaultPage: undefined;
 };
 
 export interface PostData {
