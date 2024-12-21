@@ -3,18 +3,9 @@ import Colors from '@/assets/colors/Colors';
 
 import {typography} from '../../styles/typography';
 
-const {
-  display01,
-  subhead03,
-  subhead02,
-  subhead01,
-  subheadLong02,
-  headline,
-  body01,
-  caption,
-} = typography;
+const {display01, subhead03} = typography;
 
-const DashboardStyles = StyleSheet.create({
+const PremiumStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.gray_01,
@@ -38,49 +29,13 @@ const DashboardStyles = StyleSheet.create({
     ...display01,
     color: Colors.black,
   },
-  // 탭
-  containerTab: {
-    backgroundColor: Colors.primary_03,
-    flexDirection: 'row',
-    height: 44,
-  },
-  tabContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  tabButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tabText: {
-    ...subhead03,
-    color: Colors.gray_06,
-    textAlign: 'center',
-  },
-  activeTabText: {
-    ...subhead03,
-    color: Colors.black,
-  },
-  activeTabButton: {
-    position: 'relative',
-  },
-  activeTabUnderline: {
-    position: 'absolute',
-    bottom: 0,
-    height: 2,
-    width: 67.3,
-    backgroundColor: Colors.sub_04,
-  },
   // 글쓰기 버튼
   writeButton: {
     position: 'absolute',
     bottom: 14,
     right: 20,
-    width: 105,
-    height: 41,
+    width: 119,
+    height: 43,
     borderRadius: 49,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -100,4 +55,4 @@ const DashboardStyles = StyleSheet.create({
   },
 });
 
-export default DashboardStyles;
+export default PremiumStyles;

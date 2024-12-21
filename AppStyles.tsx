@@ -6,6 +6,11 @@ const AppStyles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 20,
   },
+  close_button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingRight: 20,
+  },
   title: {
     color: '#171717',
     fontFamily: 'Pretendard-Bold',

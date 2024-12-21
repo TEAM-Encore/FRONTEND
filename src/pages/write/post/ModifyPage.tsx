@@ -12,7 +12,7 @@ import {RouteProp} from '@react-navigation/native';
 import ModifyStyles from './ModifyStyles';
 import {SvgXml} from 'react-native-svg';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
-import {RootStackParamList} from '../../../types';
+import {RootStackParamList} from '../../../../types';
 import {getPost} from '@/api/post.api';
 
 import ModalCategory from '@/components/categoryModal/ModalCategory';

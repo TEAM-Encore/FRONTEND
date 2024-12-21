@@ -1,10 +1,10 @@
 import {StyleSheet} from 'react-native';
 import Colors from '@/assets/colors/Colors';
-import {typography} from '../../styles/typography';
+import {typography} from '../../../styles/typography';
 
 const {bodyLong02, bodyLong01, subhead02, headline, caption} = typography;
 
-const ModifyStyles = StyleSheet.create({
+const WriteStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.gray_01,
@@ -24,15 +24,14 @@ const ModifyStyles = StyleSheet.create({
   },
   input_title: {
     ...headline,
-    color: Colors.gray_12,
     width: 335,
     height: 28,
     marginTop: 29,
   },
   input_content: {
     ...bodyLong01,
-    color: Colors.gray_12,
     marginBottom: 20,
+    minHeight: 230,
   },
   line: {
     height: 1,
@@ -40,6 +39,9 @@ const ModifyStyles = StyleSheet.create({
     width: 335,
     marginTop: 12,
     marginBottom: 23,
+  },
+  photos: {
+    flexDirection: 'row',
   },
   photo_container: {
     marginHorizontal: 20,
@@ -49,6 +51,12 @@ const ModifyStyles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 18,
   },
+  photo_wrapper: {
+    position: 'relative',
+    width: 84,
+    height: 92,
+    marginRight: 8,
+  },
   photo: {
     width: 84,
     height: 92,
@@ -56,6 +64,7 @@ const ModifyStyles = StyleSheet.create({
     backgroundColor: Colors.gray_03,
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 14,
   },
   photo_text: {
     ...caption,
@@ -67,7 +76,12 @@ const ModifyStyles = StyleSheet.create({
     marginTop: 10, // 상단 여백
     padding: 5, // 내부 여백
   },
-
+  closeButton: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    borderRadius: 15,
+  },
   // Optional: 스타일을 추가하여 이미지 미리보기를 꾸밀 수 있음
   selected_photo: {
     width: 100,
@@ -137,4 +151,4 @@ const ModifyStyles = StyleSheet.create({
   },
 });
 
-export default ModifyStyles;
+export default WriteStyles;
