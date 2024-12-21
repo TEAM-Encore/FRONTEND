@@ -12,8 +12,11 @@ import WritePage from './src/pages/write/WritePage';
 import PostPage from './src/pages/dashboard/post/PostPage';
 import ModifyPage from './src/pages/write/ModifyPage';
 import SavePage from './src/pages/write/save/SavePage';
+import SearchPage from './src/pages/dashboard/search/SearchPage';
+import SearchDefaultPage from './src/pages/search/SearchDefaultPage';
 
 import {createPost, putPost} from './src/api/post.api';
+import {ensureAsyncStorageDir} from './src/util/ensureAsyncStorageDir';
 
 interface PostData {
   title: string;
@@ -56,6 +59,10 @@ const Stack = createStackNavigator<RootStackParamList>();
 export default function App() {
   const [postData, setPostData] = React.useState<PostData | null>(null);
   const [modifyData, setModifyData] = React.useState<ModifyData | null>(null);
+
+  React.useEffect(() => {
+    ensureAsyncStorageDir();
+  }, []);
 
   const postTypeMapping: Record<string, string> = {
     '게시판 선택 안함': 'NO_SELECT',
@@ -240,6 +247,22 @@ export default function App() {
               headerTitleStyle: {...AppStyles.title},
               headerLeft: () => <CustomBackButton navigation={navigation} />,
             })}
+          />
+          <Stack.Screen
+            name="SearchPage"
+            component={SearchPage}
+            options={{
+              headerShown: false,
+              cardStyle: {backgroundColor: '#FBFBFB'},
+            }}
+          />
+          <Stack.Screen
+            name="SearchDefaultPage"
+            component={SearchDefaultPage}
+            options={{
+              headerShown: false,
+              cardStyle: {backgroundColor: '#FBFBFB'},
+            }}
           />
         </Stack.Navigator>
       </NavigationContainer>

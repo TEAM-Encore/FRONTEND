@@ -129,6 +129,13 @@ const ItemPostNoCategory: React.FC<PostProps> = ({postList}) => {
           </>
         );
       }}
+      ListEmptyComponent={
+        postList.length === 0 ? (
+          <View style={styles.container}>
+            <Text style={styles.emptyText}>검색 결과가 없습니다.</Text>
+          </View>
+        ) : null
+      }
     />
   );
 };
@@ -197,6 +204,10 @@ const styles = StyleSheet.create({
     height: 4,
     backgroundColor: Colors.gray_03,
     marginVertical: 16,
+  },
+  emptyText: {
+    fontSize: 14,
+    color: Colors.gray_06,
   },
 });
 

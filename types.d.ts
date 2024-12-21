@@ -6,6 +6,8 @@ export type RootStackParamList = {
   PostPage: {postId: number};
   ModifyPage: {postId: number};
   SavePage: undefined;
+  SearchPage: {postData: any; text: string};
+  SearchDefaultPage: undefined;
 };
 
 export interface PostData {
@@ -15,3 +17,8 @@ export interface PostData {
   category: string;
   hashTags: string[];
 }
+
+export type SearchPageProps = {
+  route: SearchPageRouterProp;
+  navigation: SearchPageNavigationProp;
+};
