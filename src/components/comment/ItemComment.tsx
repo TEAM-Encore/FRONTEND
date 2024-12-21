@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   FlatList,
   View,
@@ -12,9 +12,8 @@ import {SvgXml} from 'react-native-svg';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
-// import {timeAgo} from '@/util/timeAgo';
 import {timeAgo} from '../../util/timeAgo';
-import {createLikeComment} from '@/api/comment.api';
+import {createAndDeleteLikeComment} from '@/api/comment.api';
 
 import ModalModifyDelete from '@/components/modifyDeleteModal/ModalModifyDelete';
 
@@ -49,7 +48,12 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
   const [modalPosition, setModalPosition] = useState<ModalPosition | null>(
     null,
   );
-  const [postLike, setPostLike] = useState(false);
+
+  const [comments, setComments] = useState(commentList);
+
+  useEffect(() => {
+    setComments(commentList);
+  }, [commentList]);
 
   const handleIconPress = () => {
     setModalVisible(true);
@@ -60,21 +64,33 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
     }
   };
 
-  const fetchCreateLikePost = async (post_id: number, comment_id: number) => {
-    setPostLike(true);
+  const fetchCreateAndDeleteLikeComment = async (
+    post_id: number,
+    comment_id: number,
+  ) => {
     try {
-      await createLikeComment(post_id, comment_id);
+      const response = await createAndDeleteLikeComment(post_id, comment_id);
+      setComments(prev =>
+        prev.map(comment =>
+          comment.id === comment_id
+            ? {
+                ...comment,
+                is_liked: response.data.data.is_liked,
+                like_count: response.data.data.like_count,
+              }
+            : comment,
+        ),
+      );
     } catch (error) {
-      console.error('게시글 좋아요 생성 오류:', error);
+      console.error('댓글 좋아요 생성 및 삭제 오류:', error);
     }
   };
 
   return (
     <FlatList
-      data={commentList}
+      data={comments}
       keyExtractor={item => String(item.id)}
       renderItem={({item, index}) => {
-        setPostLike(item.is_liked);
         return (
           <>
             <View style={styles.container}>
@@ -125,9 +141,13 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
               <View style={styles.containerRow}>
                 <TouchableOpacity
                   style={styles.containerLike}
-                  onPress={() => fetchCreateLikePost(item.post_id, item.id)}>
+                  onPress={() =>
+                    fetchCreateAndDeleteLikeComment(item.post_id, item.id)
+                  }>
                   <SvgXml
-                    xml={postLike ? PostIcon.fullLike : PostIcon.commentLike}
+                    xml={
+                      item.is_liked ? PostIcon.fullLike : PostIcon.commentLike
+                    }
                   />
                   <Text style={styles.textLikeComment}>
                     하트 {item.like_count}
@@ -141,7 +161,7 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
                 </View>
               </View>
             </View>
-            {index < commentList.length - 1 ? (
+            {index < comments.length - 1 ? (
               <View style={{marginHorizontal: 20}}>
                 <View style={styles.line} />
               </View>

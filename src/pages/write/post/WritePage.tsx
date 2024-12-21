@@ -8,8 +8,10 @@ import {
   TextInput,
   Image,
 } from 'react-native';
+import {SvgXml} from 'react-native-svg';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
+
 import WriteStyles from './WriteStyles';
-import {parse, SvgXml} from 'react-native-svg';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import ModalCategory from '@/components/categoryModal/ModalCategory';
 import WriteBottomTab from '@/components/bottomTab/WriteBottomTab';
@@ -66,6 +68,7 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
   const [selectedSubTitle, setSelectedSubtitle] = useState('');
   const [topButton, setTopButton] = useState('');
   const [bottomButton, setBottomButton] = useState('');
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const dashboardList = [
     '게시판 선택 안함',
@@ -352,6 +355,7 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
         subTitle={selectedSubTitle}
         topButton={topButton}
         bottomButton={bottomButton}
+        topButtonAction={() => navigation.navigate('SavePage')}
       />
     </>
   );

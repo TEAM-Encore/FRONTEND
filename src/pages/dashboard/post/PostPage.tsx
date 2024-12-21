@@ -19,9 +19,8 @@ import {RootStackParamList} from '../../../../types';
 import Colors from '@/assets/colors/Colors';
 import PostStyles from '@/pages/dashboard/post/PostStyles';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
-import {getPost, createLikePost, deleteLikePost} from '@/api/post.api';
+import {getPost, createAndDeleteLikePost} from '@/api/post.api';
 import {getComments, createComment} from '@/api/comment.api';
-// import {timeAgo} from '@/util/timeAgo';
 import {timeAgo} from '../../../util/timeAgo';
 
 import ModalModifyDelete from '@/components/modifyDeleteModal/ModalModifyDelete';
@@ -55,7 +54,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     nick_name: string;
     post_images?: [];
     profile_image_url?: string;
-  }>({});
+  }>();
   const [commentData, setCommentData] = useState<
     {
       id: number;
@@ -111,7 +110,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     return categoryMapping[category];
   };
 
-  const category = getMappedCategory(postData.category);
+  const category = getMappedCategory(postData?.category);
 
   const handleGoBack = () => {
     const previousState = navigation.getState();
@@ -132,6 +131,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
       const response = await getPost(postId);
       setPostData(response.data.data);
       // console.log('상세페이지 응답값:', response.data.data);
+      setPostLike(response.data.data.is_liked);
     } catch (error) {
       console.error('게시글 조회 오류:', error);
     }
@@ -143,21 +143,12 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     }, [commentData]),
   );
 
-  const fetchCreateLikePost = async () => {
-    setPostLike(true);
+  const fetchCreateAndDeleteLikePost = async () => {
+    setPostLike(postLike);
     try {
-      await createLikePost(1, postId);
+      await createAndDeleteLikePost(1, postId);
     } catch (error) {
-      console.error('게시글 좋아요 생성 오류:', error);
-    }
-  };
-
-  const fetchDeleteLikePost = async () => {
-    setPostLike(false);
-    try {
-      await deleteLikePost(1, postId);
-    } catch (error) {
-      console.error('게시글 좋아요 삭제 오류:', error);
+      console.error('게시글 좋아요 생성 및 삭제 오류:', error);
     }
   };
 
@@ -247,13 +238,13 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
                     </Text>
                   </View>
                 )}
-                <Text style={PostStyles.textTitle}>{postData.title}</Text>
-                <Text style={PostStyles.textContent}>{postData.content}</Text>
+                <Text style={PostStyles.textTitle}>{postData?.title}</Text>
+                <Text style={PostStyles.textContent}>{postData?.content}</Text>
               </View>
               {/* 이미지 */}
               <View style={PostStyles.photos}>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  {postData.post_images &&
+                  {postData?.post_images &&
                     postData.post_images.length > 0 &&
                     postData.post_images.map((url: string, index: number) =>
                       url ? (
@@ -273,31 +264,29 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
                 </ScrollView>
               </View>
               {/* 해시태그 */}
-              {postData.hashtags?.length !== 0 && (
+              {postData?.hashtags?.length !== 0 && (
                 <View style={PostStyles.line} />
               )}
               <TouchableOpacity style={PostStyles.containerHashtag}>
                 <Text style={PostStyles.textHashtag}>
-                  {postData.hashtags?.join(' ') || ''}
+                  {postData?.hashtags?.join(' ') || ''}
                 </Text>
               </TouchableOpacity>
               {/* 좋아요 및 댓글 */}
               <View style={PostStyles.containerCommentLikeItems}>
                 <TouchableOpacity
                   style={[PostStyles.containerCommentLike, {marginRight: 10}]}
-                  onPress={
-                    postLike ? fetchDeleteLikePost : fetchCreateLikePost
-                  }>
+                  onPress={fetchCreateAndDeleteLikePost}>
                   <SvgXml xml={postLike ? PostIcon.fullLike : PostIcon.like} />
                   <Text style={PostStyles.textCommentLike}>
-                    {postData.num_of_like}
+                    {postData?.num_of_like}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[PostStyles.containerCommentLike, {marginRight: 10}]}>
                   <SvgXml xml={PostIcon.comment} />
                   <Text style={PostStyles.textCommentLike}>
-                    {postData.num_of_comment}
+                    {postData?.num_of_comment}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -314,12 +303,12 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
                   <View style={PostStyles.containerWriterText}>
                     <View style={PostStyles.containerRow}>
                       <Text style={PostStyles.textWriter}>
-                        {postData.nick_name}
+                        {postData?.nick_name}
                       </Text>
                       <SvgXml xml={PostIcon.Badge} />
                     </View>
                     <Text style={PostStyles.textDate}>
-                      {timeAgo(postData.created_at)}
+                      {timeAgo(postData?.created_at)}
                     </Text>
                   </View>
                 </View>
@@ -330,7 +319,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
               {/* 댓글 헤더 */}
               <View style={PostStyles.containerCommentTitle}>
                 <Text style={PostStyles.textCommentTitle}>
-                  댓글 {postData.num_of_comment}
+                  댓글 {postData?.num_of_comment}
                 </Text>
                 <View style={PostStyles.containerRow}>
                   <TouchableOpacity>
