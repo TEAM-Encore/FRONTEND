@@ -19,7 +19,7 @@ import {RootStackParamList} from '../../../../types';
 import Colors from '@/assets/colors/Colors';
 import PostStyles from '@/pages/dashboard/post/PostStyles';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
-import {getPost, createLikePost, deleteLikePost} from '@/api/post.api';
+import {getPost, createAndDeleteLikePost} from '@/api/post.api';
 import {getComments, createComment} from '@/api/comment.api';
 import {timeAgo} from '../../../util/timeAgo';
 
@@ -131,6 +131,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
       const response = await getPost(postId);
       setPostData(response.data.data);
       // console.log('상세페이지 응답값:', response.data.data);
+      setPostLike(response.data.data.is_liked);
     } catch (error) {
       console.error('게시글 조회 오류:', error);
     }
@@ -142,21 +143,12 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
     }, [commentData]),
   );
 
-  const fetchCreateLikePost = async () => {
-    setPostLike(true);
+  const fetchCreateAndDeleteLikePost = async () => {
+    setPostLike(postLike);
     try {
-      await createLikePost(1, postId);
+      await createAndDeleteLikePost(1, postId);
     } catch (error) {
-      console.error('게시글 좋아요 생성 오류:', error);
-    }
-  };
-
-  const fetchDeleteLikePost = async () => {
-    setPostLike(false);
-    try {
-      await deleteLikePost(1, postId);
-    } catch (error) {
-      console.error('게시글 좋아요 삭제 오류:', error);
+      console.error('게시글 좋아요 생성 및 삭제 오류:', error);
     }
   };
 
@@ -284,9 +276,7 @@ const PostPage: React.FC<PostPageProps> = ({route}) => {
               <View style={PostStyles.containerCommentLikeItems}>
                 <TouchableOpacity
                   style={[PostStyles.containerCommentLike, {marginRight: 10}]}
-                  onPress={
-                    postLike ? fetchDeleteLikePost : fetchCreateLikePost
-                  }>
+                  onPress={fetchCreateAndDeleteLikePost}>
                   <SvgXml xml={postLike ? PostIcon.fullLike : PostIcon.like} />
                   <Text style={PostStyles.textCommentLike}>
                     {postData?.num_of_like}
