@@ -6,7 +6,10 @@ type SearchListProps = {
   selectedFilter: '최신순' | '인기순';
 };
 
-const SearchList: React.FC<SearchListProps> = ({postData, selectedFilter}) => {
+const DashboardSearchList: React.FC<SearchListProps> = ({
+  postData,
+  selectedFilter,
+}) => {
   const sortedPostData =
     selectedFilter === '최신순'
       ? [...postData].sort(
@@ -18,4 +21,4 @@ const SearchList: React.FC<SearchListProps> = ({postData, selectedFilter}) => {
   return <ItemPostNoCategory postList={sortedPostData} />;
 };
 
-export default SearchList;
+export default DashboardSearchList;

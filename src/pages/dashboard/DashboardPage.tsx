@@ -17,7 +17,7 @@ import {GetPostList} from '@/api/post.api';
 
 type RootStackParamList = {
   WritePage: undefined;
-  SearchDefaultPage: undefined;
+  DashboardSearchDefaultPage: undefined;
 };
 
 const DashboardPage: React.FC = () => {
@@ -29,7 +29,7 @@ const DashboardPage: React.FC = () => {
         <Text style={DashboardStyles.textTitle}>게시판</Text>
         <View style={DashboardStyles.containerRow}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('SearchDefaultPage')}>
+            onPress={() => navigation.navigate('DashboardSearchDefaultPage')}>
             <IconSearch style={{marginRight: 20}} />
           </TouchableOpacity>
           <IconNotification />

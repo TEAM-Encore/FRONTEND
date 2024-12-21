@@ -14,7 +14,7 @@ import {SearchIcon} from '@/assets/icons/search/SearchIcon';
 import {useNavigation} from '@react-navigation/native';
 import {GetPostList} from '@/api/post.api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import SearchingPage from './SearchingPage';
+import SearchingPage from './DashboardSearchingPage';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from 'types';
 
@@ -22,10 +22,10 @@ const MAX_HISTORY = 10;
 
 type SearchDefaultPageNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'SearchDefaultPage'
+  'DashboardSearchDefaultPage'
 >;
 
-const SearchDefaultPage: React.FC<RootStackParamList> = () => {
+const DashboardSearchDefaultPage: React.FC<RootStackParamList> = () => {
   const navigation = useNavigation<SearchDefaultPageNavigationProp>();
   const [loading, setLoading] = useState(true);
   const [text, setText] = useState<string>('');
@@ -96,7 +96,7 @@ const SearchDefaultPage: React.FC<RootStackParamList> = () => {
       // 검색 기록 저장
       await saveSearchHistory(searchText);
 
-      navigation.navigate('SearchPage', {postData, text: searchText});
+      navigation.navigate('DashboardSearchPage', {postData, text: searchText});
     } catch (error) {
       console.error('Error fetching post list:', error);
     } finally {
@@ -240,4 +240,4 @@ const SearchDefaultPage: React.FC<RootStackParamList> = () => {
   );
 };
 
-export default SearchDefaultPage;
+export default DashboardSearchDefaultPage;

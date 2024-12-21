@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import SearchList from './SearchList';
+import DashboardSearchList from './DashboardSearchList';
 import SearchStyles from './SearchStyles';
 
 type SearchScreenProps = {
   postData: any;
 };
 
-const SearchScreen: React.FC<SearchScreenProps> = ({postData}) => {
+const DashboardSearchScreen: React.FC<SearchScreenProps> = ({postData}) => {
   console.log('Search Screen에 도달한 데이터: ', postData);
 
   const [selectedFilter, setSelectedFilter] = useState<'최신순' | '인기순'>(
@@ -49,10 +49,13 @@ const SearchScreen: React.FC<SearchScreenProps> = ({postData}) => {
         </View>
       </View>
       <View style={{marginTop: 19}}>
-        <SearchList postData={postData} selectedFilter={selectedFilter} />
+        <DashboardSearchList
+          postData={postData}
+          selectedFilter={selectedFilter}
+        />
       </View>
     </View>
   );
 };
 
-export default SearchScreen;
+export default DashboardSearchScreen;

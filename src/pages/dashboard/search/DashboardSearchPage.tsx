@@ -12,10 +12,13 @@ import SearchStyles from './SearchStyles';
 import DashboardStyles from '../DashboardStyles';
 import {SearchIcon} from '@/assets/icons/search/SearchIcon';
 import {useFocusEffect} from '@react-navigation/native';
-import SearchScreen from './SearchScreen';
+import DashboardSearchScreen from './DashboardSearchScreen';
 import {SearchPageProps} from 'types';
 
-const SearchPage: React.FC<SearchPageProps> = ({route, navigation}) => {
+const DashboardSearchPage: React.FC<SearchPageProps> = ({
+  route,
+  navigation,
+}) => {
   const [selectedTab, setSelectedTab] = useState('Entire');
   const {postData, text} = route.params;
   const [searchText, setSearchText] = useState<string>(text || '');
@@ -31,33 +34,33 @@ const SearchPage: React.FC<SearchPageProps> = ({route, navigation}) => {
   const renderScreen = () => {
     switch (selectedTab) {
       case 'Entire':
-        return <SearchScreen postData={postData} />;
+        return <DashboardSearchScreen postData={postData} />;
       case 'Information':
         return (
-          <SearchScreen
+          <DashboardSearchScreen
             postData={postData.filter(item => item.type === 'INFORMATION')}
           />
         );
       case 'Review':
         return (
-          <SearchScreen
+          <DashboardSearchScreen
             postData={postData.filter(item => item.type === 'REVIEW')}
           />
         );
       case 'Actor':
         return (
-          <SearchScreen
+          <DashboardSearchScreen
             postData={postData.filter(item => item.type === 'ACTOR')}
           />
         );
       case 'Free':
         return (
-          <SearchScreen
+          <DashboardSearchScreen
             postData={postData.filter(item => item.type === 'FREE')}
           />
         );
       default:
-        return <SearchScreen postData={postData} />;
+        return <DashboardSearchScreen postData={postData} />;
     }
   };
 
@@ -139,4 +142,4 @@ const SearchPage: React.FC<SearchPageProps> = ({route, navigation}) => {
   );
 };
 
-export default SearchPage;
+export default DashboardSearchPage;

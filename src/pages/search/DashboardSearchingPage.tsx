@@ -21,12 +21,15 @@ type SearchingPageProp = {
 
 type SearchingPageNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'SearchDefaultPage'
+  'DashboardSearchDefaultPage'
 >;
 
 const MAX_HISTORY = 10;
 
-const SearchingPage: React.FC<SearchingPageProp> = ({text, setText}) => {
+const DashboardSearchingPage: React.FC<SearchingPageProp> = ({
+  text,
+  setText,
+}) => {
   const navigation = useNavigation<SearchingPageNavigationProp>();
   const [loading, setLoading] = useState<boolean>(false);
   const [suggestions, setSuggestions] = useState<any[]>([]);
@@ -72,7 +75,9 @@ const SearchingPage: React.FC<SearchingPageProp> = ({text, setText}) => {
       //   console.log('연관검색어:', filteredSuggestions);
 
       // 중복된 단어 제거
-      const uniqueSuggestions = Array.from(new Set(filteredSuggestions));
+      const uniqueSuggestions = Array.from(
+        new Set(filteredSuggestions.map(word => word.toLowerCase())),
+      );
       setSuggestions(uniqueSuggestions);
     } catch (error) {
       console.error('Error fetching suggestions:', error);
@@ -145,7 +150,7 @@ const SearchingPage: React.FC<SearchingPageProp> = ({text, setText}) => {
       // 검색 기록 저장
       await saveSearchHistory(searchText);
 
-      navigation.navigate('SearchPage', {postData, text: searchText});
+      navigation.navigate('DashboardSearchPage', {postData, text: searchText});
     } catch (error) {
       console.error('Error fetching post list:', error);
     } finally {
@@ -192,4 +197,4 @@ const SearchingPage: React.FC<SearchingPageProp> = ({text, setText}) => {
   );
 };
 
-export default SearchingPage;
+export default DashboardSearchingPage;

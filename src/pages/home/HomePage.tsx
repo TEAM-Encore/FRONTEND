@@ -9,6 +9,7 @@ import {
   NativeScrollEvent,
   Image,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 
 import HomeStyles from '@/pages/home/HomeStyles';
@@ -21,8 +22,14 @@ import IconComment from '@/assets/icons/home/IconComment';
 import IconDate from '@/assets/icons/home/IconDate';
 import IconActor from '@/assets/icons/home/IconActor';
 import {HomeIcon} from '@/assets/icons/dashboard/HomeIcon';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 type HomePageProps = {};
+
+type RootStackParamList = {
+  WritePage: undefined;
+  HomeSearchDefaultPage: undefined;
+};
 
 const CARD_WIDTH = 290;
 const PADDING = 6;
@@ -37,6 +44,7 @@ const HomePage: React.FC<HomePageProps> = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
   const flatListRef = useRef<FlatList<any>>(null);
   const screenWidth = Dimensions.get('window').width;
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const carouselTicketList = [
     {
@@ -143,7 +151,10 @@ const HomePage: React.FC<HomePageProps> = () => {
           <View style={HomeStyles.containerIcons}>
             <SvgXml xml={IconTitle.iconTitle} />
             <View style={HomeStyles.containerRow}>
-              <IconSearch style={{marginRight: 20}} />
+              <TouchableOpacity
+                onPress={() => navigation.navigate('HomeSearchDefaultPage')}>
+                <IconSearch style={{marginRight: 20}} />
+              </TouchableOpacity>
               <IconNotification />
             </View>
           </View>
