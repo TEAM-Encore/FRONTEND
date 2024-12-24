@@ -10,12 +10,9 @@ const PremiumStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.gray_01,
   },
-  // 상단바
   containerHeader: {
-    // height: 70,
     justifyContent: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 23,
   },
   containerIcons: {
     flexDirection: 'row',
@@ -28,7 +25,8 @@ const PremiumStyles = StyleSheet.create({
   },
   textTitle: {
     ...display01,
-    color: Colors.black,
+    color: Colors.gray_12,
+    marginVertical: 23,
   },
   textPopularReviewsTilte: {
     ...headline,

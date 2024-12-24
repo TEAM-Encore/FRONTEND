@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useRef} from 'react';
 import {
   SafeAreaView,
   FlatList,
@@ -17,6 +17,7 @@ import IconNotification from '@/assets/icons/dashboard/IconNotification';
 import PopularReviews from '@/components/premium/PopularReviews';
 import Tags from '@/components/premium/Tags';
 import ItemReview from '@/components/premium/ItemReview';
+import ToolTipModal from '@/components/alertModal/ToolTipModal';
 
 type RootStackParamList = {
   PremiumWritePage: undefined;
@@ -64,6 +65,20 @@ const data = [
 
 export default function PremiumPage() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [reviewModalPosition, setReviewModalPosition] = useState({
+    top: 0,
+    right: 0,
+  });
+  const [reviewModalVisible, setReviewModalVisible] = useState(true);
+
+  const handleLayout = (event: any) => {
+    const {x, y, width, height} = event.nativeEvent.layout;
+    setReviewModalPosition({top: height * 2.3, right: width});
+  };
+
+  const handleModalCancel = () => {
+    setReviewModalVisible(false);
+  };
 
   const renderHeader = () => (
     <View style={PremiumStyles.containerHeader}>
@@ -71,12 +86,26 @@ export default function PremiumPage() {
         <Text style={PremiumStyles.textTitle}>프리미엄</Text>
         <View style={PremiumStyles.containerRow}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('PremiumSearchDefaultPage')}>
+            onPress={() => navigation.navigate('PremiumSearchDefaultPage')}
+            onLayout={handleLayout}>
             <IconSearch style={{marginRight: 20}} />
           </TouchableOpacity>
           <IconNotification />
         </View>
       </View>
+
+      {reviewModalVisible && (
+        <ToolTipModal
+          visible={reviewModalVisible}
+          position={reviewModalPosition}
+          text={[
+            {text: '원하는 후기를', isBold: false},
+            {text: '빠르게', isBold: true},
+            {text: '찾아보세요!', isBold: false},
+          ]}
+          onCancel={handleModalCancel}
+        />
+      )}
 
       <Text style={PremiumStyles.textPopularReviewsTilte}>
         오늘의 인기 리뷰
