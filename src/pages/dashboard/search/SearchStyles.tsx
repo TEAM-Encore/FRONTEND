@@ -139,7 +139,7 @@ const SearchStyles = StyleSheet.create({
     fontSize: 16,
   },
   line: {
-    height: 1,
+    height: 0.5,
     backgroundColor: Colors.gray_04,
     width: 335,
     marginTop: 12,
