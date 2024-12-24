@@ -9,6 +9,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {RootStackParamList} from './types';
 import Tabs from './src/components/navigation/Tabs';
 import PremiumWritePage from './src/pages/write/review/PremiumWritePage';
+import StopReviewModal from './src/components/alertModal/StopReviewModal';
 import WritePage from './src/pages/write/post/WritePage';
 import PostPage from './src/pages/dashboard/post/PostPage';
 import ModifyPage from './src/pages/write/post/ModifyPage';
@@ -58,17 +59,16 @@ function CustomBackButton({navigation}) {
 }
 
 // 글 작성 페이지 내 x 버튼
-function CustomCloseButton({navigation}) {
+function CustomCloseButton({setModalVisible}) {
   return (
     <TouchableOpacity
-      onPress={() => navigation.goBack()}
+      onPress={() => setModalVisible(true)}
       style={AppStyles.close_button}>
       <SvgXml
         xml={`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        `}
+          <path d="M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`}
       />
     </TouchableOpacity>
   );
@@ -79,6 +79,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 export default function App() {
   const [postData, setPostData] = React.useState<PostData | null>(null);
   const [modifyData, setModifyData] = React.useState<ModifyData | null>(null);
+  const [modalVisible, setModalVisible] = React.useState(false);
 
   React.useEffect(() => {
     ensureAsyncStorageDir();
@@ -234,7 +235,9 @@ export default function App() {
               title: '프리미엄 리뷰 작성',
               headerTitleStyle: {...AppStyles.title},
               headerLeft: () => <CustomBackButton navigation={navigation} />,
-              headerRight: () => <CustomCloseButton navigation={navigation} />,
+              headerRight: () => (
+                <CustomCloseButton setModalVisible={setModalVisible} />
+              ),
             })}>
             {props => <PremiumWritePage />}
           </Stack.Screen>
@@ -324,6 +327,10 @@ export default function App() {
             }}
           />
         </Stack.Navigator>
+        <StopReviewModal
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
       </NavigationContainer>
     </SafeAreaProvider>
   );
