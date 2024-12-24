@@ -8,15 +8,59 @@ import {
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+
 import PremiumStyles from './PremiumStyles';
+
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import IconSearch from '@/assets/icons/dashboard/IconSearch';
 import IconNotification from '@/assets/icons/dashboard/IconNotification';
+import PopularReviews from '@/components/premium/PopularReviews';
+import Tags from '@/components/premium/Tags';
+import ItemReview from '@/components/premium/ItemReview';
 
 type RootStackParamList = {
   PremiumWritePage: undefined;
   PremiumSearchDefaultPage: undefined;
 };
+
+const data = [
+  {
+    id: 1,
+    nickname: '뮤지컬럽',
+    title: '뮤지컬 고인물의 시카고 후기4',
+    like_count: 7,
+    view_count: 9,
+    created_at: '2024-12-23',
+    star: 4.7,
+  },
+  {
+    id: 2,
+    nickname: '뮤지컬럽',
+    title: '뮤지컬 고인물의 시카고 후기3',
+    like_count: 14,
+    view_count: 20,
+    created_at: '2024-11-01',
+    star: 4.2,
+  },
+  {
+    id: 3,
+    nickname: '뮤지컬럽',
+    title: '뮤지컬 고인물의 시카고 후기2',
+    like_count: 9,
+    view_count: 31,
+    created_at: '2024-03-01',
+    star: 3.9,
+  },
+  {
+    id: 4,
+    nickname: '뮤지컬럽',
+    title: '뮤지컬 고인물의 시카고 후기1',
+    like_count: 22,
+    view_count: 40,
+    created_at: '2022-03-01',
+    star: 4.2,
+  },
+];
 
 export default function PremiumPage() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -33,6 +77,19 @@ export default function PremiumPage() {
           <IconNotification />
         </View>
       </View>
+
+      <Text style={PremiumStyles.textPopularReviewsTilte}>
+        오늘의 인기 리뷰
+      </Text>
+      <View style={PremiumStyles.containerPopularReviews}>
+        <PopularReviews />
+      </View>
+
+      <View style={PremiumStyles.containerTages}>
+        <Tags />
+      </View>
+
+      <ItemReview postList={data} />
     </View>
   );
 
