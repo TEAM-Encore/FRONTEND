@@ -99,6 +99,7 @@ const PremiumStep6Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
   return (
     <>
       <SafeAreaView style={PremiumWriteStyles.container}>
+        <SvgXml xml={ReviewWriteIcon.progress_6} />
         <ScrollView>
           <View style={PremiumWriteStyles.field_container}>
             <Text style={PremiumWriteStyles.progressText}>6/6</Text>
