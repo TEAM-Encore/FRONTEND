@@ -19,7 +19,6 @@ import IconLike from '@/assets/icons/home/IconLike';
 import IconComment from '@/assets/icons/home/IconComment';
 import IconDate from '@/assets/icons/home/IconDate';
 import IconActor from '@/assets/icons/home/IconActor';
-import {HomeIcon} from '@/assets/icons/dashboard/HomeIcon';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 type HomePageProps = {};
