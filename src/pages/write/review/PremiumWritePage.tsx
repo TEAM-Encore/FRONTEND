@@ -1,166 +1,84 @@
-import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  SafeAreaView,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
-  ListRenderItem,
-  FlatList,
-} from 'react-native';
-import PremiumWriteStyles from './PremiumWriteStyles';
-import {SvgXml} from 'react-native-svg';
-import {ReviewWriteIcon} from '@/assets/icons/premium/ReviewWriteIcon';
-import Colors from '@/assets/colors/Colors';
+import React, {useState, useEffect} from 'react';
+import PremiumStep1Page from './step/PremiumStep1Page';
+import PremiumStep2Page from './step/PremiumStep2Page';
+import PremiumStep3Page from './step/PremiumStep3Page';
+import PremiumStep4Page from './step/PremiumStep4Page';
+import PremiumStep5Page from './step/PremiumStep5Page';
+import PremiumStep6Page from './step/PremiumStep6Page';
+import {RouteProp} from '@react-navigation/native';
+import {RootStackParamList} from 'types';
 
-type ReviewItems = {
-  id: string;
-  title: string;
-  time: string;
-  seat: string;
-  actor: string;
-};
+interface PremiumWritePageProps {
+  navigation: any;
+  route: RouteProp<RootStackParamList, 'PremiumWritePage'>;
+  goToPrevious?: () => void;
+}
 
-const data: ReviewItems[] = [
-  {
-    id: '1',
-    title: '비더슈탄트',
-    time: '2024.06.21',
-    seat: '샤롯데 시어터 B구역 6열 4번',
-    actor: '우선영 염지은 하은영 윤혜원',
-  },
-  {
-    id: '2',
-    title: '위키드 (5회차)',
-    time: '2024.06.21',
-    seat: '샤롯데 시어터 B구역 6열 4번',
-    actor: '우선영 염지은 하은영 윤혜원',
-  },
-  {
-    id: '3',
-    title: '위키드 (4회차)',
-    time: '2024.06.21',
-    seat: '샤롯데 시어터 B구역 6열 4번',
-    actor: '우선영 염지은 하은영 윤혜원',
-  },
-  {
-    id: '4',
-    title: '위키드 (3회차)',
-    time: '2024.06.21',
-    seat: '샤롯데 시어터 B구역 6열 4번',
-    actor: '우선영 염지은 하은영 윤혜원',
-  },
-];
+const PremiumWritePage: React.FC<PremiumWritePageProps> = ({navigation}) => {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [stepData, setStepData] = useState({});
 
-const PremiumWritePage: React.FC = () => {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  useEffect(() => {
+    // goToPrevious를 navigation params에 등록
+    navigation.setParams({goToPrevious});
+  }, [navigation, currentStep]);
 
-  const renderItem: ListRenderItem<ReviewItems> = ({item}) => {
-    const isSelected = selectedId === item.id;
-    const backgroundColor = isSelected ? Colors.gray_11 : Colors.sub_02;
-    const titleColor = isSelected ? '#FBFBFB' : Colors.gray_12;
-    const textColor = isSelected ? Colors.gray_06 : Colors.gray_09;
-    const time_icon = isSelected
-      ? ReviewWriteIcon.select_time
-      : ReviewWriteIcon.time;
-    const seat_icon = isSelected
-      ? ReviewWriteIcon.select_seat
-      : ReviewWriteIcon.seat;
-    const person_icon = isSelected
-      ? ReviewWriteIcon.select_person
-      : ReviewWriteIcon.person;
-    const icon = isSelected
-      ? ReviewWriteIcon.list_black
-      : ReviewWriteIcon.list_yellow;
+  const saveData = (step: number, data: string[]) => {
+    setStepData(prev => ({...prev, [step]: data}));
+  };
 
-    const handlePress = () => {
-      if (isSelected) {
-        setSelectedId(null);
-      } else {
-        setSelectedId(item.id);
-      }
-    };
+  const goToNext = () => {
+    setCurrentStep(currentStep + 1);
+  };
 
-    return (
-      <View style={PremiumWriteStyles.list_container}>
-        <TouchableOpacity onPress={handlePress}>
-          <View
-            style={[
-              PremiumWriteStyles.list_yellow,
-              {backgroundColor: backgroundColor},
-            ]}>
-            <View style={{flexDirection: 'row'}}>
-              <Image
-                source={require('@/assets/images/premium/review_image.png')}
-                style={PremiumWriteStyles.list_image}
-              />
-              <View style={PremiumWriteStyles.icons}>
-                <Text
-                  style={[PremiumWriteStyles.list_title, {color: titleColor}]}>
-                  {item.title}
-                </Text>
-                <View style={PremiumWriteStyles.icon_container}>
-                  <SvgXml xml={time_icon} style={PremiumWriteStyles.icon} />
-                  <Text
-                    style={[PremiumWriteStyles.list_text, {color: textColor}]}>
-                    {item.time}
-                  </Text>
-                </View>
-                <View style={PremiumWriteStyles.icon_container}>
-                  <SvgXml xml={seat_icon} style={PremiumWriteStyles.icon} />
-                  <Text
-                    style={[PremiumWriteStyles.list_text, {color: textColor}]}>
-                    {item.seat}
-                  </Text>
-                </View>
-                <View style={PremiumWriteStyles.icon_container}>
-                  <SvgXml xml={person_icon} style={PremiumWriteStyles.icon} />
-                  <Text
-                    style={[PremiumWriteStyles.list_text, {color: textColor}]}>
-                    {item.actor}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </TouchableOpacity>
-        <SvgXml xml={icon} style={PremiumWriteStyles.list_yellow_icon} />
-      </View>
-    );
+  const goToPrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    } else if (currentStep === 1) {
+      navigation.goBack();
+    }
   };
 
   return (
     <>
-      <SafeAreaView style={PremiumWriteStyles.container}>
-        <SvgXml xml={ReviewWriteIcon.progress_1} />
-
-        <ScrollView>
-          <View style={PremiumWriteStyles.field_container}>
-            <Text style={PremiumWriteStyles.progressText}>1/6</Text>
-            <Text style={PremiumWriteStyles.title}>
-              후기를 작성할 내역을 선택해주세요.
-            </Text>
-            <FlatList
-              data={data}
-              renderItem={renderItem}
-              keyExtractor={item => item.id}
-              scrollEnabled={false}
-            />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-
-      <View style={PremiumWriteStyles.white} />
-      <KeyboardAvoidingView
-        style={PremiumWriteStyles.containerCommentInput}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <TouchableOpacity style={PremiumWriteStyles.next_button}>
-          <Text style={PremiumWriteStyles.next_button_text}>다음</Text>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+      {currentStep === 1 && (
+        <PremiumStep1Page goToNext={goToNext} saveData={saveData} />
+      )}
+      {currentStep === 2 && (
+        <PremiumStep2Page
+          goToNext={goToNext}
+          saveData={saveData}
+          stepData={stepData}
+        />
+      )}
+      {currentStep === 3 && (
+        <PremiumStep3Page
+          goToNext={goToNext}
+          saveData={saveData}
+          stepData={stepData}
+        />
+      )}
+      {currentStep === 4 && (
+        <PremiumStep4Page
+          goToNext={goToNext}
+          saveData={saveData}
+          stepData={stepData}
+        />
+      )}
+      {currentStep === 5 && (
+        <PremiumStep5Page
+          goToNext={goToNext}
+          saveData={saveData}
+          stepData={stepData}
+        />
+      )}
+      {currentStep === 6 && (
+        <PremiumStep6Page
+          goToNext={goToNext}
+          saveData={saveData}
+          stepData={stepData}
+        />
+      )}
     </>
   );
 };
