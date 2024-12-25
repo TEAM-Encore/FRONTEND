@@ -9,6 +9,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {RootStackParamList} from './types';
 import Tabs from './src/components/navigation/Tabs';
 import PremiumWritePage from './src/pages/write/review/PremiumWritePage';
+import StopReviewModal from './src/components/alertModal/StopReviewModal';
 import WritePage from './src/pages/write/post/WritePage';
 import PostPage from './src/pages/dashboard/post/PostPage';
 import ModifyPage from './src/pages/write/post/ModifyPage';
@@ -58,17 +59,29 @@ function CustomBackButton({navigation}) {
 }
 
 // 글 작성 페이지 내 x 버튼
-function CustomCloseButton({navigation}) {
+function CustomCloseButton({setModalVisible}) {
   return (
     <TouchableOpacity
-      onPress={() => navigation.goBack()}
+      onPress={() => setModalVisible(true)}
       style={AppStyles.close_button}>
       <SvgXml
         xml={`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        `}
+          <path d="M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`}
+      />
+    </TouchableOpacity>
+  );
+}
+
+// 프리미엄 리뷰 작성 내 뒤로 가기 버튼
+function CustomPreviousButton({goToPrevious}: {goToPrevious: () => void}) {
+  return (
+    <TouchableOpacity onPress={goToPrevious} style={AppStyles.back_button}>
+      <SvgXml
+        xml={`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16.0303 4.46967C16.2966 4.73594 16.3208 5.1526 16.1029 5.44621L16.0303 5.53033L9.561 12L16.0303 18.4697C16.2966 18.7359 16.3208 19.1526 16.1029 19.4462L16.0303 19.5303C15.7641 19.7966 15.3474 19.8208 15.0538 19.6029L14.9697 19.5303L7.96967 12.5303C7.7034 12.2641 7.6792 11.8474 7.89705 11.5538L7.96967 11.4697L14.9697 4.46967C15.2626 4.17678 15.7374 4.17678 16.0303 4.46967Z" fill="black"/>
+        </svg>`}
       />
     </TouchableOpacity>
   );
@@ -79,6 +92,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 export default function App() {
   const [postData, setPostData] = React.useState<PostData | null>(null);
   const [modifyData, setModifyData] = React.useState<ModifyData | null>(null);
+  const [modalVisible, setModalVisible] = React.useState(false);
 
   React.useEffect(() => {
     ensureAsyncStorageDir();
@@ -233,10 +247,30 @@ export default function App() {
               },
               title: '프리미엄 리뷰 작성',
               headerTitleStyle: {...AppStyles.title},
-              headerLeft: () => <CustomBackButton navigation={navigation} />,
-              headerRight: () => <CustomCloseButton navigation={navigation} />,
+              headerLeft: () => (
+                <CustomPreviousButton
+                  goToPrevious={() => {
+                    const premiumWritePageInstance = navigation
+                      .getState()
+                      .routes.find(route => route.name === 'PremiumWritePage');
+                    if (premiumWritePageInstance?.params?.goToPrevious) {
+                      premiumWritePageInstance.params.goToPrevious();
+                    } else {
+                      navigation.goBack();
+                    }
+                  }}
+                />
+              ),
+              headerRight: () => (
+                <CustomCloseButton setModalVisible={setModalVisible} />
+              ),
             })}>
-            {props => <PremiumWritePage />}
+            {props => (
+              <PremiumWritePage
+                {...props}
+                goToPrevious={props.route.params?.goToPrevious}
+              />
+            )}
           </Stack.Screen>
 
           {/* 게시판 작성 페이지*/}
@@ -324,6 +358,10 @@ export default function App() {
             }}
           />
         </Stack.Navigator>
+        <StopReviewModal
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
       </NavigationContainer>
     </SafeAreaProvider>
   );
