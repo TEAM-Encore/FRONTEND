@@ -17,6 +17,7 @@ import DashboardSearchPage from './src/pages/dashboard/search/DashboardSearchPag
 import DashboardSearchDefaultPage from './src/pages/search/DashboardSearchDefaultPage';
 import HomeSearchPage from './src/pages/home/search/HomeSearchPage';
 import HomeSearchDefaultPage from './src/pages/search/HomeSearchDefaultPage';
+import HomeBannerPage from './src/pages/home/HomeBannerPage';
 
 import {createPost, putPost} from './src/api/post.api';
 import {ensureAsyncStorageDir} from './src/util/ensureAsyncStorageDir';
@@ -205,6 +206,15 @@ export default function App() {
             component={props => <Tabs {...props} postData={postData} />}
             options={{headerShown: false}}
           />
+          <Stack.Screen
+            name="HomeBannerPage"
+            component={HomeBannerPage}
+            options={{
+              headerShown: false,
+              cardStyle: {backgroundColor: '#FBFBFB'},
+            }}
+          />
+
           {/* 홈 검색 페이지 */}
           <Stack.Screen
             name="HomeSearchPage"
