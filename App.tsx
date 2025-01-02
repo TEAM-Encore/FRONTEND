@@ -222,6 +222,15 @@ export default function App() {
             component={props => <Tabs {...props} postData={postData} />}
             options={{headerShown: false}}
           />
+          <Stack.Screen
+            name="HomeBannerPage"
+            component={HomeBannerPage}
+            options={{
+              headerShown: false,
+              cardStyle: {backgroundColor: '#FBFBFB'},
+            }}
+          />
+
           {/* 홈 검색 페이지 */}
           <Stack.Screen
             name="HomeSearchPage"

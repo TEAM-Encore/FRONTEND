@@ -25,16 +25,11 @@ type HomePageProps = {};
 type RootStackParamList = {
   WritePage: undefined;
   HomeSearchDefaultPage: undefined;
+  HomeBannerPage: {bannerId: number};
 };
 
 const CARD_WIDTH = 290;
 const PADDING = 6;
-
-const Ticket = ({image}: {image: any}) => (
-  <View style={HomeStyles.containerCarouselTicket}>
-    <Image style={{width: 290, height: 170}} source={image} />
-  </View>
-);
 
 const HomePage: React.FC<HomePageProps> = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
@@ -49,42 +44,52 @@ const HomePage: React.FC<HomePageProps> = () => {
 
   const carouselTicketList = [
     {
-      id: '1',
+      id: 1,
       image: require('@/assets/images/home/ImageCarouselColor.png'),
     },
     {
-      id: '2',
+      id: 2,
       image: require('@/assets/images/home/ImageCarousel.png'),
     },
     {
-      id: '3',
+      id: 3,
       image: require('@/assets/images/home/ImageCarouselColor2.png'),
     },
   ];
 
+  const Ticket = ({image, bannerId}: {image: any; bannerId: number}) => (
+    <TouchableOpacity
+      style={HomeStyles.containerCarouselTicket}
+      onPress={() =>
+        navigation.navigate('HomeBannerPage', {bannerId: bannerId})
+      }>
+      <Image style={{width: 290, height: 170}} source={image} />
+    </TouchableOpacity>
+  );
+
   const premiumReviewRanking = [
-    {id: '1', title: '위키드 5회차 관람 후기'},
-    {id: '2', title: '위키드 5회차 관람 후기'},
-    {id: '3', title: '위키드 5회차 관람 후기'},
+    {id: 1, title: '위키드 5회차 관람 후기'},
+    {id: 2, title: '위키드 5회차 관람 후기'},
+    {id: 3, title: '위키드 5회차 관람 후기'},
   ];
 
   const bestMusicals = [
     {
-      id: '1',
+      id: 1,
       image: require('@/assets/images/home/Musical1.jpeg'),
       title: '벤자민 버튼',
       date: '24.06.21~24.07.21',
       location: '샤롯데시어터',
     },
     {
-      id: '2',
+      id: 2,
       image: require('@/assets/images/home/Musical2.jpeg'),
       title: '카르밀라',
       date: '24.06.21~24.07.21',
       location: '샤롯데시어터',
     },
     {
-      id: '3',
+      id: 3,
       image: require('@/assets/images/home/Musical3.jpeg'),
       title: '몬테크리스토',
       date: '24.06.21~24.07.21',
@@ -94,21 +99,21 @@ const HomePage: React.FC<HomePageProps> = () => {
 
   const notReleaseMusicals = [
     {
-      id: '1',
+      id: 1,
       image: require('@/assets/images/home/Musical4.jpeg'),
       title: '엘리자벳',
       date: '24.06.21~24.07.21',
       location: '샤롯데시어터',
     },
     {
-      id: '2',
+      id: 2,
       image: require('@/assets/images/home/Musical5.jpeg'),
       title: '미오 프라텔로',
       date: '24.06.21~24.07.21',
       location: '샤롯데시어터',
     },
     {
-      id: '3',
+      id: 3,
       image: require('@/assets/images/home/Musical6.jpeg'),
       title: '비더슈탄트',
       date: '24.06.21~24.07.21',
@@ -118,7 +123,7 @@ const HomePage: React.FC<HomePageProps> = () => {
 
   const eventBanner = [
     {
-      id: '1',
+      id: 1,
       icon: HomeIcon.bannerHeart,
       color: '#EDDCFF',
       subColor: '#D6AFFF',
@@ -126,7 +131,7 @@ const HomePage: React.FC<HomePageProps> = () => {
       subTitle: '댓글 3번 작성하기',
     },
     {
-      id: '2',
+      id: 2,
       icon: HomeIcon.bannerGift,
       color: '#FFF8DB',
       subColor: '#FFF1BB',
@@ -134,7 +139,7 @@ const HomePage: React.FC<HomePageProps> = () => {
       subTitle: '로그인 후 20분 경과 시',
     },
     {
-      id: '3',
+      id: 3,
       icon: HomeIcon.bannerTrophy,
       color: '#FFDFD6',
       subColor: '#FFB19B',
@@ -180,7 +185,9 @@ const HomePage: React.FC<HomePageProps> = () => {
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
-            renderItem={({item}) => <Ticket image={item.image || null} />}
+            renderItem={({item}) => (
+              <Ticket image={item.image || null} bannerId={item.id} />
+            )}
             keyExtractor={item => item.id}
             snapToOffsets={snapToOffsets}
             decelerationRate="fast"
