@@ -8,6 +8,8 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 
@@ -33,6 +35,9 @@ const PADDING = 6;
 
 const HomePage: React.FC<HomePageProps> = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
+  const [eventCurrentIndex, setEventCurrentIndex] = useState(1);
+  const bannerRef = useRef<FlatList<any>>(null);
+  const eventBannerRef = useRef<FlatList<any>>(null);
   const flatListRef = useRef<FlatList<any>>(null);
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -42,20 +47,52 @@ const HomePage: React.FC<HomePageProps> = () => {
   });
   const [reviewModalVisible, setReviewModalVisible] = useState(true);
 
-  const carouselTicketList = [
-    {
-      id: 1,
-      image: require('@/assets/images/home/ImageCarouselColor.png'),
-    },
-    {
-      id: 2,
-      image: require('@/assets/images/home/ImageCarousel.png'),
-    },
-    {
-      id: 3,
-      image: require('@/assets/images/home/ImageCarouselColor2.png'),
-    },
-  ];
+  const carouselTicketList = useMemo(
+    () => [
+      {
+        id: 1,
+        image: require('@/assets/images/home/ImageCarouselColor.png'),
+      },
+      {
+        id: 2,
+        image: require('@/assets/images/home/ImageCarousel.png'),
+      },
+      {
+        id: 3,
+        image: require('@/assets/images/home/ImageCarouselColor2.png'),
+      },
+    ],
+    [],
+  );
+
+  const circularCarouselTicketList = useMemo(
+    () => [
+      carouselTicketList[carouselTicketList.length - 1],
+      ...carouselTicketList,
+      carouselTicketList[0],
+    ],
+    [carouselTicketList],
+  );
+
+  const handleMomentumScrollEnd = (
+    event: NativeSyntheticEvent<NativeScrollEvent>,
+  ) => {
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+    const newIndex = Math.round(contentOffsetX / (CARD_WIDTH + PADDING * 2));
+
+    if (newIndex === 0) {
+      setCurrentIndex(carouselTicketList.length - 1);
+      bannerRef.current?.scrollToIndex({
+        index: circularCarouselTicketList.length - 2,
+        animated: false,
+      });
+    } else if (newIndex === circularCarouselTicketList.length - 1) {
+      setCurrentIndex(0);
+      bannerRef.current?.scrollToIndex({index: 1, animated: false});
+    } else {
+      setCurrentIndex(newIndex - 1);
+    }
+  };
 
   const Ticket = ({image, bannerId}: {image: any; bannerId: number}) => (
     <TouchableOpacity
@@ -148,13 +185,33 @@ const HomePage: React.FC<HomePageProps> = () => {
     },
   ];
 
-  const snapToOffsets = useMemo(
-    () =>
-      Array.from(Array(carouselTicketList.length)).map(
-        (_, index) => index * CARD_WIDTH + 15,
-      ),
-    [carouselTicketList],
-  );
+  const circularEventBannerList = useMemo(() => {
+    return [
+      eventBanner[eventBanner.length - 1],
+      ...eventBanner,
+      eventBanner[0],
+    ];
+  }, [eventBanner]);
+
+  const handleEventMomentumScrollEnd = (
+    event: NativeSyntheticEvent<NativeScrollEvent>,
+  ) => {
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+    const newIndex = Math.round(contentOffsetX / screenWidth);
+
+    if (newIndex === 0) {
+      setEventCurrentIndex(circularEventBannerList.length - 1);
+      eventBannerRef.current?.scrollToIndex({
+        index: circularEventBannerList.length - 2,
+        animated: false,
+      });
+    } else if (newIndex === circularEventBannerList.length - 1) {
+      setEventCurrentIndex(0);
+      eventBannerRef.current?.scrollToIndex({index: 1, animated: false});
+    } else {
+      setEventCurrentIndex(newIndex - 1);
+    }
+  };
 
   const handleLayout = (event: any) => {
     const {y, height} = event.nativeEvent.layout;
@@ -180,24 +237,25 @@ const HomePage: React.FC<HomePageProps> = () => {
             </View>
           </View>
           <FlatList
-            ref={flatListRef}
-            data={carouselTicketList}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
+            ref={bannerRef}
+            data={circularCarouselTicketList}
             renderItem={({item}) => (
               <Ticket image={item.image || null} bannerId={item.id} />
             )}
-            keyExtractor={item => item.id}
-            snapToOffsets={snapToOffsets}
+            keyExtractor={item => item.id.toString()}
+            initialScrollIndex={2}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            snapToAlignment="center"
+            snapToInterval={CARD_WIDTH + PADDING * 2}
             decelerationRate="fast"
-            contentContainerStyle={{paddingHorizontal: 52, paddingTop: 10}}
-            initialScrollIndex={1}
+            onMomentumScrollEnd={handleMomentumScrollEnd}
+            scrollEventThrottle={64}
             getItemLayout={(data, index) => ({
-              length: 170,
+              length: CARD_WIDTH + PADDING * 2,
               offset:
                 (CARD_WIDTH + PADDING * 2) * index -
-                (screenWidth - CARD_WIDTH) / 2,
+                (screenWidth - (CARD_WIDTH + PADDING * 2)) / 2,
               index,
             })}
           />
@@ -337,8 +395,8 @@ const HomePage: React.FC<HomePageProps> = () => {
 
         <View style={{marginTop: 48}}>
           <FlatList
-            ref={flatListRef}
-            data={eventBanner}
+            ref={eventBannerRef}
+            data={circularEventBannerList}
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
@@ -368,14 +426,15 @@ const HomePage: React.FC<HomePageProps> = () => {
                 </View>
               </View>
             )}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.id.toString()}
             decelerationRate="fast"
-            initialScrollIndex={0}
+            initialScrollIndex={1}
             getItemLayout={(data, index) => ({
-              length: 94,
-              offset: 94 * index,
+              length: screenWidth,
+              offset: screenWidth * index,
               index,
             })}
+            onMomentumScrollEnd={handleEventMomentumScrollEnd}
           />
         </View>
 
@@ -398,7 +457,7 @@ const HomePage: React.FC<HomePageProps> = () => {
               </Text>
             </View>
           )}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
           nestedScrollEnabled
@@ -423,7 +482,7 @@ const HomePage: React.FC<HomePageProps> = () => {
               </Text>
             </View>
           )}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
           nestedScrollEnabled
