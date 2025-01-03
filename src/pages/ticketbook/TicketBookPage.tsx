@@ -21,7 +21,7 @@ import IconNotification from '@/assets/icons/dashboard/IconNotification';
 import ModalCategory from '@/components/categoryModal/ModalCategory';
 
 type RootStackParamList = {
-  PremiumSearchDefaultPage: undefined;
+  AddTicketPage: undefined;
 };
 
 export default function TicketBookPage() {
@@ -159,8 +159,7 @@ export default function TicketBookPage() {
         <View style={TicketBookStyles.containerIcons}>
           <Text style={TicketBookStyles.textTitle}>티켓북</Text>
           <View style={TicketBookStyles.containerRow}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('PremiumSearchDefaultPage')}>
+            <TouchableOpacity>
               <IconSearch style={{marginRight: 20}} />
             </TouchableOpacity>
             <IconNotification />
@@ -216,7 +215,9 @@ export default function TicketBookPage() {
         renderItem={null}
       />
 
-      <TouchableOpacity style={TicketBookStyles.containerPlusButton}>
+      <TouchableOpacity
+        style={TicketBookStyles.containerPlusButton}
+        onPress={() => navigation.navigate('AddTicketPage')}>
         <SvgXml xml={TicketBookIcon.plus} style={TicketBookStyles.iconPlus} />
         <Text style={TicketBookStyles.textPlusButton}>추가</Text>
       </TouchableOpacity>

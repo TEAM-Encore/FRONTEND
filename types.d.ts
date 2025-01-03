@@ -12,6 +12,7 @@ export type RootStackParamList = {
   HomeSearchPage: { postData: any; text: string };
   HomeSearchDefaultPage: undefined;
   HomeBannerPage: { bannerId: number };
+  AddTicketPage: undefined;
 };
 
 export interface PostData {

@@ -1,0 +1,81 @@
+import React, {useState} from 'react';
+import {SafeAreaView, TouchableOpacity, View, Text} from 'react-native';
+import {SvgXml} from 'react-native-svg';
+import {useNavigation} from '@react-navigation/native';
+
+import HomeBannerStyles from '@/pages/home/HomeBannerStyles';
+import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
+
+import AddTicketStep1Page from './AddTicketStep1Page';
+import AddTicketStep2Page from './AddTicketStep2Page';
+import AddTicketStep3Page from './AddTicketStep3Page';
+import AddTicketStep4Page from './AddTicketStep4Page';
+import AddTicketStep5Page from './AddTicketStep5Page';
+
+export default function AddTicketPage() {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [stepData, setStepData] = useState({});
+  const navigation = useNavigation();
+
+  const saveData = (step: number, data: string[]) => {
+    setStepData(prev => ({...prev, [step]: data}));
+  };
+
+  const goToNext = (nextStep?: number) => {
+    setCurrentStep(nextStep ?? currentStep + 1);
+  };
+
+  const goToPrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    } else if (currentStep === 1) {
+      navigation.goBack();
+    }
+  };
+
+  return (
+    <>
+      <SafeAreaView>
+        <View style={HomeBannerStyles.containerHeader}>
+          <TouchableOpacity
+            style={HomeBannerStyles.iconGoBack}
+            onPress={goToPrevious}>
+            <SvgXml style={{margin: 7.75}} xml={PostIcon.arrowLeft} />
+          </TouchableOpacity>
+          <Text style={HomeBannerStyles.textTitle}>내역 추가하기</Text>
+        </View>
+      </SafeAreaView>
+      {currentStep === 1 && (
+        <AddTicketStep1Page goToNext={goToNext} saveData={saveData} />
+      )}
+      {currentStep === 2 && (
+        <AddTicketStep2Page
+          goToNext={goToNext}
+          saveData={saveData}
+          stepData={stepData}
+        />
+      )}
+      {currentStep === 3 && (
+        <AddTicketStep3Page
+          goToNext={goToNext}
+          saveData={saveData}
+          stepData={stepData}
+        />
+      )}
+      {currentStep === 4 && (
+        <AddTicketStep4Page
+          goToNext={goToNext}
+          saveData={saveData}
+          stepData={stepData}
+        />
+      )}
+      {currentStep === 5 && (
+        <AddTicketStep5Page
+          goToNext={goToNext}
+          saveData={saveData}
+          stepData={stepData}
+        />
+      )}
+    </>
+  );
+}
