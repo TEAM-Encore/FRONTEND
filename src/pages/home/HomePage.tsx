@@ -335,7 +335,9 @@ const HomePage: React.FC<HomePageProps> = () => {
                 <SvgXml xml={HomeIcon.star} />
                 <SvgXml xml={HomeIcon.star} />
               </View>
-              <Text style={HomeStyles.textReview}>리뷰를{'\n'}남겨주세요</Text>
+              <Text style={HomeStyles.textReview}>
+                아직 남겨주신{'\n'}리뷰가 없어요
+              </Text>
             </View>
           </View>
         </View>

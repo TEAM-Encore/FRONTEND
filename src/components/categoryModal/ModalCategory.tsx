@@ -65,7 +65,7 @@ const ModalCategory: React.FC<ModalCategoryProps> = ({
             <SvgXml xml={DashboardIcon.cancel} />
           </TouchableOpacity>
           <View style={styles.containerTitle}>
-            <Text style={styles.textTitle}>{modalTitle} 선택</Text>
+            <Text style={styles.textTitle}>{modalTitle}</Text>
           </View>
           {categoryList.map(item => (
             <TouchableOpacity
