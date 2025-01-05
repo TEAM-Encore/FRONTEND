@@ -18,6 +18,7 @@ import DashboardSearchPage from './src/pages/dashboard/search/DashboardSearchPag
 import DashboardSearchDefaultPage from './src/pages/search/DashboardSearchDefaultPage';
 import HomeSearchPage from './src/pages/home/search/HomeSearchPage';
 import HomeSearchDefaultPage from './src/pages/search/HomeSearchDefaultPage';
+import MusicalDetailPage from './src/pages/home/musical/MusicalDetailPage';
 
 import {createPost, putPost} from './src/api/post.api';
 import {ensureAsyncStorageDir} from './src/util/ensureAsyncStorageDir';
@@ -235,6 +236,19 @@ export default function App() {
               headerShown: false,
               cardStyle: {backgroundColor: '#FBFBFB'},
             }}
+          />
+          <Stack.Screen
+            name="MusicalDetailPage"
+            component={MusicalDetailPage}
+            options={({navigation}) => ({
+              headerStyle: {
+                height: 123,
+                backgroundColor: '#FBFBFB',
+              },
+              title: '뮤지컬 공연 정보',
+              headerTitleStyle: {...AppStyles.title},
+              headerLeft: () => <CustomBackButton navigation={navigation} />,
+            })}
           />
 
           {/* 프리미엄 후기 작성 페이지*/}

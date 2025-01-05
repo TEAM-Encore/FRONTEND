@@ -26,6 +26,7 @@ type HomePageProps = {};
 type RootStackParamList = {
   WritePage: undefined;
   HomeSearchDefaultPage: undefined;
+  MusicalDetailPage: {data: any};
 };
 
 const CARD_WIDTH = 290;
@@ -375,7 +376,12 @@ const HomePage: React.FC<HomePageProps> = () => {
           data={bestMusicals}
           renderItem={({item}) => (
             <View style={{flexDirection: 'column', marginHorizontal: 7.5}}>
-              <Image style={HomeStyles.imageMusical} source={item.image} />
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('MusicalDetailPage', {data: item})
+                }>
+                <Image style={HomeStyles.imageMusical} source={item.image} />
+              </TouchableOpacity>
               <Text style={HomeStyles.textMusicalTitle}>{item.title}</Text>
               <Text style={HomeStyles.textMusicalDateLocation}>
                 {item.date}
