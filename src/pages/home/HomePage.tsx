@@ -9,6 +9,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 import HomeStyles from '@/pages/home/HomeStyles';
 import {SvgXml} from 'react-native-svg';
@@ -17,9 +18,7 @@ import IconSearch from '@/assets/icons/home/IconSearch';
 import IconNotification from '@/assets/icons/home/IconNotification';
 import IconLike from '@/assets/icons/home/IconLike';
 import IconComment from '@/assets/icons/home/IconComment';
-import IconDate from '@/assets/icons/home/IconDate';
-import IconActor from '@/assets/icons/home/IconActor';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import ToolTipModal from '@/components/alertModal/ToolTipModal';
 
 type HomePageProps = {};
 
@@ -42,7 +41,10 @@ const HomePage: React.FC<HomePageProps> = () => {
   const flatListRef = useRef<FlatList<any>>(null);
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [reviewModalPosition, setReviewModalPosition] = useState({top: 0});
+  const [reviewModalPosition, setReviewModalPosition] = useState({
+    top: 0,
+    right: 0,
+  });
   const [reviewModalVisible, setReviewModalVisible] = useState(true);
 
   const carouselTicketList = [
@@ -151,7 +153,7 @@ const HomePage: React.FC<HomePageProps> = () => {
 
   const handleLayout = (event: any) => {
     const {y, height} = event.nativeEvent.layout;
-    setReviewModalPosition({top: y + height});
+    setReviewModalPosition({top: y + height, right: 0});
   };
 
   const handleModalCancel = () => {
@@ -215,23 +217,16 @@ const HomePage: React.FC<HomePageProps> = () => {
         </View>
 
         {reviewModalVisible && (
-          <View
-            style={[
-              HomeStyles.containerReviewModal,
-              {top: reviewModalPosition.top},
-            ]}>
-            <View style={HomeStyles.triangle} />
-            <View style={HomeStyles.reviewModal}>
-              <Text style={HomeStyles.textReviewModal}>
-                리뷰 작성하고{' '}
-                <Text style={{fontFamily: 'Pretendard-Bold'}}>20포인트</Text>{' '}
-                받아가세요!
-              </Text>
-              <TouchableOpacity onPress={handleModalCancel}>
-                <SvgXml xml={HomeIcon.modalCancel} />
-              </TouchableOpacity>
-            </View>
-          </View>
+          <ToolTipModal
+            visible={reviewModalVisible}
+            position={reviewModalPosition}
+            text={[
+              {text: '리뷰 작성하고', isBold: false},
+              {text: '20포인트', isBold: true},
+              {text: '받아가세요!', isBold: false},
+            ]}
+            onCancel={handleModalCancel}
+          />
         )}
 
         <View style={{alignItems: 'center'}}>
@@ -243,19 +238,30 @@ const HomePage: React.FC<HomePageProps> = () => {
                 resizeMode="cover"
               />
               <View style={HomeStyles.containerTicketText}>
-                <Text style={HomeStyles.textTicketTitle}>뮤지컬[위키드]</Text>
+                <Text style={HomeStyles.textTicketTitle}>위키드</Text>
                 <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
-                  <IconDate />
+                  <SvgXml xml={HomeIcon.season} />
+                  <Text style={HomeStyles.textTicketDateActor}>3연</Text>
+                </View>
+                <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
+                  <SvgXml xml={HomeIcon.date} />
                   <Text style={HomeStyles.textTicketDateActor}>2024.06.21</Text>
                 </View>
+                <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
+                  <SvgXml xml={HomeIcon.place} />
+                  <Text style={HomeStyles.textTicketDateActor}>
+                    세종문화회관 A구역 6열 4번
+                  </Text>
+                </View>
                 <View style={HomeStyles.containerRow}>
-                  <IconActor />
+                  <SvgXml xml={HomeIcon.actor} />
                   <Text style={HomeStyles.textTicketDateActor}>
                     우선영 염지은 하은영 윤혜원
                   </Text>
                 </View>
               </View>
             </View>
+            <SvgXml style={HomeStyles.ticketLine} xml={HomeIcon.line} />
             <View style={HomeStyles.ticket2}>
               <View style={{flexDirection: 'row'}}>
                 <SvgXml xml={HomeIcon.star} />
