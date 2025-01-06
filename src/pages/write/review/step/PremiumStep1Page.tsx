@@ -62,6 +62,7 @@ type PremiumProp = {
 
 const PremiumStep1Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const [input, setInput] = useState([]);
 
   const renderItem: ListRenderItem<ReviewItems> = ({item}) => {
@@ -87,6 +88,7 @@ const PremiumStep1Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
         setSelectedId(null);
       } else {
         setSelectedId(item.id);
+        setSelectedTitle(item.title);
         // console.log('선택된 카드:', item.id);
       }
     };
@@ -172,7 +174,7 @@ const PremiumStep1Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
             },
           ]}
           onPress={() => {
-            saveData(1, input);
+            saveData(1, {id: selectedId, title: selectedTitle});
             goToNext(2);
           }}
           disabled={!selectedId}>
