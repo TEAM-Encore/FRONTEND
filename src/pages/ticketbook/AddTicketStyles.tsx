@@ -58,11 +58,12 @@ const AddTicketStyles = StyleSheet.create({
   },
   textInputSearch: {
     ...body01,
+    lineHeight: 0,
     width: '100%',
+    height: 36,
     borderRadius: 8,
     backgroundColor: Colors.gray_03,
     paddingHorizontal: 45,
-    paddingVertical: 8,
   },
   iconSearch: {
     position: 'absolute',
@@ -84,6 +85,7 @@ const AddTicketStyles = StyleSheet.create({
     height: 37,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: Colors.gray_03,
     padding: 10,
     borderRadius: 4,
@@ -91,9 +93,11 @@ const AddTicketStyles = StyleSheet.create({
   },
   textCategory: {
     ...body01,
+    marginRight: 4,
   },
   textInputPlace: {
     ...body01,
+    lineHeight: 0,
     width: '100%',
     borderRadius: 4,
     backgroundColor: Colors.gray_03,
@@ -102,6 +106,7 @@ const AddTicketStyles = StyleSheet.create({
   },
   textInputSeat: {
     ...body01,
+    lineHeight: 0,
     width: 40,
     height: 25,
     borderRadius: 4,
