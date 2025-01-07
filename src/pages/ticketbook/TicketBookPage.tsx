@@ -22,6 +22,7 @@ import ModalCategory from '@/components/categoryModal/ModalCategory';
 
 type RootStackParamList = {
   AddTicketPage: undefined;
+  TicketDetailPage: undefined;
 };
 
 export default function TicketBookPage() {
@@ -85,7 +86,9 @@ export default function TicketBookPage() {
     star: number;
   }) => {
     return (
-      <View style={{alignItems: 'center', marginBottom: 21}}>
+      <TouchableOpacity
+        style={{alignItems: 'center', marginBottom: 21}}
+        onPress={() => navigation.navigate('TicketDetailPage')}>
         <View style={HomeStyles.containerTicket}>
           <View style={HomeStyles.ticket1}>
             <Image
@@ -144,7 +147,7 @@ export default function TicketBookPage() {
             )}
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 

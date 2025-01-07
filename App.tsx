@@ -19,6 +19,7 @@ import HomeSearchPage from './src/pages/home/search/HomeSearchPage';
 import HomeSearchDefaultPage from './src/pages/search/HomeSearchDefaultPage';
 import HomeBannerPage from './src/pages/home/HomeBannerPage';
 import AddTicketPage from './src/pages/ticketbook/AddTicketPage';
+import TicketDetailPage from './src/pages/ticketbook/TicketDetailPage';
 
 import {createPost, putPost} from './src/api/post.api';
 import {ensureAsyncStorageDir} from './src/util/ensureAsyncStorageDir';
@@ -337,6 +338,14 @@ export default function App() {
           <Stack.Screen
             name="AddTicketPage"
             component={AddTicketPage}
+            options={{
+              headerShown: false,
+              cardStyle: {backgroundColor: '#FBFBFB'},
+            }}
+          />
+          <Stack.Screen
+            name="TicketDetailPage"
+            component={TicketDetailPage}
             options={{
               headerShown: false,
               cardStyle: {backgroundColor: '#FBFBFB'},
