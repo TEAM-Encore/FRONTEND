@@ -12,6 +12,10 @@ import PremiumStyles from './PremiumStyles';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import IconSearch from '@/assets/icons/dashboard/IconSearch';
 import IconNotification from '@/assets/icons/dashboard/IconNotification';
+import PopularReviews from '@/components/premium/PopularReviews';
+import Tags from '@/components/premium/Tags';
+import ItemReview from '@/components/premium/ItemReview';
+import ToolTipModal from '@/components/alertModal/ToolTipModal';
 
 type RootStackParamList = {
   PremiumWritePage: undefined;
@@ -33,15 +37,42 @@ export default function PremiumPage() {
           <IconNotification />
         </View>
       </View>
+
+      {reviewModalVisible && (
+        <ToolTipModal
+          visible={reviewModalVisible}
+          position={reviewModalPosition}
+          text={[
+            {text: '원하는 후기를', isBold: false},
+            {text: '빠르게', isBold: true},
+            {text: '찾아보세요!', isBold: false},
+          ]}
+          onCancel={handleModalCancel}
+        />
+      )}
+
+      <Text style={PremiumStyles.textPopularReviewsTilte}>
+        오늘의 인기 리뷰
+      </Text>
+      <View style={PremiumStyles.containerPopularReviews}>
+        <PopularReviews />
+      </View>
+
+      <View style={PremiumStyles.containerTages}>
+        <Tags />
+      </View>
+
+      {/* <ItemReview postList={data} /> */}
     </View>
   );
 
   return (
     <SafeAreaView style={PremiumStyles.container}>
       <FlatList
-        data={[]}
+        data={data}
         ListHeaderComponent={renderHeader}
-        renderItem={null}
+        keyExtractor={item => item.id.toString()}
+        renderItem={({item}) => <ItemReview postList={[item]} />}
       />
 
       {/* 글쓰기 버튼 */}

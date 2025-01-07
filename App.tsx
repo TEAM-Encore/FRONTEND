@@ -9,6 +9,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {RootStackParamList} from './types';
 import Tabs from './src/components/navigation/Tabs';
 import PremiumWritePage from './src/pages/write/review/PremiumWritePage';
+import PremiumOthersPage from './src/pages/premium/others/PremiumOthersPage';
 import StopReviewModal from './src/components/alertModal/StopReviewModal';
 import WritePage from './src/pages/write/post/WritePage';
 import PostPage from './src/pages/dashboard/post/PostPage';
@@ -286,6 +287,12 @@ export default function App() {
               />
             )}
           </Stack.Screen>
+          {/* 다른 사람 프리미엄 리뷰 상세 페이지*/}
+          <Stack.Screen
+            name="PremiumOthersPage"
+            component={PremiumOthersPage}
+            options={{headerShown: false}}
+          />
 
           {/* 게시판 작성 페이지*/}
           <Stack.Screen
