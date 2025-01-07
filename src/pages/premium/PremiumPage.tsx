@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useRef} from 'react';
 import {
   SafeAreaView,
   FlatList,
@@ -8,7 +8,9 @@ import {
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+
 import PremiumStyles from './PremiumStyles';
+
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import IconSearch from '@/assets/icons/dashboard/IconSearch';
 import IconNotification from '@/assets/icons/dashboard/IconNotification';
@@ -22,8 +24,61 @@ type RootStackParamList = {
   PremiumSearchDefaultPage: undefined;
 };
 
+const data = [
+  {
+    id: 1,
+    nickname: '뮤지컬럽',
+    title: '뮤지컬 고인물의 시카고 후기4',
+    like_count: 7,
+    view_count: 9,
+    created_at: '2024-12-23',
+    star: 4.7,
+  },
+  {
+    id: 2,
+    nickname: '뮤지컬럽',
+    title: '뮤지컬 고인물의 시카고 후기3',
+    like_count: 14,
+    view_count: 20,
+    created_at: '2024-11-01',
+    star: 4.2,
+  },
+  {
+    id: 3,
+    nickname: '뮤지컬럽',
+    title: '뮤지컬 고인물의 시카고 후기2',
+    like_count: 9,
+    view_count: 31,
+    created_at: '2024-03-01',
+    star: 3.9,
+  },
+  {
+    id: 4,
+    nickname: '뮤지컬럽',
+    title: '뮤지컬 고인물의 시카고 후기1',
+    like_count: 22,
+    view_count: 40,
+    created_at: '2022-03-01',
+    star: 4.2,
+  },
+];
+
 export default function PremiumPage() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [reviewModalPosition, setReviewModalPosition] = useState({
+    top: 0,
+    right: 0,
+  });
+  const [reviewModalVisible, setReviewModalVisible] = useState(true);
+
+  const handleLayout = (event: any) => {
+    const {x, y, width, height} = event.nativeEvent.layout;
+    setReviewModalPosition({top: height * 2.3, right: width});
+  };
+
+  const handleModalCancel = () => {
+    setReviewModalVisible(false);
+  };
 
   const renderHeader = () => (
     <View style={PremiumStyles.containerHeader}>
@@ -31,7 +86,8 @@ export default function PremiumPage() {
         <Text style={PremiumStyles.textTitle}>프리미엄</Text>
         <View style={PremiumStyles.containerRow}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('PremiumSearchDefaultPage')}>
+            onPress={() => navigation.navigate('PremiumSearchDefaultPage')}
+            onLayout={handleLayout}>
             <IconSearch style={{marginRight: 20}} />
           </TouchableOpacity>
           <IconNotification />

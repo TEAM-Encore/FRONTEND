@@ -3,18 +3,16 @@ import Colors from '@/assets/colors/Colors';
 
 import {typography} from '../../styles/typography';
 
-const {display01, subhead03} = typography;
+const {headline, display01, subhead03} = typography;
 
 const PremiumStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.gray_01,
   },
-  // 상단바
   containerHeader: {
-    height: 70,
     justifyContent: 'center',
-    paddingHorizontal: 23,
+    paddingHorizontal: 20,
   },
   containerIcons: {
     flexDirection: 'row',
@@ -27,7 +25,21 @@ const PremiumStyles = StyleSheet.create({
   },
   textTitle: {
     ...display01,
-    color: Colors.black,
+    color: Colors.gray_12,
+    marginVertical: 23,
+  },
+  textPopularReviewsTilte: {
+    ...headline,
+    marginTop: 21,
+    marginBottom: 14,
+  },
+  containerPopularReviews: {
+    alignContent: 'center',
+    alignItems: 'center',
+  },
+  containerTages: {
+    marginTop: 26,
+    marginBottom: 22.37,
   },
   // 글쓰기 버튼
   writeButton: {
