@@ -2,7 +2,7 @@ import React, {useState, useCallback} from 'react';
 import {FlatList, View, ActivityIndicator} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 
-import ItemPost from '@/components/list/ItemPost';
+import ItemPost from '@/components/homeList/ItemPost';
 import {GetPostList} from '@/api/post.api';
 
 type EntireListProps = {
