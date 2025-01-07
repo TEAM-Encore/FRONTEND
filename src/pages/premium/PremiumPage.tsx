@@ -118,16 +118,17 @@ export default function PremiumPage() {
         <Tags />
       </View>
 
-      <ItemReview postList={data} />
+      {/* <ItemReview postList={data} /> */}
     </View>
   );
 
   return (
     <SafeAreaView style={PremiumStyles.container}>
       <FlatList
-        data={[]}
+        data={data}
         ListHeaderComponent={renderHeader}
-        renderItem={null}
+        keyExtractor={item => item.id.toString()}
+        renderItem={({item}) => <ItemReview postList={[item]} />}
       />
 
       {/* 글쓰기 버튼 */}

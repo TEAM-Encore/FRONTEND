@@ -1,4 +1,4 @@
-import React, {useState, useRef, useMemo} from 'react';
+import React, {useState, useRef, useMemo, useCallback} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,7 +9,11 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {
+  NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
 
 import HomeStyles from '@/pages/home/HomeStyles';
 import {SvgXml} from 'react-native-svg';
@@ -19,12 +23,14 @@ import IconNotification from '@/assets/icons/home/IconNotification';
 import IconLike from '@/assets/icons/home/IconLike';
 import IconComment from '@/assets/icons/home/IconComment';
 import ToolTipModal from '@/components/alertModal/ToolTipModal';
+import {getFeturedMusical, getUpcomingMusical} from '@/api/musical.api';
 
 type HomePageProps = {};
 
 type RootStackParamList = {
   WritePage: undefined;
   HomeSearchDefaultPage: undefined;
+  MusicalDetailPage: {data: any};
 };
 
 const CARD_WIDTH = 290;
@@ -46,6 +52,8 @@ const HomePage: React.FC<HomePageProps> = () => {
     right: 0,
   });
   const [reviewModalVisible, setReviewModalVisible] = useState(true);
+  const [bestMusicalInfo, setBestMusicalInfo] = useState();
+  const [releaseMusicalInfo, setReleaseMusicalInfo] = useState();
 
   const carouselTicketList = [
     {
@@ -68,53 +76,69 @@ const HomePage: React.FC<HomePageProps> = () => {
     {id: '3', title: '위키드 5회차 관람 후기'},
   ];
 
-  const bestMusicals = [
-    {
-      id: '1',
-      image: require('@/assets/images/home/Musical1.jpeg'),
-      title: '벤자민 버튼',
-      date: '24.06.21~24.07.21',
-      location: '샤롯데시어터',
-    },
-    {
-      id: '2',
-      image: require('@/assets/images/home/Musical2.jpeg'),
-      title: '카르밀라',
-      date: '24.06.21~24.07.21',
-      location: '샤롯데시어터',
-    },
-    {
-      id: '3',
-      image: require('@/assets/images/home/Musical3.jpeg'),
-      title: '몬테크리스토',
-      date: '24.06.21~24.07.21',
-      location: '샤롯데시어터',
-    },
-  ];
+  const fetchbestMusicals = async () => {
+    try {
+      const response = await getFeturedMusical();
+      console.log('인기 뮤지컬 조회: ', response.data.data);
+      setBestMusicalInfo(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  const notReleaseMusicals = [
-    {
-      id: '1',
-      image: require('@/assets/images/home/Musical4.jpeg'),
-      title: '엘리자벳',
-      date: '24.06.21~24.07.21',
-      location: '샤롯데시어터',
-    },
-    {
-      id: '2',
-      image: require('@/assets/images/home/Musical5.jpeg'),
-      title: '미오 프라텔로',
-      date: '24.06.21~24.07.21',
-      location: '샤롯데시어터',
-    },
-    {
-      id: '3',
-      image: require('@/assets/images/home/Musical6.jpeg'),
-      title: '비더슈탄트',
-      date: '24.06.21~24.07.21',
-      location: '샤롯데시어터',
-    },
-  ];
+  const fetchReleaseMusicals = async () => {
+    try {
+      const response = await getUpcomingMusical();
+      console.log('개봉 예정 뮤지컬: ', response.data.data);
+      setReleaseMusicalInfo(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchbestMusicals();
+      fetchReleaseMusicals();
+    }, []),
+  );
+
+  // const notReleaseMusicals = [
+  //   {
+  //     id: '1',
+  //     image: require('@/assets/images/home/Musical4.jpeg'),
+  //     title: '엘리자벳',
+  //     date: '24.06.21~24.07.21',
+  //     location: '샤롯데시어터',
+  //   },
+  //   {
+  //     id: '2',
+  //     image: require('@/assets/images/home/Musical5.jpeg'),
+  //     title: '미오 프라텔로',
+  //     date: '24.06.21~24.07.21',
+  //     location: '샤롯데시어터',
+  //   },
+  //   {
+  //     id: '3',
+  //     image: require('@/assets/images/home/Musical6.jpeg'),
+  //     title: '비더슈탄트',
+  //     date: '24.06.21~24.07.21',
+  //     location: '샤롯데시어터',
+  //   },
+  // ];
+
+  // 날짜 형식 변환 함수
+  function formatDateRange(startDate: Date, endDate: Date) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    const formatDate = (date: Date): string =>
+      `${String(date.getFullYear()).slice(-2)}.${String(
+        date.getMonth() + 1,
+      ).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+
+    return `${formatDate(start)}~${formatDate(end)}`;
+  }
 
   const eventBanner = [
     {
@@ -378,15 +402,36 @@ const HomePage: React.FC<HomePageProps> = () => {
         <FlatList
           style={{marginHorizontal: 12.5}}
           ref={flatListRef}
-          data={bestMusicals}
+          data={bestMusicalInfo}
           renderItem={({item}) => (
-            <View style={{flexDirection: 'column', marginHorizontal: 7.5}}>
-              <Image style={HomeStyles.imageMusical} source={item.image} />
-              <Text style={HomeStyles.textMusicalTitle}>{item.title}</Text>
-              <Text style={HomeStyles.textMusicalDateLocation}>
-                {item.date}
+            <View
+              style={{
+                flexDirection: 'column',
+                marginHorizontal: 7.5,
+                width: 125,
+              }}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('MusicalDetailPage', {data: item})
+                }>
+                <Image
+                  style={HomeStyles.imageMusical}
+                  source={{uri: item.image_url}}
+                />
+              </TouchableOpacity>
+              <Text
+                style={HomeStyles.textMusicalTitle}
+                numberOfLines={1}
+                ellipsizeMode="tail">
+                {item.title}
               </Text>
               <Text style={HomeStyles.textMusicalDateLocation}>
+                {formatDateRange(item.start_date, item.end_date)}
+              </Text>
+              <Text
+                style={HomeStyles.textMusicalDateLocation}
+                numberOfLines={1}
+                ellipsizeMode="tail">
                 {item.location}
               </Text>
             </View>
@@ -403,15 +448,31 @@ const HomePage: React.FC<HomePageProps> = () => {
         <FlatList
           style={{marginHorizontal: 12.5, marginBottom: 37}}
           ref={flatListRef}
-          data={notReleaseMusicals}
+          data={releaseMusicalInfo}
           renderItem={({item}) => (
-            <View style={{flexDirection: 'column', marginHorizontal: 7.5}}>
-              <Image style={HomeStyles.imageMusical} source={item.image} />
-              <Text style={HomeStyles.textMusicalTitle}>{item.title}</Text>
-              <Text style={HomeStyles.textMusicalDateLocation}>
-                {item.date}
+            <View
+              style={{
+                flexDirection: 'column',
+                marginHorizontal: 7.5,
+                width: 125,
+              }}>
+              <Image
+                style={HomeStyles.imageMusical}
+                source={{uri: item.image_url}}
+              />
+              <Text
+                style={HomeStyles.textMusicalTitle}
+                numberOfLines={1}
+                ellipsizeMode="tail">
+                {item.title}
               </Text>
               <Text style={HomeStyles.textMusicalDateLocation}>
+                {formatDateRange(item.start_date, item.end_date)}
+              </Text>
+              <Text
+                style={HomeStyles.textMusicalDateLocation}
+                numberOfLines={1}
+                ellipsizeMode="tail">
                 {item.location}
               </Text>
             </View>

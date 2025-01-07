@@ -4,6 +4,7 @@ export type RootStackParamList = {
     setPostData: React.Dispatch<React.SetStateAction<PostData | null>>;
   };
   PremiumWritePage: undefined;
+  PremiumOthersPage: undefined;
   PostPage: {postId: number};
   ModifyPage: {postId: number};
   SavePage: undefined;
@@ -11,6 +12,7 @@ export type RootStackParamList = {
   DashboardSearchDefaultPage: undefined;
   HomeSearchPage: {postData: any; text: string};
   HomeSearchDefaultPage: undefined;
+  MusicalDetailPage: {data: any};
 };
 
 export interface PostData {

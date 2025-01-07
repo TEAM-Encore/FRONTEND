@@ -9,6 +9,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {RootStackParamList} from './types';
 import Tabs from './src/components/navigation/Tabs';
 import PremiumWritePage from './src/pages/write/review/PremiumWritePage';
+import PremiumOthersPage from './src/pages/premium/others/PremiumOthersPage';
 import StopReviewModal from './src/components/alertModal/StopReviewModal';
 import WritePage from './src/pages/write/post/WritePage';
 import PostPage from './src/pages/dashboard/post/PostPage';
@@ -18,6 +19,7 @@ import DashboardSearchPage from './src/pages/dashboard/search/DashboardSearchPag
 import DashboardSearchDefaultPage from './src/pages/search/DashboardSearchDefaultPage';
 import HomeSearchPage from './src/pages/home/search/HomeSearchPage';
 import HomeSearchDefaultPage from './src/pages/search/HomeSearchDefaultPage';
+import MusicalDetailPage from './src/pages/home/musical/MusicalDetailPage';
 
 import {createPost, putPost} from './src/api/post.api';
 import {ensureAsyncStorageDir} from './src/util/ensureAsyncStorageDir';
@@ -236,6 +238,19 @@ export default function App() {
               cardStyle: {backgroundColor: '#FBFBFB'},
             }}
           />
+          <Stack.Screen
+            name="MusicalDetailPage"
+            component={MusicalDetailPage}
+            options={({navigation}) => ({
+              headerStyle: {
+                height: 123,
+                backgroundColor: '#FBFBFB',
+              },
+              title: '뮤지컬 공연 정보',
+              headerTitleStyle: {...AppStyles.title},
+              headerLeft: () => <CustomBackButton navigation={navigation} />,
+            })}
+          />
 
           {/* 프리미엄 후기 작성 페이지*/}
           <Stack.Screen
@@ -272,6 +287,12 @@ export default function App() {
               />
             )}
           </Stack.Screen>
+          {/* 다른 사람 프리미엄 리뷰 상세 페이지*/}
+          <Stack.Screen
+            name="PremiumOthersPage"
+            component={PremiumOthersPage}
+            options={{headerShown: false}}
+          />
 
           {/* 게시판 작성 페이지*/}
           <Stack.Screen
