@@ -404,18 +404,34 @@ const HomePage: React.FC<HomePageProps> = () => {
           ref={flatListRef}
           data={bestMusicalInfo}
           renderItem={({item}) => (
-            <View style={{flexDirection: 'column', marginHorizontal: 7.5}}>
+            <View
+              style={{
+                flexDirection: 'column',
+                marginHorizontal: 7.5,
+                width: 125,
+              }}>
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate('MusicalDetailPage', {data: item})
                 }>
-                <Image style={HomeStyles.imageMusical} source={item.image} />
+                <Image
+                  style={HomeStyles.imageMusical}
+                  source={{uri: item.image_url}}
+                />
               </TouchableOpacity>
-              <Text style={HomeStyles.textMusicalTitle}>{item.title}</Text>
+              <Text
+                style={HomeStyles.textMusicalTitle}
+                numberOfLines={1}
+                ellipsizeMode="tail">
+                {item.title}
+              </Text>
               <Text style={HomeStyles.textMusicalDateLocation}>
                 {formatDateRange(item.start_date, item.end_date)}
               </Text>
-              <Text style={HomeStyles.textMusicalDateLocation}>
+              <Text
+                style={HomeStyles.textMusicalDateLocation}
+                numberOfLines={1}
+                ellipsizeMode="tail">
                 {item.location}
               </Text>
             </View>
@@ -434,13 +450,29 @@ const HomePage: React.FC<HomePageProps> = () => {
           ref={flatListRef}
           data={releaseMusicalInfo}
           renderItem={({item}) => (
-            <View style={{flexDirection: 'column', marginHorizontal: 7.5}}>
-              <Image style={HomeStyles.imageMusical} source={item.image} />
-              <Text style={HomeStyles.textMusicalTitle}>{item.title}</Text>
+            <View
+              style={{
+                flexDirection: 'column',
+                marginHorizontal: 7.5,
+                width: 125,
+              }}>
+              <Image
+                style={HomeStyles.imageMusical}
+                source={{uri: item.image_url}}
+              />
+              <Text
+                style={HomeStyles.textMusicalTitle}
+                numberOfLines={1}
+                ellipsizeMode="tail">
+                {item.title}
+              </Text>
               <Text style={HomeStyles.textMusicalDateLocation}>
                 {formatDateRange(item.start_date, item.end_date)}
               </Text>
-              <Text style={HomeStyles.textMusicalDateLocation}>
+              <Text
+                style={HomeStyles.textMusicalDateLocation}
+                numberOfLines={1}
+                ellipsizeMode="tail">
                 {item.location}
               </Text>
             </View>

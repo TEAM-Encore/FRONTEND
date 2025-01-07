@@ -75,7 +75,10 @@ const MusicalDetailPage: React.FC<MusicalDetailPageProps> = ({route}) => {
         ListHeaderComponent={
           <>
             <View style={MusicalDetailStyles.imageContainer}>
-              <Image source={data.image} style={MusicalDetailStyles.image} />
+              <Image
+                source={{uri: data.image_url}}
+                style={MusicalDetailStyles.image}
+              />
               <View style={MusicalDetailStyles.chipContainer}>
                 <Text style={MusicalDetailStyles.chipText}>NOW</Text>
               </View>
