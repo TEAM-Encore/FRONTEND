@@ -36,6 +36,16 @@ export const typography = {
     lineHeight: 28,
     letterSpacing: -0.3,
   },
+  subhead05: {
+    fontFamily: 'Pretendard-SemiBold',
+    fontSize: 20,
+    lineHeight: 28,
+    letterSpacing: -0.3,
+  },
+  subhead04: {
+    fontFamily: 'Pretendard-SemiBold',
+    fontSize: 18,
+  },
   subhead03: {
     fontFamily: 'Pretendard-SemiBold',
     fontSize: 16,
