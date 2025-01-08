@@ -1,4 +1,4 @@
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import {
   SafeAreaView,
   FlatList,
@@ -12,17 +12,32 @@ import {SvgXml} from 'react-native-svg';
 
 import HomeStyles from '@/pages/home/HomeStyles';
 import TicketBookStyles from '@/pages/ticketbook/TicketBookStyles';
-
 import {HomeIcon} from '@/assets/icons/home/HomeIcon';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import {TicketBookIcon} from '@/assets/icons/ticketbook/TicketBookIcon';
+
 import IconSearch from '@/assets/icons/dashboard/IconSearch';
 import IconNotification from '@/assets/icons/dashboard/IconNotification';
 import ModalCategory from '@/components/categoryModal/ModalCategory';
+import {getTicketBookList} from '@/api/ticketbook.api';
+import Colors from '@/assets/colors/Colors';
 
 type RootStackParamList = {
   AddTicketPage: undefined;
   TicketDetailPage: undefined;
+};
+
+type TicketItem = {
+  id: number;
+  musical_title: string;
+  actors: string[];
+  location: string;
+  seat: string;
+  series: string;
+  total_rating: number;
+  viewed_date: string;
+  has_review?: boolean;
+  user_id?: number;
 };
 
 export default function TicketBookPage() {
@@ -31,42 +46,28 @@ export default function TicketBookPage() {
   const [modalTitle, setModalTitle] = useState('');
   const [category, setCategory] = useState('기간 설정');
   const categoryList = ['전체보기', '최근 1주', '최근 1달', '최근 1년'];
+  const [ticketList, setTicketList] = useState<TicketItem[]>([]);
 
-  const data = useMemo(
-    () => [
-      {
-        id: 1,
-        image: require('@/assets/images/home/TicketBackground.png'),
-        title: '위키드',
-        season: '3연',
-        date: '24.06.21',
-        place: '세종문화회관 A구역 6열 4번',
-        actor: '우선영 염지은 하은영 윤혜원',
-        star: 0,
-      },
-      {
-        id: 2,
-        image: require('@/assets/images/home/TicketBackground.png'),
-        title: '지킬앤하이드',
-        season: '2연',
-        date: '24.07.21',
-        place: '세종문화회관 A구역 6열 4번',
-        actor: '우선영 염지은 하은영 윤혜원',
-        star: 4.0,
-      },
-      {
-        id: 3,
-        image: require('@/assets/images/home/TicketBackground.png'),
-        title: '위키드',
-        season: '5연',
-        date: '25.01.16',
-        place: '세종문화회관 A구역 6열 4번',
-        actor: '우선영 염지은 하은영 윤혜원',
-        star: 2.0,
-      },
-    ],
-    [],
-  );
+  const fetchTicketList = async () => {
+    try {
+      let period = 'NULL';
+      if (category == '최근 1주') {
+        period = 'WEEK';
+      } else if (category == '최근 1달') {
+        period = 'MONTH';
+      } else if (category == '최근 1년') {
+        period = 'YEAR';
+      }
+      const response = await getTicketBookList(period);
+      setTicketList(response.data.data);
+    } catch (error) {
+      console.error('티켓북 리스트 조회 오류: ', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTicketList();
+  }, [category]);
 
   const Ticket = ({
     image,
@@ -76,6 +77,8 @@ export default function TicketBookPage() {
     season,
     actor,
     star,
+    hasReview,
+    color,
   }: {
     image: any;
     title: string;
@@ -84,6 +87,8 @@ export default function TicketBookPage() {
     season: string;
     actor: string;
     star: number;
+    hasReview?: boolean;
+    color: string;
   }) => {
     return (
       <TouchableOpacity
@@ -117,31 +122,28 @@ export default function TicketBookPage() {
             </View>
           </View>
           <SvgXml style={HomeStyles.ticketLine} xml={HomeIcon.line} />
-          <View style={HomeStyles.ticket2}>
-            {star === 0 ? (
+          <View style={[HomeStyles.ticket2, {backgroundColor: color}]}>
+            {hasReview ? (
               <>
                 <View style={{flexDirection: 'row'}}>
-                  <SvgXml xml={HomeIcon.star} />
-                  <SvgXml xml={HomeIcon.star} />
-                  <SvgXml xml={HomeIcon.star} />
-                  <SvgXml xml={HomeIcon.star} />
-                  <SvgXml xml={HomeIcon.star} />
+                  {Array.from({length: 5}).map((_, index) => (
+                    <SvgXml
+                      key={index}
+                      xml={index < star ? HomeIcon.fullStar : HomeIcon.star}
+                    />
+                  ))}
                 </View>
-                <Text style={HomeStyles.textReview}>
-                  아직 남겨주신{'\n'}리뷰가 없어요
-                </Text>
+                <Text style={HomeStyles.textReview}>총평 {star}</Text>
               </>
             ) : (
               <>
                 <View style={{flexDirection: 'row'}}>
-                  <SvgXml xml={HomeIcon.star} />
-                  <SvgXml xml={HomeIcon.star} />
-                  <SvgXml xml={HomeIcon.star} />
-                  <SvgXml xml={HomeIcon.star} />
-                  <SvgXml xml={HomeIcon.star} />
+                  {Array.from({length: 5}).map((_, index) => (
+                    <SvgXml key={index} xml={HomeIcon.star} />
+                  ))}
                 </View>
                 <Text style={HomeStyles.textReview}>
-                  총평 {star.toFixed(1)}
+                  아직 남겨주신{'\n'}리뷰가 없어요
                 </Text>
               </>
             )}
@@ -194,18 +196,35 @@ export default function TicketBookPage() {
 
       <FlatList
         contentContainerStyle={{justifyContent: 'center'}}
-        data={data}
-        renderItem={({item}) => (
-          <Ticket
-            image={item.image}
-            title={item.title}
-            season={item.season}
-            date={item.date}
-            place={item.place}
-            actor={item.actor}
-            star={item.star}
-          />
-        )}
+        data={ticketList}
+        renderItem={({item}) => {
+          let ticketBackground;
+          let backgroundColor;
+          if (item.series == '초연') {
+            ticketBackground = require('@/assets/images/home/TicketBackgroundRed.png');
+            backgroundColor = '#FFB19B';
+          } else if (item.series == '재연') {
+            ticketBackground = require('@/assets/images/home/TicketBackgroundPurple.png');
+            backgroundColor = '#D6AFFF';
+          } else {
+            ticketBackground = require('@/assets/images/home/TicketBackground.png');
+            backgroundColor = Colors.sub_03;
+          }
+
+          return (
+            <Ticket
+              image={ticketBackground}
+              title={item.musical_title}
+              season={item.series}
+              date={item.viewed_date}
+              place={`${item.location} ${item.seat}`}
+              actor={item.actors?.join(', ')}
+              star={item.total_rating}
+              hasReview={item.has_review}
+              color={backgroundColor}
+            />
+          );
+        }}
       />
     </>
   );
