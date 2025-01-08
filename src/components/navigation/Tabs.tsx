@@ -5,7 +5,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import HomePage from '@/pages/home/HomePage';
 import PremiumPage from '@/pages/premium/PremiumPage';
 import DashboardPage from '@/pages/dashboard/DashboardPage';
-import TicketBookPage from '@/pages/TicketBookPage';
+import TicketBookPage from '@/pages/ticketbook/TicketBookPage';
 import MyPage from '@/pages/MyPage';
 
 import {SvgXml} from 'react-native-svg';

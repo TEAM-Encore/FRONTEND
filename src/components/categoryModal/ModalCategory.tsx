@@ -14,6 +14,7 @@ import {SvgXml} from 'react-native-svg';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const {headline, body02, caption} = typography;
 
@@ -65,25 +66,27 @@ const ModalCategory: React.FC<ModalCategoryProps> = ({
             <SvgXml xml={DashboardIcon.cancel} />
           </TouchableOpacity>
           <View style={styles.containerTitle}>
-            <Text style={styles.textTitle}>{modalTitle} 선택</Text>
+            <Text style={styles.textTitle}>{modalTitle}</Text>
           </View>
-          {categoryList.map(item => (
-            <TouchableOpacity
-              key={item}
-              style={[
-                styles.containerList,
-                selectedItem === item && {backgroundColor: Colors.gray_03},
-              ]}
-              onPress={() => handleSelect(item)}>
-              <Text
+          <ScrollView>
+            {categoryList.map(item => (
+              <TouchableOpacity
+                key={item}
                 style={[
-                  styles.textList,
-                  selectedItem === item && {color: Colors.gray_12},
-                ]}>
-                {item}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                  styles.containerList,
+                  selectedItem === item && {backgroundColor: Colors.gray_03},
+                ]}
+                onPress={() => handleSelect(item)}>
+                <Text
+                  style={[
+                    styles.textList,
+                    selectedItem === item && {color: Colors.gray_12},
+                  ]}>
+                  {item}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
           <TouchableOpacity style={styles.buttonCheck} onPress={handleConfirm}>
             <Text style={styles.textButton}>확인</Text>
           </TouchableOpacity>
@@ -104,7 +107,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',
-    height: 'auto',
+    height: 397,
     justifyContent: 'center',
     borderTopStartRadius: 25,
     borderTopEndRadius: 25,
