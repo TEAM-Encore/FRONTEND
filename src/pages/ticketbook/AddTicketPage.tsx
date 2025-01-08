@@ -17,8 +17,14 @@ export default function AddTicketPage() {
   const [stepData, setStepData] = useState({});
   const navigation = useNavigation();
 
-  const saveData = (step: number, data: string[]) => {
-    setStepData(prev => ({...prev, [step]: data}));
+  const saveData = (step: number, data: any) => {
+    if (Array.isArray(stepData)) {
+      const updatedStepData = [...stepData];
+      updatedStepData[step] = data;
+      setStepData(updatedStepData);
+    } else if (typeof stepData === 'object') {
+      setStepData(prev => ({...prev, [step]: data}));
+    }
   };
 
   const goToNext = (nextStep?: number) => {
@@ -46,7 +52,11 @@ export default function AddTicketPage() {
         </View>
       </SafeAreaView>
       {currentStep === 1 && (
-        <AddTicketStep1Page goToNext={goToNext} saveData={saveData} />
+        <AddTicketStep1Page
+          goToNext={goToNext}
+          saveData={saveData}
+          stepData={stepData}
+        />
       )}
       {currentStep === 2 && (
         <AddTicketStep2Page
