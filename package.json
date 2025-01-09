@@ -54,6 +54,7 @@
     "@tsconfig/react-native": "^3.0.5",
     "@types/jest": "^29.5.14",
     "@types/lodash": "^4.17.13",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/react": "^18.3.12",
     "@types/react-calendar": "^3.9.0",
     "@types/react-test-renderer": "^18.3.0",

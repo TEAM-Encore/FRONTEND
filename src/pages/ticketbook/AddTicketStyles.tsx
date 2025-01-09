@@ -65,6 +65,17 @@ const AddTicketStyles = StyleSheet.create({
     backgroundColor: Colors.gray_03,
     paddingHorizontal: 45,
   },
+  containerSearch: {
+    ...body01,
+    lineHeight: 0,
+    width: '100%',
+    height: 36,
+    justifyContent: 'center',
+    paddingHorizontal: 13,
+    borderRadius: 8,
+    backgroundColor: Colors.gray_03,
+    marginBottom: 5,
+  },
   iconSearch: {
     position: 'absolute',
     left: 13,
@@ -120,6 +131,35 @@ const AddTicketStyles = StyleSheet.create({
     marginRight: 12,
   },
 
+  // step4
+  textActor: {
+    ...body01,
+    color: Colors.gray_12,
+  },
+  imageActorExample: {
+    width: 50,
+    height: 50,
+    borderRadius: 7.35,
+    backgroundColor: '#000',
+    marginRight: 12,
+  },
+  containerActor: {
+    alignItems: 'center',
+    marginRight: 16.77,
+  },
+  iconActorDelete: {
+    position: 'absolute',
+    top: -6,
+    right: -6.77,
+  },
+  imageActor: {
+    width: 71.22767,
+    height: 71.22767,
+    borderRadius: 7.35,
+    backgroundColor: '#000',
+    marginBottom: 4,
+  },
+
   // step5
   textDiscription: {
     ...body01,
@@ -157,6 +197,12 @@ const AddTicketStyles = StyleSheet.create({
     ...caption,
     color: Colors.gray_08,
     marginLeft: 6,
+  },
+  imageTicket: {
+    width: '100%',
+    height: 270,
+    borderRadius: 8,
+    backgroundColor: '#000',
   },
 });
 

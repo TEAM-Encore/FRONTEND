@@ -11,6 +11,7 @@ import {Calendar, DateData} from 'react-native-calendars';
 
 import AddTicketStyles from './AddTicketStyles';
 import Colors from '@/assets/colors/Colors';
+import {useAddTicket} from '@/state/AddTicketContext';
 
 type PremiumProp = {
   goToNext: any;
@@ -24,11 +25,14 @@ export default function AddTicketStep2Page({
   stepData,
 }: PremiumProp) {
   const screenWidth = Dimensions.get('window').width;
-  const [input, setInput] = useState(stepData[2] || '');
-  const [selectedDate, setSelectedDate] = useState<string>('');
+
+  const {updateAddTicketData} = useAddTicket();
+
+  const [selectedDate, setSelectedDate] = useState<string>(stepData[2] || '');
 
   const onDayPress = (day: DateData) => {
     setSelectedDate(day.dateString);
+    updateAddTicketData({date: day.dateString});
   };
 
   const renderHeader = (date: Date) => {
@@ -84,7 +88,7 @@ export default function AddTicketStep2Page({
               selectedDate !== '' && {backgroundColor: Colors.sub_04},
             ]}
             onPress={() => {
-              saveData(2, input);
+              saveData(2, selectedDate);
               goToNext(3);
             }}
             disabled={selectedDate === ''}>
