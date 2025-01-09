@@ -8,6 +8,8 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 
@@ -25,19 +27,17 @@ type HomePageProps = {};
 type RootStackParamList = {
   WritePage: undefined;
   HomeSearchDefaultPage: undefined;
+  HomeBannerPage: {bannerId: number};
 };
 
 const CARD_WIDTH = 290;
 const PADDING = 6;
 
-const Ticket = ({image}: {image: any}) => (
-  <View style={HomeStyles.containerCarouselTicket}>
-    <Image style={{width: 290, height: 170}} source={image} />
-  </View>
-);
-
 const HomePage: React.FC<HomePageProps> = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
+  const [eventCurrentIndex, setEventCurrentIndex] = useState(1);
+  const bannerRef = useRef<FlatList<any>>(null);
+  const eventBannerRef = useRef<FlatList<any>>(null);
   const flatListRef = useRef<FlatList<any>>(null);
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -47,44 +47,86 @@ const HomePage: React.FC<HomePageProps> = () => {
   });
   const [reviewModalVisible, setReviewModalVisible] = useState(true);
 
-  const carouselTicketList = [
-    {
-      id: '1',
-      image: require('@/assets/images/home/ImageCarouselColor.png'),
-    },
-    {
-      id: '2',
-      image: require('@/assets/images/home/ImageCarousel.png'),
-    },
-    {
-      id: '3',
-      image: require('@/assets/images/home/ImageCarouselColor2.png'),
-    },
-  ];
+  const carouselTicketList = useMemo(
+    () => [
+      {
+        id: 1,
+        image: require('@/assets/images/home/ImageCarouselColor.png'),
+      },
+      {
+        id: 2,
+        image: require('@/assets/images/home/ImageCarousel.png'),
+      },
+      {
+        id: 3,
+        image: require('@/assets/images/home/ImageCarouselColor2.png'),
+      },
+    ],
+    [],
+  );
+
+  const circularCarouselTicketList = useMemo(
+    () => [
+      carouselTicketList[carouselTicketList.length - 1],
+      ...carouselTicketList,
+      carouselTicketList[0],
+    ],
+    [carouselTicketList],
+  );
+
+  const handleMomentumScrollEnd = (
+    event: NativeSyntheticEvent<NativeScrollEvent>,
+  ) => {
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+    const newIndex = Math.round(contentOffsetX / (CARD_WIDTH + PADDING * 2));
+
+    if (newIndex === 0) {
+      setCurrentIndex(carouselTicketList.length - 1);
+      bannerRef.current?.scrollToIndex({
+        index: circularCarouselTicketList.length - 2,
+        animated: false,
+      });
+    } else if (newIndex === circularCarouselTicketList.length - 1) {
+      setCurrentIndex(0);
+      bannerRef.current?.scrollToIndex({index: 1, animated: false});
+    } else {
+      setCurrentIndex(newIndex - 1);
+    }
+  };
+
+  const Ticket = ({image, bannerId}: {image: any; bannerId: number}) => (
+    <TouchableOpacity
+      style={HomeStyles.containerCarouselTicket}
+      onPress={() =>
+        navigation.navigate('HomeBannerPage', {bannerId: bannerId})
+      }>
+      <Image style={{width: 290, height: 170}} source={image} />
+    </TouchableOpacity>
+  );
 
   const premiumReviewRanking = [
-    {id: '1', title: '위키드 5회차 관람 후기'},
-    {id: '2', title: '위키드 5회차 관람 후기'},
-    {id: '3', title: '위키드 5회차 관람 후기'},
+    {id: 1, title: '위키드 5회차 관람 후기'},
+    {id: 2, title: '위키드 5회차 관람 후기'},
+    {id: 3, title: '위키드 5회차 관람 후기'},
   ];
 
   const bestMusicals = [
     {
-      id: '1',
+      id: 1,
       image: require('@/assets/images/home/Musical1.jpeg'),
       title: '벤자민 버튼',
       date: '24.06.21~24.07.21',
       location: '샤롯데시어터',
     },
     {
-      id: '2',
+      id: 2,
       image: require('@/assets/images/home/Musical2.jpeg'),
       title: '카르밀라',
       date: '24.06.21~24.07.21',
       location: '샤롯데시어터',
     },
     {
-      id: '3',
+      id: 3,
       image: require('@/assets/images/home/Musical3.jpeg'),
       title: '몬테크리스토',
       date: '24.06.21~24.07.21',
@@ -94,21 +136,21 @@ const HomePage: React.FC<HomePageProps> = () => {
 
   const notReleaseMusicals = [
     {
-      id: '1',
+      id: 1,
       image: require('@/assets/images/home/Musical4.jpeg'),
       title: '엘리자벳',
       date: '24.06.21~24.07.21',
       location: '샤롯데시어터',
     },
     {
-      id: '2',
+      id: 2,
       image: require('@/assets/images/home/Musical5.jpeg'),
       title: '미오 프라텔로',
       date: '24.06.21~24.07.21',
       location: '샤롯데시어터',
     },
     {
-      id: '3',
+      id: 3,
       image: require('@/assets/images/home/Musical6.jpeg'),
       title: '비더슈탄트',
       date: '24.06.21~24.07.21',
@@ -118,7 +160,7 @@ const HomePage: React.FC<HomePageProps> = () => {
 
   const eventBanner = [
     {
-      id: '1',
+      id: 1,
       icon: HomeIcon.bannerHeart,
       color: '#EDDCFF',
       subColor: '#D6AFFF',
@@ -126,7 +168,7 @@ const HomePage: React.FC<HomePageProps> = () => {
       subTitle: '댓글 3번 작성하기',
     },
     {
-      id: '2',
+      id: 2,
       icon: HomeIcon.bannerGift,
       color: '#FFF8DB',
       subColor: '#FFF1BB',
@@ -134,7 +176,7 @@ const HomePage: React.FC<HomePageProps> = () => {
       subTitle: '로그인 후 20분 경과 시',
     },
     {
-      id: '3',
+      id: 3,
       icon: HomeIcon.bannerTrophy,
       color: '#FFDFD6',
       subColor: '#FFB19B',
@@ -143,13 +185,33 @@ const HomePage: React.FC<HomePageProps> = () => {
     },
   ];
 
-  const snapToOffsets = useMemo(
-    () =>
-      Array.from(Array(carouselTicketList.length)).map(
-        (_, index) => index * CARD_WIDTH + 15,
-      ),
-    [carouselTicketList],
-  );
+  const circularEventBannerList = useMemo(() => {
+    return [
+      eventBanner[eventBanner.length - 1],
+      ...eventBanner,
+      eventBanner[0],
+    ];
+  }, [eventBanner]);
+
+  const handleEventMomentumScrollEnd = (
+    event: NativeSyntheticEvent<NativeScrollEvent>,
+  ) => {
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+    const newIndex = Math.round(contentOffsetX / screenWidth);
+
+    if (newIndex === 0) {
+      setEventCurrentIndex(circularEventBannerList.length - 1);
+      eventBannerRef.current?.scrollToIndex({
+        index: circularEventBannerList.length - 2,
+        animated: false,
+      });
+    } else if (newIndex === circularEventBannerList.length - 1) {
+      setEventCurrentIndex(0);
+      eventBannerRef.current?.scrollToIndex({index: 1, animated: false});
+    } else {
+      setEventCurrentIndex(newIndex - 1);
+    }
+  };
 
   const handleLayout = (event: any) => {
     const {y, height} = event.nativeEvent.layout;
@@ -175,22 +237,25 @@ const HomePage: React.FC<HomePageProps> = () => {
             </View>
           </View>
           <FlatList
-            ref={flatListRef}
-            data={carouselTicketList}
+            ref={bannerRef}
+            data={circularCarouselTicketList}
+            renderItem={({item}) => (
+              <Ticket image={item.image || null} bannerId={item.id} />
+            )}
+            keyExtractor={item => item.id.toString()}
+            initialScrollIndex={2}
             horizontal
-            pagingEnabled
             showsHorizontalScrollIndicator={false}
-            renderItem={({item}) => <Ticket image={item.image || null} />}
-            keyExtractor={item => item.id}
-            snapToOffsets={snapToOffsets}
+            snapToAlignment="center"
+            snapToInterval={CARD_WIDTH + PADDING * 2}
             decelerationRate="fast"
-            contentContainerStyle={{paddingHorizontal: 52, paddingTop: 10}}
-            initialScrollIndex={1}
+            onMomentumScrollEnd={handleMomentumScrollEnd}
+            scrollEventThrottle={64}
             getItemLayout={(data, index) => ({
-              length: 170,
+              length: CARD_WIDTH + PADDING * 2,
               offset:
                 (CARD_WIDTH + PADDING * 2) * index -
-                (screenWidth - CARD_WIDTH) / 2,
+                (screenWidth - (CARD_WIDTH + PADDING * 2)) / 2,
               index,
             })}
           />
@@ -332,8 +397,8 @@ const HomePage: React.FC<HomePageProps> = () => {
 
         <View style={{marginTop: 48}}>
           <FlatList
-            ref={flatListRef}
-            data={eventBanner}
+            ref={eventBannerRef}
+            data={circularEventBannerList}
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
@@ -363,14 +428,15 @@ const HomePage: React.FC<HomePageProps> = () => {
                 </View>
               </View>
             )}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.id.toString()}
             decelerationRate="fast"
-            initialScrollIndex={0}
+            initialScrollIndex={1}
             getItemLayout={(data, index) => ({
-              length: 94,
-              offset: 94 * index,
+              length: screenWidth,
+              offset: screenWidth * index,
               index,
             })}
+            onMomentumScrollEnd={handleEventMomentumScrollEnd}
           />
         </View>
 
@@ -393,7 +459,7 @@ const HomePage: React.FC<HomePageProps> = () => {
               </Text>
             </View>
           )}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
           nestedScrollEnabled
@@ -418,7 +484,7 @@ const HomePage: React.FC<HomePageProps> = () => {
               </Text>
             </View>
           )}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
           nestedScrollEnabled
