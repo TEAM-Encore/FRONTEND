@@ -15,3 +15,9 @@ export const getUpcomingMusical = () => {
 export const getMusicalReviews = (musical_id: number) => {
   return httpApi.get(`/api/v1/review/musical/${musical_id}/reviews`);
 };
+
+export const getSearchMusical = (keyword: string) => {
+  return httpApi.get(`/api/v1/musical/search`, {
+    params: {keyword},
+  });
+};
