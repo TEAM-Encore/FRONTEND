@@ -18,7 +18,7 @@ type ReviewScreenProps = {};
 
 const ReviewScreen: React.FC<ReviewScreenProps> = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [category, setCategory] = useState('카테고리');
+  const [category, setCategory] = useState('카테고리 선택');
   const categoryList = ['전체보기', '시야 후기', '굿즈 후기', '공연 감상'];
   const [selectedFilter, setSelectedFilter] = useState<'최신순' | '인기순'>(
     '최신순',
