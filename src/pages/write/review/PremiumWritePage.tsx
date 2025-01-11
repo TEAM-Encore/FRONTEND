@@ -39,6 +39,47 @@ const PremiumWritePage: React.FC<PremiumWritePageProps> = ({navigation}) => {
     }
   };
 
+  const transformStepDataToRequest = (stepData: any) => {
+    return {
+      title: stepData['2']?.title || '',
+      tags: stepData['2']?.tags || [],
+      reviewDataReq: {
+        view: {
+          view_level: parseInt(stepData['3']?.view_level, 10) || 1, // 기본값 1
+          view_review: stepData['3']?.view_review || '', // 기본값 ""
+        },
+        sound: {
+          sound_level: parseInt(stepData['4']?.sound_level, 10) || 1, // 기본값 1
+          sound_review: stepData['4']?.sound_review || '', // 기본값 ""
+        },
+        facility: {
+          facility_level: parseInt(stepData['5']?.facility_level, 10) || 1, // 기본값 1
+          facility_review: stepData['5']?.facility_review || '', // 기본값 ""
+        },
+        rating: {
+          number_rating: stepData['6']?.scores?.[0] || 1, // 기본값 1
+          story_rating: stepData['6']?.scores?.[1] || 1,
+          revisit_rating: stepData['6']?.scores?.[2] || 1,
+          actor_rating: stepData['6']?.scores?.[3] || 1,
+          performance_rating: stepData['6']?.scores?.[4] || 1,
+          total_rating: calculateAverageScore(stepData['6']?.scores) || 1, // 기본값 1
+          rating_review: stepData['6']?.title || '',
+        },
+      },
+    };
+  };
+
+  // 평균 점수 계산 함수
+  const calculateAverageScore = (scores: any) => {
+    if (!scores || scores.length === 0) return 1; // 기본값 1
+    const total = scores.reduce((acc: any, score: any) => acc + score, 0);
+    return parseFloat((total / scores.length).toFixed(1)); // 소수점 1자리
+  };
+
+  const requestData = transformStepDataToRequest(stepData);
+  console.log(requestData);
+  console.log('현재 단계: ', currentStep, '데이터: ', stepData);
+
   return (
     <>
       {currentStep === 1 && (

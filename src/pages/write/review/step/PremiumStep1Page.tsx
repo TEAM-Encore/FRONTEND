@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   View,
   Text,
@@ -10,50 +10,53 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import PremiumWriteStyles from '../PremiumWriteStyles';
 import {SvgXml} from 'react-native-svg';
 import {ReviewWriteIcon} from '@/assets/icons/premium/ReviewWriteIcon';
 import Colors from '@/assets/colors/Colors';
+import {getTicketList} from '@/api/ticketBook.api';
+import {useFocusEffect} from '@react-navigation/native';
 
 type ReviewItems = {
   id: string;
-  title: string;
-  time: string;
+  musical_title: string;
+  location: string;
   seat: string;
-  actor: string;
+  actors: string;
 };
 
-const data: ReviewItems[] = [
-  {
-    id: '1',
-    title: '비더슈탄트',
-    time: '2024.06.21',
-    seat: '샤롯데 시어터 B구역 6열 4번',
-    actor: '우선영 염지은 하은영 윤혜원',
-  },
-  {
-    id: '2',
-    title: '위키드 (5회차)',
-    time: '2024.06.21',
-    seat: '샤롯데 시어터 B구역 6열 4번',
-    actor: '우선영 염지은 하은영 윤혜원',
-  },
-  {
-    id: '3',
-    title: '위키드 (4회차)',
-    time: '2024.06.21',
-    seat: '샤롯데 시어터 B구역 6열 4번',
-    actor: '우선영 염지은 하은영 윤혜원',
-  },
-  {
-    id: '4',
-    title: '위키드 (3회차)',
-    time: '2024.06.21',
-    seat: '샤롯데 시어터 B구역 6열 4번',
-    actor: '우선영 염지은 하은영 윤혜원',
-  },
-];
+// const data: ReviewItems[] = [
+//   {
+//     id: '1',
+//     title: '비더슈탄트',
+//     time: '2024.06.21',
+//     seat: '샤롯데 시어터 B구역 6열 4번',
+//     actor: '우선영 염지은 하은영 윤혜원',
+//   },
+//   {
+//     id: '2',
+//     title: '위키드 (5회차)',
+//     time: '2024.06.21',
+//     seat: '샤롯데 시어터 B구역 6열 4번',
+//     actor: '우선영 염지은 하은영 윤혜원',
+//   },
+//   {
+//     id: '3',
+//     title: '위키드 (4회차)',
+//     time: '2024.06.21',
+//     seat: '샤롯데 시어터 B구역 6열 4번',
+//     actor: '우선영 염지은 하은영 윤혜원',
+//   },
+//   {
+//     id: '4',
+//     title: '위키드 (3회차)',
+//     time: '2024.06.21',
+//     seat: '샤롯데 시어터 B구역 6열 4번',
+//     actor: '우선영 염지은 하은영 윤혜원',
+//   },
+// ];
 
 type PremiumProp = {
   goToNext: any;
@@ -62,7 +65,26 @@ type PremiumProp = {
 
 const PremiumStep1Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
+  const [reviewData, setReviewData] = useState();
   const [input, setInput] = useState([]);
+
+  const fetchreviewData = async () => {
+    try {
+      const response = await getTicketList('NULL');
+      console.log('API 요청 결과값: ', response.data.data);
+      setReviewData(response.data.data);
+    } catch (error) {
+      console.log(error);
+      Alert.alert('내역 조회 중 오류가 발생했습니다.');
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchreviewData();
+    }, []),
+  );
 
   const renderItem: ListRenderItem<ReviewItems> = ({item}) => {
     const isSelected = selectedId === item.id;
@@ -87,6 +109,7 @@ const PremiumStep1Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
         setSelectedId(null);
       } else {
         setSelectedId(item.id);
+        setSelectedTitle(item.musical_title);
         // console.log('선택된 카드:', item.id);
       }
     };
@@ -107,13 +130,13 @@ const PremiumStep1Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
               <View style={PremiumWriteStyles.icons}>
                 <Text
                   style={[PremiumWriteStyles.list_title, {color: titleColor}]}>
-                  {item.title}
+                  {item.musical_title}
                 </Text>
                 <View style={PremiumWriteStyles.icon_container}>
                   <SvgXml xml={time_icon} style={PremiumWriteStyles.icon} />
                   <Text
                     style={[PremiumWriteStyles.list_text, {color: textColor}]}>
-                    {item.time}
+                    {item.location}
                   </Text>
                 </View>
                 <View style={PremiumWriteStyles.icon_container}>
@@ -127,7 +150,7 @@ const PremiumStep1Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
                   <SvgXml xml={person_icon} style={PremiumWriteStyles.icon} />
                   <Text
                     style={[PremiumWriteStyles.list_text, {color: textColor}]}>
-                    {item.actor}
+                    {item.actors}
                   </Text>
                 </View>
               </View>
@@ -151,7 +174,7 @@ const PremiumStep1Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
               후기를 작성할 내역을 선택해주세요.
             </Text>
             <FlatList
-              data={data}
+              data={reviewData}
               renderItem={renderItem}
               keyExtractor={item => item.id}
               scrollEnabled={false}
@@ -172,7 +195,7 @@ const PremiumStep1Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
             },
           ]}
           onPress={() => {
-            saveData(1, input);
+            saveData(1, {id: selectedId, title: selectedTitle});
             goToNext(2);
           }}
           disabled={!selectedId}>

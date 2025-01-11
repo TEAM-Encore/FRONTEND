@@ -32,21 +32,21 @@ const PremiumStep4Page: React.FC<PremiumProp> = ({
 
   const options = [
     {
-      id: 'good',
+      id: '1',
       label: '잘 들려요',
       labelColor: Colors.sub_05,
       icon1: ReviewWriteIcon.goodIcon1,
       icon2: ReviewWriteIcon.goodIcon2,
     },
     {
-      id: 'normal',
+      id: '2',
       label: '보통이에요',
       labelColor: '#A765EE',
       icon1: ReviewWriteIcon.sosoIcon1,
       icon2: ReviewWriteIcon.sosoIcon2,
     },
     {
-      id: 'bad',
+      id: '3',
       label: '안 들려요',
       labelColor: '#D45D3C',
       icon1: ReviewWriteIcon.badIcon1,
@@ -136,7 +136,10 @@ const PremiumStep4Page: React.FC<PremiumProp> = ({
           ]}
           onPress={() => {
             if (!isButtonDisabled) {
-              saveData(4, {tags: selectedOption, title: searchText});
+              saveData(4, {
+                sound_level: selectedOption,
+                sound_review: searchText,
+              });
               goToNext(5);
             }
           }}

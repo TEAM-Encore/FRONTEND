@@ -4,16 +4,19 @@ export type RootStackParamList = {
     setPostData: React.Dispatch<React.SetStateAction<PostData | null>>;
   };
   PremiumWritePage: undefined;
-  PostPage: { postId: number };
-  ModifyPage: { postId: number };
+  PremiumOthersPage: undefined;
+  PremiumMyPage: {reviewId: number};
+  PostPage: {postId: number};
+  ModifyPage: {postId: number};
   SavePage: undefined;
-  DashboardSearchPage: { postData: any; text: string };
+  DashboardSearchPage: {postData: any; text: string};
   DashboardSearchDefaultPage: undefined;
-  HomeSearchPage: { postData: any; text: string };
+  HomeSearchPage: {postData: any; text: string};
   HomeSearchDefaultPage: undefined;
-  HomeBannerPage: { bannerId: number };
+  HomeBannerPage: {bannerId: number};
   AddTicketPage: undefined;
   TicketDetailPage: undefined;
+  MusicalDetailPage: {data: any};
 };
 
 export interface PostData {

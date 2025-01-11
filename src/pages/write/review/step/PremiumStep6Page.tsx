@@ -8,13 +8,16 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import Svg, {Polygon, Circle, Text as SvgText, SvgXml} from 'react-native-svg';
 import {ReviewWriteIcon} from '@/assets/icons/premium/ReviewWriteIcon';
 import RegisterReviewModal from '@/components/alertModal/RegisterReviewModal';
 import PremiumWriteStyles from '../PremiumWriteStyles';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../../../styles/typography';
+import {postTicketReview} from '@/api/review.api';
 
 type PremiumProp = {
   goToNext: any;
@@ -22,7 +25,11 @@ type PremiumProp = {
   stepData: any;
 };
 
-const PremiumStep6Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
+const PremiumStep6Page: React.FC<PremiumProp> = ({
+  goToNext,
+  saveData,
+  stepData,
+}) => {
   const categories = [
     '넘버',
     '퍼포먼스',
@@ -95,6 +102,65 @@ const PremiumStep6Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
 
   const isButtonDisabled =
     searchText.trim() === '' || searchText.trim().length < 20;
+
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
+
+  const transformStepDataToRequest = (stepData: any) => ({
+    title: stepData['2']?.title || '',
+    tags: stepData['2']?.tags || [],
+    reviewDataReq: {
+      view: {
+        view_level: parseInt(stepData['3']?.view_level, 10) || 1,
+        view_review: stepData['3']?.view_review || '',
+      },
+      sound: {
+        sound_level: parseInt(stepData['4']?.sound_level, 10) || 1,
+        sound_review: stepData['4']?.sound_review || '',
+      },
+      facility: {
+        facility_level: parseInt(stepData['5']?.facility_level, 10) || 1,
+        facility_review: stepData['5']?.facility_review || '',
+      },
+      rating: {
+        number_rating: scores[0],
+        story_rating: scores[1],
+        revisit_rating: scores[2],
+        actor_rating: scores[3],
+        performance_rating: scores[4],
+        total_rating: parseFloat(calculateAverageScore()),
+        rating_review: searchText,
+      },
+    },
+  });
+
+  const ticket_id = stepData['1']?.id;
+  console.log('티켓 아이디: ', ticket_id);
+
+  const handleRegister = async () => {
+    try {
+      setLoading(true);
+      setModalVisible(true);
+
+      saveData(6, {scores, title: searchText});
+
+      const ticket_id = stepData['1']?.id;
+      const requestData = transformStepDataToRequest(stepData);
+
+      const response = await postTicketReview(ticket_id, requestData);
+
+      console.log('완료 되었다: ', response);
+
+      // // 이동
+      // navigation.navigate('PremiumWritePage');
+    } catch (error) {
+      console.error('API Error:', error);
+      Alert.alert('리뷰 등록 중 문제가 발생했습니다. 다시 시도해주세요.');
+    } finally {
+      setModalVisible(false);
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -216,9 +282,10 @@ const PremiumStep6Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
             if (!isButtonDisabled) {
               saveData(6, {scores, title: searchText});
               openModal();
+              handleRegister();
             }
           }}
-          disabled={isButtonDisabled}>
+          disabled={isButtonDisabled || loading}>
           <Text
             style={[
               PremiumWriteStyles.next_button_text,
@@ -226,7 +293,7 @@ const PremiumStep6Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
                 color: isButtonDisabled ? Colors.gray_01 : Colors.gray_12,
               },
             ]}>
-            등록
+            {loading ? '등록 중' : '등록'}
           </Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
@@ -234,6 +301,7 @@ const PremiumStep6Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
       <RegisterReviewModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
+        loading={loading}
       />
     </>
   );

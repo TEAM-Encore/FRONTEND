@@ -7,8 +7,13 @@ import {typography} from '../../styles/typography';
 
 import {PremiumIcon} from '@/assets/icons/premium/PremiumIcon';
 import {timeAgo} from '../../util/timeAgo';
+import {useNavigation} from '@react-navigation/native';
 
 const {subhead03, caption} = typography;
+
+type NavigationProp = {
+  navigate: (screen: 'PremiumOthersPage') => void;
+};
 
 type PostProps = {
   postList: {
@@ -23,6 +28,13 @@ type PostProps = {
 };
 
 const ItemReview: React.FC<PostProps> = ({postList}) => {
+  const navigation = useNavigation<NavigationProp>();
+
+  const handlePremiumPost = () => {
+    navigation.navigate('PremiumOthersPage');
+    console.log('뿅');
+  };
+
   return (
     <FlatList
       data={postList}
@@ -30,7 +42,9 @@ const ItemReview: React.FC<PostProps> = ({postList}) => {
       renderItem={({item, index}) => {
         return (
           <>
-            <TouchableOpacity style={styles.container}>
+            <TouchableOpacity
+              style={styles.container}
+              onPress={handlePremiumPost}>
               <View style={styles.containerRow}>
                 <View style={{flex: 1}}>
                   <Text
@@ -82,6 +96,7 @@ const ItemReview: React.FC<PostProps> = ({postList}) => {
 
 const styles = StyleSheet.create({
   container: {
+    marginHorizontal: 20,
     paddingVertical: 10,
   },
   containerRow: {

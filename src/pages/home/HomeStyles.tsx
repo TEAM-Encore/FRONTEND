@@ -257,6 +257,8 @@ const HomeStyles = StyleSheet.create({
     ...subhead03,
     color: Colors.gray_12,
     marginBottom: 4,
+    overflow: 'hidden',
+    width: '100%',
   },
   textMusicalDateLocation: {
     ...caption,
