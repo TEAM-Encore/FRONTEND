@@ -10,6 +10,7 @@ import {RootStackParamList} from './types';
 import Tabs from './src/components/navigation/Tabs';
 import PremiumWritePage from './src/pages/write/review/PremiumWritePage';
 import PremiumOthersPage from './src/pages/premium/others/PremiumOthersPage';
+import PremiumMyPage from './src/pages/premium/mine/PremiumMyPage';
 import StopReviewModal from './src/components/alertModal/StopReviewModal';
 import WritePage from './src/pages/write/post/WritePage';
 import PostPage from './src/pages/dashboard/post/PostPage';
@@ -291,6 +292,12 @@ export default function App() {
           <Stack.Screen
             name="PremiumOthersPage"
             component={PremiumOthersPage}
+            options={{headerShown: false}}
+          />
+          {/* 자신이 작성한 프리미엄 리뷰 상세 페이지 */}
+          <Stack.Screen
+            name="PremiumMyPage"
+            component={PremiumMyPage}
             options={{headerShown: false}}
           />
 

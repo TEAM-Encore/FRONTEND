@@ -5,6 +5,7 @@ export type RootStackParamList = {
   };
   PremiumWritePage: undefined;
   PremiumOthersPage: undefined;
+  PremiumMyPage: {reviewId: number};
   PostPage: {postId: number};
   ModifyPage: {postId: number};
   SavePage: undefined;
