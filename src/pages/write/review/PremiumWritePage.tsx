@@ -43,7 +43,7 @@ const PremiumWritePage: React.FC<PremiumWritePageProps> = ({navigation}) => {
     return {
       title: stepData['2']?.title || '',
       tags: stepData['2']?.tags || [],
-      reviewDataReq: {
+      review_data_req: {
         view: {
           view_level: parseInt(stepData['3']?.view_level, 10) || 1, // 기본값 1
           view_review: stepData['3']?.view_review || '', // 기본값 ""
