@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',
-    height: 397,
+    maxHeight: 397,
     justifyContent: 'center',
     borderTopStartRadius: 25,
     borderTopEndRadius: 25,
