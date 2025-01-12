@@ -17,6 +17,7 @@ export type RootStackParamList = {
   AddTicketPage: undefined;
   TicketDetailPage: undefined;
   MusicalDetailPage: {data: any};
+  ModifyProfileImg: undefined;
 };
 
 export interface PostData {
