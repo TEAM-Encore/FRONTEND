@@ -12,6 +12,7 @@ module.exports = {
           '@/assets': './src/assets',
           '@/util': './src/util',
           '@/api': './src/api',
+          '@/state': './src/state',
         },
       },
     ],
