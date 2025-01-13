@@ -6,15 +6,23 @@ import HomePage from '@/pages/home/HomePage';
 import PremiumPage from '@/pages/premium/PremiumPage';
 import DashboardPage from '@/pages/dashboard/DashboardPage';
 import TicketBookPage from '@/pages/ticketbook/TicketBookPage';
-import MyPage from '@/pages/MyPage';
+import MyPage from '@/pages/myPage/MyPage';
 
 import {SvgXml} from 'react-native-svg';
 import {TabSvg} from '@/assets/icons/TabSvg';
 import Colors from '@/assets/colors/Colors';
+import {useRoute} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
+import {RootStackParamList} from 'types';
 
-export default function Tabs() {
+type TabsRouteProp = RouteProp<RootStackParamList, 'Tabs'>;
+
+export default function Tabs({route}: {route: TabsRouteProp}) {
   const Tab = createBottomTabNavigator();
-
+  const {
+    frequency = '연 8회 이상',
+    checkedOptions = ['감동적인', '넘버 퀄리티가 높은'],
+  } = route.params || {};
   const tabList = [
     {
       name: '홈',
@@ -42,7 +50,14 @@ export default function Tabs() {
     },
     {
       name: '마이',
-      content: MyPage,
+      // content: MyPage,
+      content: props => (
+        <MyPage
+          {...props}
+          frequency={frequency}
+          checkedOptions={checkedOptions}
+        />
+      ),
       icon: TabSvg.MyPageIcon,
       tabIcon: TabSvg.tabMyPageIcon,
     },

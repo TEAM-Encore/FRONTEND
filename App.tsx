@@ -10,7 +10,7 @@ import {RootStackParamList} from './types';
 import Tabs from './src/components/navigation/Tabs';
 import PremiumWritePage from './src/pages/write/review/PremiumWritePage';
 import PremiumOthersPage from './src/pages/premium/others/PremiumOthersPage';
-import PremiumMyPage from './src/pages/premium/mine/PremiumMyPage';
+// import PremiumMyPage from './src/pages/premium/mine/PremiumMyPage';
 import StopReviewModal from './src/components/alertModal/StopReviewModal';
 import WritePage from './src/pages/write/post/WritePage';
 import PostPage from './src/pages/dashboard/post/PostPage';
@@ -25,6 +25,7 @@ import AddTicketPage from './src/pages/ticketbook/AddTicketPage';
 import TicketDetailPage from './src/pages/ticketbook/TicketDetailPage';
 import {AddTicketProvider} from './src/state/AddTicketContext';
 import MusicalDetailPage from './src/pages/home/musical/MusicalDetailPage';
+import ModifyProfileImg from './src/pages/myPage/ModifyProfileImg';
 
 import {createPost, putPost} from './src/api/post.api';
 import {ensureAsyncStorageDir} from './src/util/ensureAsyncStorageDir';
@@ -290,11 +291,11 @@ export default function App() {
               options={{headerShown: false}}
             />
             {/* 자신이 작성한 프리미엄 리뷰 상세 페이지 */}
-            <Stack.Screen
+            {/* <Stack.Screen
               name="PremiumMyPage"
               component={PremiumMyPage}
               options={{headerShown: false}}
-            />
+            /> */}
             {/* 게시판 작성 페이지*/}
             <Stack.Screen
               name="WritePage"
@@ -394,6 +395,20 @@ export default function App() {
                 headerShown: false,
                 cardStyle: {backgroundColor: '#FBFBFB'},
               }}
+            />
+            {/* 마이페이지: 프로필 수정 페이지 */}
+            <Stack.Screen
+              name="ModifyProfileImg"
+              component={ModifyProfileImg}
+              options={({navigation}) => ({
+                headerStyle: {
+                  height: 123,
+                  backgroundColor: '#FBFBFB',
+                },
+                title: '프로필 수정',
+                headerTitleStyle: {...AppStyles.title},
+                headerLeft: () => <CustomBackButton navigation={navigation} />,
+              })}
             />
           </Stack.Navigator>
         </NavigationContainer>

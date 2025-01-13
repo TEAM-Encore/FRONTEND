@@ -16,7 +16,7 @@ import PremiumWriteStyles from '../PremiumWriteStyles';
 import {SvgXml} from 'react-native-svg';
 import {ReviewWriteIcon} from '@/assets/icons/premium/ReviewWriteIcon';
 import Colors from '@/assets/colors/Colors';
-import {getTicketList} from '@/api/ticketBook.api';
+import {getTicketBookList} from '@/api/ticketBook.api';
 import {useFocusEffect} from '@react-navigation/native';
 
 type ReviewItems = {
@@ -71,7 +71,7 @@ const PremiumStep1Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
 
   const fetchreviewData = async () => {
     try {
-      const response = await getTicketList('NULL');
+      const response = await getTicketBookList('NULL');
       console.log('API 요청 결과값: ', response.data.data);
       setReviewData(response.data.data);
     } catch (error) {
