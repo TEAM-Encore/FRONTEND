@@ -21,6 +21,8 @@ import HomeSearchDefaultPage from './src/pages/search/HomeSearchDefaultPage';
 import HomeBannerPage from './src/pages/home/HomeBannerPage';
 import AddTicketPage from './src/pages/ticketbook/AddTicketPage';
 import TicketDetailPage from './src/pages/ticketbook/TicketDetailPage';
+import LoginPage from './src/pages/login/LoginPage';
+
 import {AddTicketProvider} from './src/state/AddTicketContext';
 
 import {createPost, putPost} from './src/api/post.api';
@@ -218,7 +220,15 @@ export default function App() {
     <SafeAreaProvider>
       <AddTicketProvider>
         <NavigationContainer independent={true}>
-          <Stack.Navigator initialRouteName="Tabs">
+          <Stack.Navigator initialRouteName="LoginPage">
+            <Stack.Screen
+              name="LoginPage"
+              component={LoginPage}
+              options={{
+                headerShown: false,
+                cardStyle: {backgroundColor: '#FBFBFB'},
+              }}
+            />
             <Stack.Screen
               name="Tabs"
               component={props => <Tabs {...props} postData={postData} />}

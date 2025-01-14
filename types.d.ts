@@ -1,5 +1,6 @@
 export type RootStackParamList = {
   Tabs: undefined;
+  LoginPage: undefined;
   WritePage: {
     setPostData: React.Dispatch<React.SetStateAction<PostData | null>>;
   };
