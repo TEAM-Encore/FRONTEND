@@ -1,11 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {
-  SafeAreaView,
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import React from 'react';
+import {SafeAreaView, View, Text, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {LoginIcon} from '@/assets/icons/login/LoginIcon';
@@ -15,6 +9,7 @@ import Colors from '@/assets/colors/Colors';
 type RootStackParamList = {
   PremiumWritePage: undefined;
   PremiumSearchDefaultPage: undefined;
+  SignUpPage: undefined;
 };
 
 export default function LoginPage() {
@@ -34,14 +29,15 @@ export default function LoginPage() {
       </View>
 
       <View style={{paddingHorizontal: 20, alignItems: 'center'}}>
-        <View
+        <TouchableOpacity
+          onPress={() => navigation.navigate('SignUpPage')}
           style={[
             LoginStyles.containerLogin,
             {backgroundColor: '#fff', borderColor: Colors.gray_04},
           ]}>
           <SvgXml xml={LoginIcon.google} style={LoginStyles.iconLogin} />
           <Text style={LoginStyles.textLogin}>Google 로그인</Text>
-        </View>
+        </TouchableOpacity>
         <View
           style={[
             LoginStyles.containerLogin,

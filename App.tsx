@@ -22,6 +22,8 @@ import HomeBannerPage from './src/pages/home/HomeBannerPage';
 import AddTicketPage from './src/pages/ticketbook/AddTicketPage';
 import TicketDetailPage from './src/pages/ticketbook/TicketDetailPage';
 import LoginPage from './src/pages/login/LoginPage';
+import SignUpPage from './src/pages/onboarding/SignUpPage';
+import OnboardingPage from './src/pages/onboarding/OnboardingPage';
 
 import {AddTicketProvider} from './src/state/AddTicketContext';
 
@@ -224,6 +226,22 @@ export default function App() {
             <Stack.Screen
               name="LoginPage"
               component={LoginPage}
+              options={{
+                headerShown: false,
+                cardStyle: {backgroundColor: '#FBFBFB'},
+              }}
+            />
+            <Stack.Screen
+              name="SignUpPage"
+              component={SignUpPage}
+              options={{
+                headerShown: false,
+                cardStyle: {backgroundColor: '#FBFBFB'},
+              }}
+            />
+            <Stack.Screen
+              name="OnboardingPage"
+              component={OnboardingPage}
               options={{
                 headerShown: false,
                 cardStyle: {backgroundColor: '#FBFBFB'},
