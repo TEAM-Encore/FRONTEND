@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {FlatList, View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 
@@ -12,21 +12,31 @@ const {subhead03, caption} = typography;
 
 type PostProps = {
   postList: {
-    id: any;
+    review_id: any;
     nickname: string;
     title: string;
     like_count: number;
     view_count: number;
-    created_at: string;
+    elapsed_time: string;
     star: number;
   }[];
+  onEndReached: () => void;
+  onEndReachedThreshold?: number;
 };
 
-const ItemReview: React.FC<PostProps> = ({postList}) => {
+const ItemReview: React.FC<PostProps> = ({
+  postList,
+  onEndReached,
+  onEndReachedThreshold = 0.5,
+}) => {
+  useEffect(() => {
+    console.log(postList);
+  }, []);
+
   return (
     <FlatList
       data={postList}
-      keyExtractor={item => item.id}
+      keyExtractor={item => item.review_id}
       renderItem={({item, index}) => {
         return (
           <>
@@ -43,7 +53,7 @@ const ItemReview: React.FC<PostProps> = ({postList}) => {
                   <View style={styles.containerRow}>
                     <Text style={styles.textWriterDate}>{item.nickname} ·</Text>
                     <Text style={styles.textWriterDate}>
-                      {timeAgo(item.created_at)}
+                      {timeAgo(item.elapsed_time)}
                     </Text>
                   </View>
 
@@ -76,6 +86,8 @@ const ItemReview: React.FC<PostProps> = ({postList}) => {
           </>
         );
       }}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={onEndReachedThreshold}
     />
   );
 };
