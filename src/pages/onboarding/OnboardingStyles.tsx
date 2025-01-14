@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
 
-const {headline, body01, body02, caption} = typography;
+const {headline, subhead05, body01, body02, caption} = typography;
 
 const OnboardingStyles = StyleSheet.create({
   container: {
@@ -143,6 +143,11 @@ const OnboardingStyles = StyleSheet.create({
   textFrequency: {
     ...body02,
     color: Colors.gray_08,
+  },
+
+  // profileCard
+  textProfileCard: {
+    ...subhead05,
   },
 });
 

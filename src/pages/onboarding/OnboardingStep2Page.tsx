@@ -112,16 +112,33 @@ export default function OnboardingStep2Page({
           </Text>
           <Text style={OnboardingStyles.textSubTitle}>최대 3개 선택 가능</Text>
 
-          <FlatList
-            contentContainerStyle={{
-              alignItems: 'center',
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
               justifyContent: 'center',
-            }}
-            data={data}
-            renderItem={renderItem}
-            keyExtractor={item => item.id.toString()}
-            numColumns={3}
-          />
+            }}>
+            {data.map(item => (
+              <TouchableOpacity
+                key={item.id}
+                style={[
+                  OnboardingStyles.containerKeyword,
+                  selectedKeyword === item.title && {
+                    backgroundColor: Colors.sub_04,
+                  },
+                ]}
+                onPress={() => setSelectedKeyword(item.title)}>
+                <SvgXml xml={item.icon} style={OnboardingStyles.iconKeyword} />
+                <Text
+                  style={[
+                    OnboardingStyles.textKeyword,
+                    selectedKeyword === item.title && {color: Colors.white},
+                  ]}>
+                  {item.title}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </ScrollView>
 
         <View style={OnboardingStyles.containerButton}>

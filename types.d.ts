@@ -3,6 +3,7 @@ export type RootStackParamList = {
   LoginPage: undefined;
   SignUpPage: undefined;
   OnboardingPage: undefined;
+  ProfileCardPage: undefined;
   WritePage: {
     setPostData: React.Dispatch<React.SetStateAction<PostData | null>>;
   };

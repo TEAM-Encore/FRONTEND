@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
 
 import OnboardingStyles from './OnboardingStyles';
 import Colors from '@/assets/colors/Colors';
@@ -17,11 +18,8 @@ type PremiumProp = {
   stepData: any;
 };
 
-type SearchResult = {
-  title: string;
-  musical_id: number;
-  show_times: string[];
-  location: string;
+type RootStackParamList = {
+  ProfileCardPage: undefined;
 };
 
 export default function OnboardingStep3Page({
@@ -30,6 +28,7 @@ export default function OnboardingStep3Page({
   stepData,
 }: PremiumProp) {
   const screenWidth = Dimensions.get('window').width;
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const [selectedFrequency, setSelectedFrequency] = useState(stepData[1] || '');
 
@@ -79,6 +78,7 @@ export default function OnboardingStep3Page({
             onPress={() => {
               saveData(3, selectedFrequency);
               // goToNext(2);
+              navigation.navigate('ProfileCardPage');
             }}
             // disabled={!isNextButtonActive}>
           >
