@@ -46,7 +46,7 @@ const PremiumStep3Page: React.FC<PremiumProp> = ({
   const [searchText, setSearchText] = useState<string>('');
 
   const isButtonDisabled =
-    !selectedId || searchText.trim() === '' || searchText.trim().length < 20;
+    !selectedId || searchText.trim() === '' || searchText.trim().length > 20;
 
   const renderItem: ListRenderItem<ReviewItems> = ({item}) => {
     const isSelected = selectedId === item.id;
@@ -142,7 +142,7 @@ const PremiumStep3Page: React.FC<PremiumProp> = ({
           ]}
           onPress={() => {
             if (!isButtonDisabled) {
-              saveData(3, {tags: selectedId, title: searchText});
+              saveData(3, {view_level: selectedId, view_review: searchText});
               goToNext(4);
             }
           }}

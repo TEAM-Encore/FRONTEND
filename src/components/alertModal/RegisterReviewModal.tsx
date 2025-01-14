@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback} from 'react';
 import {
   View,
   Text,
@@ -7,16 +7,19 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import AlertModalStyle from './AlertModalStyle';
+import {useFocusEffect} from '@react-navigation/native';
 
 // 리뷰 등록 시 뜨는 모달
 type RegisterReviewProps = {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
+  loading: boolean;
 };
 
 const RegisterReviewModal: React.FC<RegisterReviewProps> = ({
   modalVisible,
   setModalVisible,
+  loading,
 }) => {
   const handleTopButton = () => {
     setModalVisible(false);
@@ -25,6 +28,8 @@ const RegisterReviewModal: React.FC<RegisterReviewProps> = ({
   const closeModal = () => {
     setModalVisible(false);
   };
+
+  useFocusEffect(useCallback(() => {}, []));
 
   return (
     <Modal

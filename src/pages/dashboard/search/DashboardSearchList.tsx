@@ -1,5 +1,5 @@
 import React from 'react';
-import ItemPostNoCategory from '@/components/list/ItemPostNoCategory';
+import ItemPostNoCategory from '@/components/homeList/ItemPostNoCategory';
 
 type SearchListProps = {
   postData: any[];

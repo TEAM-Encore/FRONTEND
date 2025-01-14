@@ -64,23 +64,33 @@ const PremiumStep2Page: React.FC<PremiumProp> = ({
   const [selectedId, setSelectedId] = useState<string[]>([]);
   const [searchText, setSearchText] = useState<string>('');
 
-  const handleTagPress = (id: string) => {
-    if (selectedId.includes(id)) {
-      setSelectedId(selectedId.filter(selectedId => selectedId !== id));
-    } else if (selectedId.length < 3) {
-      setSelectedId([...selectedId, id]);
-    } else {
-      Alert.alert('태그는 최대 3개까지만 선택 가능합니다.');
-    }
+  const tagMapping: Record<string, string> = {
+    '1': 'MUSEUM_EXPERT',
+    '2': 'PERFECT_REVIEW',
+    '3': 'REVOLVING_DOOR',
+    '4': 'BEST_VIEW',
+    '5': 'BEST_SOUND',
+    '6': 'BEST_FACILITIES',
+    null: 'NO_SELECT',
   };
 
   const isButtonDisabled =
-    searchText.trim() === '' || searchText.trim().length < 30;
+    searchText.trim() === '' || searchText.trim().length > 30;
 
   const renderItem: ListRenderItem<ReviewItems> = ({item}) => {
     const isSelected = selectedId.includes(item.id);
     const backgroundColor = isSelected ? Colors.sub_05 : Colors.sub_01;
     const textColor = isSelected ? Colors.sub_01 : Colors.sub_05;
+
+    const handleTagPress = (id: string) => {
+      if (selectedId.includes(id)) {
+        setSelectedId(selectedId.filter(selectedId => selectedId !== id));
+      } else if (selectedId.length < 3) {
+        setSelectedId([...selectedId, id]);
+      } else {
+        Alert.alert('태그는 최대 3개까지만 선택 가능합니다.');
+      }
+    };
 
     return (
       <View style={PremiumWriteStyles.tag_external_container}>
@@ -98,6 +108,9 @@ const PremiumStep2Page: React.FC<PremiumProp> = ({
       </View>
     );
   };
+
+  const mappedTags = selectedId.map(id => tagMapping[id] || id);
+  // console.log('매핑된 태그: ', mappedTags);
 
   return (
     <>
@@ -151,7 +164,7 @@ const PremiumStep2Page: React.FC<PremiumProp> = ({
           ]}
           onPress={() => {
             if (!isButtonDisabled) {
-              saveData(2, {tags: selectedId, title: searchText});
+              saveData(2, {tags: mappedTags, title: searchText});
               goToNext(3);
             }
           }}
