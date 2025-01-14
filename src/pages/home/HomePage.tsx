@@ -1,4 +1,4 @@
-import React, {useState, useRef, useMemo} from 'react';
+import React, {useState, useRef, useMemo, useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -21,6 +21,8 @@ import IconNotification from '@/assets/icons/home/IconNotification';
 import IconLike from '@/assets/icons/home/IconLike';
 import IconComment from '@/assets/icons/home/IconComment';
 import ToolTipModal from '@/components/alertModal/ToolTipModal';
+import {getTicketBookList} from '@/api/ticketbook.api';
+import {getPopularPremiumReviews} from '@/api/premium.api';
 
 type HomePageProps = {};
 
@@ -28,6 +30,30 @@ type RootStackParamList = {
   WritePage: undefined;
   HomeSearchDefaultPage: undefined;
   HomeBannerPage: {bannerId: number};
+  TicketDetailPage: {ticket: TicketItem};
+};
+
+type TicketItem = {
+  id: number;
+  musical_title: string;
+  actors: string[];
+  location: string;
+  seat: string;
+  series: string;
+  total_rating: number;
+  viewed_date: string;
+  has_review?: boolean;
+  user_id?: number;
+};
+
+type PopularReviewItem = {
+  review_id: number;
+  title: string;
+  like_data: {
+    like_count_res: {
+      total_like_count: number;
+    };
+  };
 };
 
 const CARD_WIDTH = 290;
@@ -46,6 +72,10 @@ const HomePage: React.FC<HomePageProps> = () => {
     right: 0,
   });
   const [reviewModalVisible, setReviewModalVisible] = useState(true);
+  const [ticketList, setTicketList] = useState<TicketItem | null>(null);
+  const [popularPremiumReviews, setPopularPremiumReviews] = useState<
+    PopularReviewItem[]
+  >([]);
 
   const carouselTicketList = useMemo(
     () => [
@@ -103,12 +133,6 @@ const HomePage: React.FC<HomePageProps> = () => {
       <Image style={{width: 290, height: 170}} source={image} />
     </TouchableOpacity>
   );
-
-  const premiumReviewRanking = [
-    {id: 1, title: '위키드 5회차 관람 후기'},
-    {id: 2, title: '위키드 5회차 관람 후기'},
-    {id: 3, title: '위키드 5회차 관람 후기'},
-  ];
 
   const bestMusicals = [
     {
@@ -222,6 +246,38 @@ const HomePage: React.FC<HomePageProps> = () => {
     setReviewModalVisible(false);
   };
 
+  const fetchTicketList = async () => {
+    try {
+      const response = await getTicketBookList('NULL');
+
+      const sortedData = response.data.data.sort(
+        (a: {viewed_date: string}, b: {viewed_date: string}) =>
+          new Date(b.viewed_date).getTime() - new Date(a.viewed_date).getTime(),
+      );
+
+      setTicketList(sortedData[0]);
+    } catch (error) {
+      console.error('최근 관람한 공연 조회 오류: ', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTicketList();
+  }, []);
+
+  useEffect(() => {
+    const fetchPopularPremiumReviewList = async () => {
+      try {
+        const response = await getPopularPremiumReviews();
+        setPopularPremiumReviews(response.data.data);
+      } catch (error) {
+        console.error('인기 프리미엄 리뷰 조회(홈) 오류: ', error);
+      }
+    };
+
+    fetchPopularPremiumReviewList();
+  }, []);
+
   return (
     <SafeAreaView style={HomeStyles.container}>
       <ScrollView>
@@ -281,7 +337,7 @@ const HomePage: React.FC<HomePageProps> = () => {
           <Text style={HomeStyles.textWriteReview}>리뷰쓰기 {'>'}</Text>
         </View>
 
-        {reviewModalVisible && (
+        {reviewModalVisible && ticketList?.has_review == false && (
           <ToolTipModal
             visible={reviewModalVisible}
             position={reviewModalPosition}
@@ -303,41 +359,67 @@ const HomePage: React.FC<HomePageProps> = () => {
                 resizeMode="cover"
               />
               <View style={HomeStyles.containerTicketText}>
-                <Text style={HomeStyles.textTicketTitle}>위키드</Text>
+                <Text style={HomeStyles.textTicketTitle}>
+                  {ticketList?.musical_title}
+                </Text>
                 <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
                   <SvgXml xml={HomeIcon.season} />
-                  <Text style={HomeStyles.textTicketDateActor}>3연</Text>
+                  <Text style={HomeStyles.textTicketDateActor}>
+                    {ticketList?.series}
+                  </Text>
                 </View>
                 <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
                   <SvgXml xml={HomeIcon.date} />
-                  <Text style={HomeStyles.textTicketDateActor}>2024.06.21</Text>
+                  <Text style={HomeStyles.textTicketDateActor}>
+                    {ticketList?.viewed_date}
+                  </Text>
                 </View>
                 <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
                   <SvgXml xml={HomeIcon.place} />
                   <Text style={HomeStyles.textTicketDateActor}>
-                    세종문화회관 A구역 6열 4번
+                    {ticketList?.location} {ticketList?.seat}
                   </Text>
                 </View>
                 <View style={HomeStyles.containerRow}>
                   <SvgXml xml={HomeIcon.actor} />
                   <Text style={HomeStyles.textTicketDateActor}>
-                    우선영 염지은 하은영 윤혜원
+                    {ticketList?.actors}
                   </Text>
                 </View>
               </View>
             </View>
             <SvgXml style={HomeStyles.ticketLine} xml={HomeIcon.line} />
             <View style={HomeStyles.ticket2}>
-              <View style={{flexDirection: 'row'}}>
-                <SvgXml xml={HomeIcon.star} />
-                <SvgXml xml={HomeIcon.star} />
-                <SvgXml xml={HomeIcon.star} />
-                <SvgXml xml={HomeIcon.star} />
-                <SvgXml xml={HomeIcon.star} />
-              </View>
-              <Text style={HomeStyles.textReview}>
-                아직 남겨주신{'\n'}리뷰가 없어요
-              </Text>
+              {ticketList?.has_review ? (
+                <>
+                  <View style={{flexDirection: 'row'}}>
+                    {Array.from({length: 5}).map((_, index) => (
+                      <SvgXml
+                        key={index}
+                        xml={
+                          index < ticketList.total_rating
+                            ? HomeIcon.fullStar
+                            : HomeIcon.star
+                        }
+                      />
+                    ))}
+                  </View>
+                  <Text style={HomeStyles.textReview}>
+                    총평 {ticketList.total_rating}
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <View style={{flexDirection: 'row'}}>
+                    {Array.from({length: 5}).map((_, index) => (
+                      <SvgXml key={index} xml={HomeIcon.star} />
+                    ))}
+                  </View>
+                  <Text style={HomeStyles.textReview}>
+                    아직 남겨주신{'\n'}리뷰가 없어요
+                  </Text>
+                </>
+              )}
             </View>
           </View>
         </View>
@@ -347,8 +429,10 @@ const HomePage: React.FC<HomePageProps> = () => {
           <Text style={HomeStyles.textWriteReview}>전체보기 {'>'}</Text>
         </View>
         <View style={{alignItems: 'center'}}>
-          {premiumReviewRanking.map((review, index) => (
-            <View key={review.id} style={HomeStyles.containerPremiumReviews}>
+          {popularPremiumReviews.map((review, index) => (
+            <View
+              key={review.review_id}
+              style={HomeStyles.containerPremiumReviews}>
               <View style={HomeStyles.containerRow}>
                 <View
                   style={[
@@ -367,7 +451,9 @@ const HomePage: React.FC<HomePageProps> = () => {
               </View>
               <View style={HomeStyles.containerRow}>
                 <IconLike />
-                <Text style={HomeStyles.textPremiumReviewLike}>40</Text>
+                <Text style={HomeStyles.textPremiumReviewLike}>
+                  {review.like_data.like_count_res.total_like_count}
+                </Text>
               </View>
             </View>
           ))}
