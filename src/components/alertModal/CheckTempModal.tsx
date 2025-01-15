@@ -12,7 +12,7 @@ type CheckTempModalProps = {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
   title: string;
-  subTitle: string;
+  subTitle?: string;
   topButton: string;
   bottomButton: string;
   topButtonAction: () => void;

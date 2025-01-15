@@ -18,17 +18,26 @@ import PremiumWriteStyles from '../PremiumWriteStyles';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../../../styles/typography';
 import {postTicketReview} from '@/api/review.api';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from 'types';
 
 type PremiumProp = {
   goToNext: any;
   saveData: any;
   stepData: any;
+  reviewId: number;
 };
+
+type NavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'PremiumMyPage'
+>;
 
 const PremiumStep6Page: React.FC<PremiumProp> = ({
   goToNext,
   saveData,
   stepData,
+  reviewId,
 }) => {
   const categories = [
     '넘버',
@@ -104,12 +113,12 @@ const PremiumStep6Page: React.FC<PremiumProp> = ({
     searchText.trim() === '' || searchText.trim().length < 20;
 
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp>();
 
   const transformStepDataToRequest = (stepData: any) => ({
     title: stepData['2']?.title || '',
     tags: stepData['2']?.tags || [],
-    reviewDataReq: {
+    review_data_req: {
       view: {
         view_level: parseInt(stepData['3']?.view_level, 10) || 1,
         view_review: stepData['3']?.view_review || '',
@@ -145,16 +154,21 @@ const PremiumStep6Page: React.FC<PremiumProp> = ({
       saveData(6, {scores, title: searchText});
 
       const ticket_id = stepData['1']?.id;
+      console.log('Ticket ID:', ticket_id);
+
       const requestData = transformStepDataToRequest(stepData);
+      console.log('Request Data:', JSON.stringify(requestData, null, 2));
 
       const response = await postTicketReview(ticket_id, requestData);
 
-      console.log('완료 되었다: ', response);
+      console.log('완료 되었다: ', response.data.data);
 
-      // // 이동
-      // navigation.navigate('PremiumWritePage');
+      const reviewId = response.data.data.review_id;
+
+      // 이동
+      navigation.navigate('PremiumMyPage', {reviewId});
     } catch (error) {
-      console.error('API Error:', error);
+      console.error('API Error:', error.response?.data || error.message);
       Alert.alert('리뷰 등록 중 문제가 발생했습니다. 다시 시도해주세요.');
     } finally {
       setModalVisible(false);

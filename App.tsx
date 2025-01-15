@@ -10,7 +10,7 @@ import {RootStackParamList} from './types';
 import Tabs from './src/components/navigation/Tabs';
 import PremiumWritePage from './src/pages/write/review/PremiumWritePage';
 import PremiumOthersPage from './src/pages/premium/others/PremiumOthersPage';
-// import PremiumMyPage from './src/pages/premium/mine/PremiumMyPage';
+import PremiumMyPage from './src/pages/premium/mine/PremiumMyPage';
 import StopReviewModal from './src/components/alertModal/StopReviewModal';
 import WritePage from './src/pages/write/post/WritePage';
 import PostPage from './src/pages/dashboard/post/PostPage';
@@ -277,12 +277,32 @@ export default function App() {
                 },
                 title: '프리미엄 리뷰 작성',
                 headerTitleStyle: {...AppStyles.title},
-                headerLeft: () => <CustomBackButton navigation={navigation} />,
+                headerLeft: () => (
+                  <CustomPreviousButton
+                    goToPrevious={() => {
+                      const premiumWritePageInstance = navigation
+                        .getState()
+                        .routes.find(
+                          route => route.name === 'PremiumWritePage',
+                        );
+                      if (premiumWritePageInstance?.params?.goToPrevious) {
+                        premiumWritePageInstance.params.goToPrevious();
+                      } else {
+                        navigation.goBack();
+                      }
+                    }}
+                  />
+                ),
                 headerRight: () => (
-                  <CustomCloseButton navigation={navigation} />
+                  <CustomCloseButton setModalVisible={setModalVisible} />
                 ),
               })}>
-              {props => <PremiumWritePage />}
+              {props => (
+                <PremiumWritePage
+                  {...props}
+                  goToPrevious={props.route.params?.goToPrevious}
+                />
+              )}
             </Stack.Screen>
             {/* 다른 사람 프리미엄 리뷰 상세 페이지*/}
             <Stack.Screen
@@ -291,11 +311,11 @@ export default function App() {
               options={{headerShown: false}}
             />
             {/* 자신이 작성한 프리미엄 리뷰 상세 페이지 */}
-            {/* <Stack.Screen
+            <Stack.Screen
               name="PremiumMyPage"
               component={PremiumMyPage}
               options={{headerShown: false}}
-            /> */}
+            />
             {/* 게시판 작성 페이지*/}
             <Stack.Screen
               name="WritePage"
@@ -411,6 +431,10 @@ export default function App() {
               })}
             />
           </Stack.Navigator>
+          <StopReviewModal
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+          />
         </NavigationContainer>
       </AddTicketProvider>
     </SafeAreaProvider>

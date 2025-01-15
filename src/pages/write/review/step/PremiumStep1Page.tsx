@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -25,38 +25,8 @@ type ReviewItems = {
   location: string;
   seat: string;
   actors: string;
+  ticket_image_url: string;
 };
-
-// const data: ReviewItems[] = [
-//   {
-//     id: '1',
-//     title: '비더슈탄트',
-//     time: '2024.06.21',
-//     seat: '샤롯데 시어터 B구역 6열 4번',
-//     actor: '우선영 염지은 하은영 윤혜원',
-//   },
-//   {
-//     id: '2',
-//     title: '위키드 (5회차)',
-//     time: '2024.06.21',
-//     seat: '샤롯데 시어터 B구역 6열 4번',
-//     actor: '우선영 염지은 하은영 윤혜원',
-//   },
-//   {
-//     id: '3',
-//     title: '위키드 (4회차)',
-//     time: '2024.06.21',
-//     seat: '샤롯데 시어터 B구역 6열 4번',
-//     actor: '우선영 염지은 하은영 윤혜원',
-//   },
-//   {
-//     id: '4',
-//     title: '위키드 (3회차)',
-//     time: '2024.06.21',
-//     seat: '샤롯데 시어터 B구역 6열 4번',
-//     actor: '우선영 염지은 하은영 윤혜원',
-//   },
-// ];
 
 type PremiumProp = {
   goToNext: any;
@@ -124,8 +94,12 @@ const PremiumStep1Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
             ]}>
             <View style={{flexDirection: 'row'}}>
               <Image
-                source={require('@/assets/images/premium/review_image.png')}
-                style={PremiumWriteStyles.list_image}
+                source={{uri: item.ticket_image_url}}
+                style={{
+                  ...PremiumWriteStyles.list_image,
+                  width: 66,
+                  height: 92,
+                }}
               />
               <View style={PremiumWriteStyles.icons}>
                 <Text
