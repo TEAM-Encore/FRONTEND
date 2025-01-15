@@ -309,6 +309,43 @@ const HomeStyles = StyleSheet.create({
     ...subhead02,
     color: Colors.gray_01,
   },
+  resultContainer: {
+    flexDirection: 'row',
+    marginTop: 21,
+    marginHorizontal: 22,
+    justifyContent: 'space-between',
+  },
+  resultText: {
+    ...typography.subhead03,
+    color: Colors.wireframe_950,
+  },
+  chip: {
+    width: 53,
+    height: 24,
+    backgroundColor: Colors.sub_05,
+    borderRadius: 4.27,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  chipText: {
+    color: Colors.gray_01,
+    ...typography.subhead01,
+  },
+  musicalSearchTitle: {
+    ...typography.subhead03,
+    color: Colors.gray_12,
+    marginBottom: 2,
+  },
+  seriesSearchText: {
+    ...typography.caption,
+    color: Colors.gray_08,
+  },
+  line2: {
+    height: 4,
+    backgroundColor: Colors.gray_03,
+    marginVertical: 16,
+  },
 });
 
 export default HomeStyles;

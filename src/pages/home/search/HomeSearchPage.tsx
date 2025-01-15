@@ -13,6 +13,8 @@ import DashboardStyles from '@/pages/dashboard/DashboardStyles';
 import {SearchIcon} from '@/assets/icons/search/SearchIcon';
 import {useFocusEffect} from '@react-navigation/native';
 import DashboardSearchScreen from '@/pages/dashboard/search/DashboardSearchScreen';
+import MusicalSearchScreen from './MusicalSearchScreen';
+import PremiumSearchScreen from './PremiumSearchScreen';
 import {SearchPageProps} from 'types';
 
 const HomeSearchPage: React.FC<SearchPageProps> = ({route, navigation}) => {
@@ -25,6 +27,7 @@ const HomeSearchPage: React.FC<SearchPageProps> = ({route, navigation}) => {
       if (text) {
         setSearchText(text);
       }
+      console.log('검색어: ', text);
     }, [text]),
   );
 
@@ -33,11 +36,11 @@ const HomeSearchPage: React.FC<SearchPageProps> = ({route, navigation}) => {
       case '통합':
         return <DashboardSearchScreen postData={postData} />;
       case '공연 정보':
-        return null;
+        return <MusicalSearchScreen postData={postData} text={text} />;
       case '게시판':
         return <DashboardSearchScreen postData={postData} />;
       case '프리미엄':
-        return null;
+        return <PremiumSearchScreen postData={postData} text={text} />;
       default:
         return <DashboardSearchScreen postData={postData} />;
     }
