@@ -44,6 +44,7 @@ const PremiumMyPage: React.FC<Props> = ({route}) => {
     null,
   );
   const iconRef = useRef<View>(null);
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
   //   const fetchReview = async () => {
   //     try {
@@ -58,6 +59,7 @@ const PremiumMyPage: React.FC<Props> = ({route}) => {
 
   const fetchReview = async () => {
     try {
+      setIsLoading(true); // 로딩 시작
       const response = await getTicketReview(reviewId);
       console.log('Response Data:', response.data.data);
       setReviewData(response.data.data);
@@ -76,6 +78,8 @@ const PremiumMyPage: React.FC<Props> = ({route}) => {
         console.error('Error Message:', error.message);
         Alert.alert('오류', '예상치 못한 오류가 발생했습니다.');
       }
+    } finally {
+      setIsLoading(false); // 로딩 종료
     }
   };
 
@@ -151,54 +155,73 @@ const PremiumMyPage: React.FC<Props> = ({route}) => {
     );
   };
 
+  // return (
+  //   // <SafeAreaView style={PremiumMyStyles.container}>
+  //   //   <FlatList
+  //   //     data={reviewData}
+  //   //     keyExtractor={item => item.reviewId.toString()} // reviewId 사용
+  //   //     renderItem={renderItem}
+  //   //     ListHeaderComponent={
+  //   //       <>
+  //   //         {/* 헤더 컴포넌트 */}
+  //   //         <View style={PremiumMyStyles.containerHeader}>
+  //   //           <TouchableOpacity onPress={() => handleGoBack()}>
+  //   //             <SvgXml xml={PostIcon.arrowLeft} />
+  //   //           </TouchableOpacity>
+  //   //           <View style={PremiumMyStyles.containerRow}>
+  //   //             <TouchableOpacity>
+  //   //               <SvgXml style={{marginRight: 11}} xml={PostIcon.upload} />
+  //   //             </TouchableOpacity>
+  //   //             <TouchableOpacity onPress={handleIconPress}>
+  //   //               <View ref={iconRef}>
+  //   //                 <SvgXml xml={PostIcon.moreVertical} />
+  //   //               </View>
+  //   //             </TouchableOpacity>
+  //   //             {/* {modalPosition && (
+  //   //               <ModalModifyDelete
+  //   //                 modalVisible={modalVisible}
+  //   //                 setModalVisible={setModalVisible}
+  //   //                 position={modalPosition}
+  //   //                 postId={reviewId}
+  //   //                 commentId={null}
+  //   //                 onNavigation={navigation}
+  //   //               />
+  //   //             )} */}
+  //   //           </View>
+  //   //         </View>
+  //   //       </>
+  //   //     }
+  //   //     ListEmptyComponent={<Text>리뷰가 없습니다.</Text>}
+  //   //   />
+  //   // </SafeAreaView>
+  //   <SafeAreaView style={PremiumMyStyles.container}>
+  //     <FlatList
+  //       data={reviewData}
+  //       keyExtractor={item =>
+  //         item?.reviewId ? item.reviewId.toString() : Math.random().toString()
+  //       }
+  //       renderItem={renderItem}
+  //       ListEmptyComponent={<Text>리뷰가 없습니다.</Text>}
+  //     />
+  //   </SafeAreaView>
+  // );
   return (
-    // <SafeAreaView style={PremiumMyStyles.container}>
-    //   <FlatList
-    //     data={reviewData}
-    //     keyExtractor={item => item.reviewId.toString()} // reviewId 사용
-    //     renderItem={renderItem}
-    //     ListHeaderComponent={
-    //       <>
-    //         {/* 헤더 컴포넌트 */}
-    //         <View style={PremiumMyStyles.containerHeader}>
-    //           <TouchableOpacity onPress={() => handleGoBack()}>
-    //             <SvgXml xml={PostIcon.arrowLeft} />
-    //           </TouchableOpacity>
-    //           <View style={PremiumMyStyles.containerRow}>
-    //             <TouchableOpacity>
-    //               <SvgXml style={{marginRight: 11}} xml={PostIcon.upload} />
-    //             </TouchableOpacity>
-    //             <TouchableOpacity onPress={handleIconPress}>
-    //               <View ref={iconRef}>
-    //                 <SvgXml xml={PostIcon.moreVertical} />
-    //               </View>
-    //             </TouchableOpacity>
-    //             {/* {modalPosition && (
-    //               <ModalModifyDelete
-    //                 modalVisible={modalVisible}
-    //                 setModalVisible={setModalVisible}
-    //                 position={modalPosition}
-    //                 postId={reviewId}
-    //                 commentId={null}
-    //                 onNavigation={navigation}
-    //               />
-    //             )} */}
-    //           </View>
-    //         </View>
-    //       </>
-    //     }
-    //     ListEmptyComponent={<Text>리뷰가 없습니다.</Text>}
-    //   />
-    // </SafeAreaView>
     <SafeAreaView style={PremiumMyStyles.container}>
-      <FlatList
-        data={reviewData}
-        keyExtractor={item =>
-          item?.reviewId ? item.reviewId.toString() : Math.random().toString()
-        }
-        renderItem={renderItem}
-        ListEmptyComponent={<Text>리뷰가 없습니다.</Text>}
-      />
+      {isLoading ? (
+        <View>
+          <ActivityIndicator size="large" />
+          <Text>로딩 중...</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={reviewData}
+          keyExtractor={item =>
+            item?.reviewId ? item.reviewId.toString() : Math.random().toString()
+          }
+          renderItem={renderItem}
+          ListEmptyComponent={<Text>리뷰가 없습니다.</Text>}
+        />
+      )}
     </SafeAreaView>
   );
 };
