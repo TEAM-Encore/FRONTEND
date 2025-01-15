@@ -15,7 +15,7 @@ import AddTicketStyles from './AddTicketStyles';
 import Colors from '@/assets/colors/Colors';
 import {useAddTicket} from '@/state/AddTicketContext';
 import {PostPresignedUrl} from '@/api/image.api';
-import {createTicket} from '@/api/ticketbook.api';
+import {createTicket} from '@/api/ticketBook.api';
 
 import {TicketBookIcon} from '@/assets/icons/ticketbook/TicketBookIcon';
 
