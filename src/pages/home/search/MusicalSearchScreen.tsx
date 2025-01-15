@@ -1,5 +1,12 @@
 import React, {useState, useCallback} from 'react';
-import {View, Text, TouchableOpacity, Alert, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  FlatList,
+  Image,
+} from 'react-native';
 import HomeStyles from '../HomeStyles';
 import {getSearchMusical} from '@/api/musical.api';
 import {useFocusEffect} from '@react-navigation/native';
@@ -32,15 +39,26 @@ const MusicalSearchScreen: React.FC<SearchScreenProps> = ({postData, text}) => {
     }, [text]),
   );
 
-  const renderItem = ({item}: {item: {title: string; series: number}}) => (
-    <View>
-      <View style={HomeStyles.chip}>
-        <Text style={HomeStyles.chipText}>NOW</Text>
+  const renderItem = ({
+    item,
+  }: {
+    item: {title: string; series: number; image_url: string};
+  }) => (
+    <View style={HomeStyles.containerRow}>
+      <View>
+        <View style={HomeStyles.chip}>
+          <Text style={HomeStyles.chipText}>NOW</Text>
+        </View>
+        <Text style={HomeStyles.musicalSearchTitle}>{item.title}</Text>
+        <Text style={HomeStyles.seriesSearchText}>
+          {mapSeriesToText(item.series)}
+        </Text>
       </View>
-      <Text style={HomeStyles.musicalSearchTitle}>{item.title}</Text>
-      <Text style={HomeStyles.seriesSearchText}>
-        {mapSeriesToText(item.series)}
-      </Text>
+
+      <Image
+        source={{uri: item.image_url}}
+        style={HomeStyles.searchMusicalImage}
+      />
     </View>
   );
 

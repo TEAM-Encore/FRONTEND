@@ -346,6 +346,12 @@ const HomeStyles = StyleSheet.create({
     backgroundColor: Colors.gray_03,
     marginVertical: 16,
   },
+  searchMusicalImage: {
+    width: 84,
+    height: 92,
+    borderRadius: 9,
+    marginLeft: 'auto',
+  },
 });
 
 export default HomeStyles;
