@@ -124,7 +124,7 @@ const ItemPostNoCategory: React.FC<PostProps> = ({postList}) => {
             {index < postList.length - 1 ? (
               <View style={styles.line2} />
             ) : (
-              <View style={{marginBottom: 16}} />
+              <View style={styles.line2} />
             )}
           </>
         );

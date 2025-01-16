@@ -23,7 +23,7 @@ const DashboardSearchScreen: React.FC<SearchScreenProps> = ({postData}) => {
   return (
     <View>
       <View style={SearchStyles.resultContainer}>
-        <Text style={SearchStyles.resultText}>검색 결과</Text>
+        <Text style={SearchStyles.resultText}>게시판</Text>
         <View style={SearchStyles.containerRow}>
           <TouchableOpacity onPress={() => handlePress('최신순')}>
             <Text
