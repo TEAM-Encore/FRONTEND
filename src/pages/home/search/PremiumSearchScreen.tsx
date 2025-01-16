@@ -3,6 +3,8 @@ import {View, Text, TouchableOpacity, Alert, FlatList} from 'react-native';
 import HomeStyles from '../HomeStyles';
 import {getSearchMusical} from '@/api/musical.api';
 import {useFocusEffect} from '@react-navigation/native';
+import {getTicketReviewList} from '@/api/review.api';
+import ItemSearchReview from '@/components/premium/ItemSearchReview';
 
 type SearchScreenProps = {
   postData: any;
@@ -10,16 +12,24 @@ type SearchScreenProps = {
 };
 
 const PremiumSearchScreen: React.FC<SearchScreenProps> = ({postData, text}) => {
-  //   console.log('Musical Search Screen에 도달한 데이터: ', postData);
   console.log('PremiumSearchScreen에 도달한 검색어: ', text);
 
   const [data, setData] = useState();
 
-  const fetchMusicalSearch = async () => {
+  const fetchReviewSearch = async (text: string) => {
+    if (text.trim().length === 0) return;
     try {
-      const response = await getSearchMusical(text);
-      console.log(response.data.data);
-      setData(response.data.data);
+      const response = await getTicketReviewList(
+        100,
+        'createdat',
+        undefined,
+        undefined,
+        text,
+      );
+      const reviewData = response.data.data.content;
+
+      console.log('프리미엄 리뷰 검색 결과: ', reviewData);
+      setData(reviewData);
     } catch (error) {
       console.log('error: ', error);
       Alert.alert('프리미엄 리뷰 검색 중에 문제가 발생했습니다.');
@@ -28,46 +38,38 @@ const PremiumSearchScreen: React.FC<SearchScreenProps> = ({postData, text}) => {
 
   useFocusEffect(
     useCallback(() => {
-      fetchMusicalSearch();
+      fetchReviewSearch(text);
     }, [text]),
   );
 
-  const renderItem = ({item}: {item: {title: string; series: number}}) => (
-    <View>
-      <View style={HomeStyles.chip}>
-        <Text style={HomeStyles.chipText}>NOW</Text>
-      </View>
-      <Text style={HomeStyles.musicalSearchTitle}>{item.title}</Text>
-      <Text style={HomeStyles.seriesSearchText}>
-        {mapSeriesToText(item.series)}
-      </Text>
-    </View>
-  );
+  const renderItem = ({
+    item,
+  }: {
+    item: {
+      elapsed_time: string;
+      like_count: number;
+      nickname: string;
+      title: string;
+      series: number;
+      rating: number;
+      total_rating: number;
+      view_count: number;
+      user_id: number;
+    };
+  }) => <ItemSearchReview postList={[item]} />;
 
-  const mapSeriesToText = (series: number): string => {
-    switch (series) {
-      case 1:
-        return '초연';
-      case 2:
-        return '재연';
-      case 3:
-        return '3연';
-      default:
-        return `${series}연`;
-    }
-  };
   return (
     <View>
       <View style={HomeStyles.resultContainer}>
         <Text style={HomeStyles.resultText}>프리미엄</Text>
       </View>
-      <View style={{marginTop: 19, marginHorizontal: 20}}>
+      <View style={{marginTop: 19}}>
         <FlatList
           data={data}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           ListEmptyComponent={
-            <Text style={{textAlign: 'center', marginTop: 20}}>
+            <Text style={{textAlign: 'center', marginVertical: 20}}>
               검색 결과가 없습니다.
             </Text>
           }

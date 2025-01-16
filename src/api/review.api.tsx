@@ -7,3 +7,23 @@ export const postTicketReview = (ticket_id: number, requestData: any) => {
 export const getTicketReview = (review_id: number) => {
   return httpApi.get(`/api/v1/review/${review_id}`);
 };
+
+// 프리미엄 리뷰 리스트 조회
+export const getTicketReviewList = (
+  size: number,
+  sort: string,
+  cursor?: number,
+  tag?: string,
+  search_word?: string,
+) => {
+  const requestParams = {
+    size,
+    sort,
+    cursor,
+    tag,
+    search_word,
+  };
+  return httpApi.get(`/api/v1/review/list`, {
+    params: requestParams,
+  });
+};
