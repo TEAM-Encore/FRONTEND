@@ -1,16 +1,18 @@
-import React from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {
   SafeAreaView,
   FlatList,
   View,
   Text,
   TouchableOpacity,
+  Image,
+  Alert,
 } from 'react-native';
 import MyPageStyles from './MyPageStyles';
 import {MyPageIcon} from '@/assets/icons/myPage/MyPageIcon';
 import {SvgXml} from 'react-native-svg';
-import {useNavigation} from '@react-navigation/native';
-import {useRoute} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {getMyInfo} from '@/api/users.api';
 
 type NavigationProp = {
   navigate: (screen: 'ModifyProfileImg') => void;
@@ -18,11 +20,43 @@ type NavigationProp = {
 
 export default function MyPage() {
   const navigation = useNavigation<NavigationProp>();
-  const route = useRoute();
-  const {
-    frequency = '연 8회 이상',
-    checkedOptions = ['감동적인', '넘버 퀄리티가 높은'],
-  } = route.params || {};
+  const [userData, setUserData] = useState<{
+    point: number;
+    nickname: string;
+    num_of_subscriber: number;
+    num_of_write_post: number;
+    preferred_keywords: [];
+    viewing_frequency: string;
+    email: string;
+  }>({
+    point: 0,
+    nickname: '',
+    num_of_subscriber: 0,
+    num_of_write_post: 0,
+    preferred_keywords: [],
+    viewing_frequency: '',
+    email: '',
+  });
+
+  const fetchMyInfo = async () => {
+    try {
+      const response = await getMyInfo();
+      console.log('내 정보 조회: ', response.data.data);
+      setUserData(response.data.data);
+    } catch (error) {
+      Alert.alert('내 정보 조회 중 오류가 발생했습니다.');
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchMyInfo();
+    }, []),
+  );
+
+  useEffect(() => {
+    console.log('Updated userData:', userData);
+  }, [userData]);
 
   const renderHeader = () => (
     <>
@@ -33,7 +67,7 @@ export default function MyPage() {
             <TouchableOpacity>
               <View style={MyPageStyles.coinContainer}>
                 <SvgXml xml={MyPageIcon.coinIcon} />
-                <Text style={MyPageStyles.coinText}>50</Text>
+                <Text style={MyPageStyles.coinText}>{userData.point}</Text>
               </View>
             </TouchableOpacity>
 
@@ -56,20 +90,24 @@ export default function MyPage() {
             <View style={MyPageStyles.containerHeader}>
               <View style={MyPageStyles.rectContainer}>
                 <SvgXml xml={MyPageIcon.rectangle1} />
-                <SvgXml
-                  xml={MyPageIcon.profile}
-                  style={MyPageStyles.overlayContainer}
+                <Image
+                  source={require('@/assets/images/myPage/profile.png')}
+                  style={MyPageStyles.profileImg}
                 />
                 <View style={MyPageStyles.overlayText}>
-                  <Text style={MyPageStyles.nickname}>뮤사랑</Text>
+                  <Text style={MyPageStyles.nickname}>{userData.nickname}</Text>
                   <SvgXml
                     xml={MyPageIcon.profileCheck}
                     style={{top: 5, left: 5.67}}
                   />
                 </View>
                 <View style={MyPageStyles.overlaySubText}>
-                  <Text style={MyPageStyles.infoText}>구독자 140명 •</Text>
-                  <Text style={MyPageStyles.infoText}>작성글 98개</Text>
+                  <Text style={MyPageStyles.infoText}>
+                    구독자 {userData.num_of_subscriber}명 •
+                  </Text>
+                  <Text style={MyPageStyles.infoText}>
+                    작성글 {userData.num_of_write_post}개
+                  </Text>
                 </View>
               </View>
               <View style={MyPageStyles.userInfoContainer}>
@@ -83,13 +121,19 @@ export default function MyPage() {
                     marginHorizontal: 20,
                     marginTop: 8,
                   }}>
-                  {checkedOptions.map(option => (
-                    <View
-                      key={option}
-                      style={{...MyPageStyles.chipContainer, marginRight: 4}}>
-                      <Text>{option}</Text>
-                    </View>
-                  ))}
+                  {userData.preferred_keywords.length > 0 ? (
+                    userData.preferred_keywords.map(option => (
+                      <View
+                        key={option}
+                        style={{...MyPageStyles.chipContainer, marginRight: 4}}>
+                        <Text>{option}</Text>
+                      </View>
+                    ))
+                  ) : (
+                    <Text style={{marginTop: 10, color: 'gray'}}>
+                      아직 선택된 키워드가 없습니다
+                    </Text>
+                  )}
                 </View>
 
                 <View style={{...MyPageStyles.containerRow, marginTop: 24}}>
@@ -105,7 +149,7 @@ export default function MyPage() {
                     marginTop: 8,
                   }}>
                   <View style={MyPageStyles.chipContainer}>
-                    <Text>{frequency}</Text>
+                    <Text>{userData.viewing_frequency}</Text>
                   </View>
                 </View>
               </View>
@@ -123,7 +167,7 @@ export default function MyPage() {
                     marginTop: 17,
                     paddingLeft: 157,
                   }}>
-                  musiclove@gmail.com
+                  {userData.email}
                 </Text>
               </View>
               <TouchableOpacity

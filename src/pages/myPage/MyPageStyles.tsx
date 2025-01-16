@@ -40,6 +40,13 @@ const MyPageStyles = StyleSheet.create({
   rectContainer: {
     position: 'relative',
   },
+  profileImg: {
+    width: 70,
+    height: 70,
+    position: 'absolute',
+    top: 22,
+    left: 20,
+  },
   overlayContainer: {
     position: 'absolute',
     top: 22,
