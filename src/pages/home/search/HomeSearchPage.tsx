@@ -15,6 +15,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import DashboardSearchScreen from '@/pages/dashboard/search/DashboardSearchScreen';
 import MusicalSearchScreen from './MusicalSearchScreen';
 import PremiumSearchScreen from './PremiumSearchScreen';
+import CombinedSearchScreen from './CombinedSearchScreen';
 import {SearchPageProps} from 'types';
 
 const HomeSearchPage: React.FC<SearchPageProps> = ({route, navigation}) => {
@@ -34,7 +35,7 @@ const HomeSearchPage: React.FC<SearchPageProps> = ({route, navigation}) => {
   const renderScreen = () => {
     switch (selectedTab) {
       case '통합':
-        return <DashboardSearchScreen postData={postData} />;
+        return <CombinedSearchScreen postData={postData} text={text} />;
       case '공연 정보':
         return <MusicalSearchScreen postData={postData} text={text} />;
       case '게시판':
