@@ -85,7 +85,7 @@ const MusicalSearchScreen: React.FC<SearchScreenProps> = ({postData, text}) => {
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           ListEmptyComponent={
-            <Text style={{textAlign: 'center', marginTop: 20}}>
+            <Text style={{textAlign: 'center', marginVertical: 20}}>
               검색 결과가 없습니다.
             </Text>
           }

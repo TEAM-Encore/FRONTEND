@@ -344,7 +344,6 @@ const HomeStyles = StyleSheet.create({
   line2: {
     height: 4,
     backgroundColor: Colors.gray_03,
-    marginVertical: 16,
   },
   searchMusicalImage: {
     width: 84,
