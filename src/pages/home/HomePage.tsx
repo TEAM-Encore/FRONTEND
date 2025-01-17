@@ -624,6 +624,9 @@ const HomePage: React.FC<HomePageProps> = () => {
           <Text style={HomeStyles.textTitle}>개봉 예정 뮤지컬</Text>
         </View>
         <FlatList
+          keyExtractor={(item, index) =>
+            item.id?.toString() || index.toString()
+          }
           style={{marginHorizontal: 12.5, marginBottom: 37}}
           ref={flatListRef}
           data={releaseMusicalInfo}
