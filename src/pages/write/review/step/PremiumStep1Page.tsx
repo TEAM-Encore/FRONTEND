@@ -155,6 +155,10 @@ const PremiumStep1Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
             />
           </View>
         </ScrollView>
+        <SvgXml
+          xml={ReviewWriteIcon.fade}
+          style={PremiumWriteStyles.fadeLayer}
+        />
       </SafeAreaView>
 
       <View style={PremiumWriteStyles.white} />
