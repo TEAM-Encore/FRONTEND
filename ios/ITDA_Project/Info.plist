@@ -24,8 +24,6 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	
-	<!-- App Transport Security 설정 -->
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -43,7 +41,6 @@
 			</dict>
 		</dict>
 	</dict>
-
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your permission to access location.</string>
 	<key>UILaunchStoryboardName</key>
@@ -72,7 +69,6 @@
 		<string>Pretendard-SemiBold.otf</string>
 		<string>Pretendard-Thin.otf</string>
 	</array>
-	<!--카메라 및 갤러리 사용 권한 추가-->
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your photo gallery</string>
 	<key>NSCameraUsageDescription</key>
@@ -81,7 +77,6 @@
 	<string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use your microphone (for videos)</string>
-
 	<key>NSFileProtectionKey</key>
 	<string>NSFileProtectionNone</string>
 </dict>
