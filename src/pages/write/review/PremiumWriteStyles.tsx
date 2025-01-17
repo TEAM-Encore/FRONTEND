@@ -35,6 +35,7 @@ const PremiumWriteStyles = StyleSheet.create({
     marginHorizontal: 16,
     marginVertical: 14,
     resizeMode: 'contain',
+    borderRadius: 4.79,
   },
   list_yellow: {
     width: 335,
