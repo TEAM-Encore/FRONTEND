@@ -1,4 +1,4 @@
-import React, {useRef, useMemo} from 'react';
+import React, {useRef, useMemo, useState} from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   Dimensions,
   ListRenderItem,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 
 import Colors from '@/assets/colors/Colors';
@@ -20,6 +21,10 @@ const offset = cardSize.width + 10;
 type CarouselItem = {
   id: string;
   tag: string;
+};
+
+type TagsProps = {
+  onTagSelect: (tag: string) => void;
 };
 
 const data: CarouselItem[] = [
@@ -49,18 +54,32 @@ const data: CarouselItem[] = [
   },
 ];
 
-const Tags: React.FC = () => {
+const Tags: React.FC<TagsProps> = ({onTagSelect}) => {
   const flatListRef = useRef<FlatList<CarouselItem>>(null);
+  const [selectedTag, setSelectedTag] = useState<string | null>('전체보기');
 
   const snapToOffsets = useMemo(
     () => Array.from(Array(data.length)).map((_, index) => index * offset),
     [data],
   );
 
+  const handleTagSelect = (tag: string) => {
+    setSelectedTag(tag);
+    onTagSelect(tag);
+  };
+
   const renderItem: ListRenderItem<CarouselItem> = ({item}) => (
-    <View style={styles.container}>
-      <Text style={styles.text}>#{item.tag}</Text>
-    </View>
+    <TouchableOpacity
+      style={[
+        styles.container,
+        selectedTag === item.tag && styles.selectedContainer,
+      ]}
+      onPress={() => handleTagSelect(item.tag)}>
+      <Text
+        style={[styles.text, selectedTag === item.tag && styles.selectedText]}>
+        #{item.tag}
+      </Text>
+    </TouchableOpacity>
   );
 
   return (
@@ -90,9 +109,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  selectedContainer: {
+    backgroundColor: Colors.sub_05,
+  },
   text: {
     ...subhead02,
     color: Colors.sub_05,
+  },
+  selectedText: {
+    color: Colors.sub_01,
   },
 });
 export default Tags;

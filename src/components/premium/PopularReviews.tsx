@@ -1,4 +1,4 @@
-import React, {useRef, useMemo} from 'react';
+import React, {useRef, useMemo, useEffect} from 'react';
 import {
   View,
   Text,
@@ -22,96 +22,41 @@ const windowWidth = Dimensions.get('window').width;
 const cardSize = {width: 225, height: 208};
 const offset = cardSize.width + 10;
 
-type CarouselItem = {
-  id: string;
-  profile: any;
-  nickname: string;
-  title: string;
-  content: string;
-  place: string;
-  actor: string;
-  color: string;
-  iconColor: string;
-  likeCount: number;
-};
+const PopularReviews: React.FC<{popularReviews: any[]}> = ({
+  popularReviews,
+}) => {
+  const flatListRef = useRef<FlatList<any>>(null);
 
-const data: CarouselItem[] = [
-  {
-    id: '1',
-    profile: require('@/assets/images/board/commentFace.png'),
-    nickname: '뮤사랑',
-    title: '위키드 5회차 관람 후기',
-    content:
-      '이번 위키드는 제 인생 최고였습니다. 같은 넘버를 반복해서 들었지만...',
-    place: '샤롯데 시어터 B구역 6열 4번',
-    actor: '전동석 카이 정선아',
-    color: '#EDDCFF',
-    iconColor: '#A765EE',
-    likeCount: 40,
-  },
-  {
-    id: '2',
-    profile: require('@/assets/images/board/commentFace.png'),
-    nickname: '뮤사랑',
-    title: '프랑켄 회전문 관람 후기',
-    content:
-      '이번 위키드는 제 인생 최고였습니다. 같은 넘버를 반복해서 들었지만...',
-    place: '샤롯데 시어터 B구역 6열 4번',
-    actor: '전동석 카이 정선아',
-    color: '#FFF1BB',
-    iconColor: '#FFB200',
-    likeCount: 40,
-  },
-  {
-    id: '3',
-    profile: require('@/assets/images/board/commentFace.png'),
-    nickname: '뮤사랑',
-    title: '프랑켄 회전문 관람 후기',
-    content:
-      '이번 위키드는 제 인생 최고였습니다. 같은 넘버를 반복해서 들었지만...',
-    place: '샤롯데 시어터 B구역 6열 4번',
-    actor: '전동석 카이 정선아',
-    color: '#FFDFD6',
-    iconColor: '#FF7259',
-    likeCount: 40,
-  },
-  {
-    id: '4',
-    profile: require('@/assets/images/board/commentFace.png'),
-    nickname: '뮤사랑',
-    title: '위키드 5회차 관람 후기',
-    content:
-      '이번 위키드는 제 인생 최고였습니다. 같은 넘버를 반복해서 들었지만...',
-    place: '샤롯데 시어터 B구역 6열 4번',
-    actor: '전동석 카이 정선아',
-    color: '#EDDCFF',
-    iconColor: '#A765EE',
-    likeCount: 40,
-  },
-  {
-    id: '5',
-    profile: require('@/assets/images/board/commentFace.png'),
-    nickname: '뮤사랑',
-    title: '프랑켄 회전문 관람 후기',
-    content:
-      '이번 위키드는 제 인생 최고였습니다. 같은 넘버를 반복해서 들었지만...',
-    place: '샤롯데 시어터 B구역 6열 4번',
-    actor: '전동석 카이 정선아',
-    color: '#FFF1BB',
-    iconColor: '#FFB200',
-    likeCount: 40,
-  },
-];
+  const colors = [
+    {
+      color: '#EDDCFF',
+      iconColor: '#A765EE',
+      profile: require('@/assets/images/board/writerFacePurple.png'),
+    },
+    {
+      color: '#FFF1BB',
+      iconColor: '#FFB200',
+      profile: require('@/assets/images/board/commentFace.png'),
+    },
+    {
+      color: '#FFDFD6',
+      iconColor: '#FF7259',
+      profile: require('@/assets/images/board/writerFaceRed.png'),
+    },
+  ];
 
-const PopularReviews: React.FC = () => {
-  const flatListRef = useRef<FlatList<CarouselItem>>(null);
+  const dataWithColors = popularReviews.map((item, index) => ({
+    ...item,
+    ...colors[index % colors.length],
+  }));
 
-  const snapToOffsets = useMemo(
-    () => Array.from(Array(data.length)).map((_, index) => index * offset),
-    [data],
-  );
+  const snapToOffsets = useMemo(() => {
+    return Array.from(Array(popularReviews.length)).map(
+      (_, index) => index * offset,
+    );
+  }, [popularReviews]);
 
-  const renderItem: ListRenderItem<CarouselItem> = ({item}) => (
+  const renderItem: ListRenderItem<any> = ({item}) => (
     <View
       style={[styles.containerPopularReview, {backgroundColor: item.color}]}>
       <View style={[styles.containerRow, {marginBottom: 16}]}>
@@ -121,11 +66,11 @@ const PopularReviews: React.FC = () => {
         </Text>
         <SvgXml xml={PostIcon.Badge} />
       </View>
-      <Text style={styles.textTitle} ellipsizeMode="tail">
+      <Text style={styles.textTitle} numberOfLines={1} ellipsizeMode="tail">
         {item.title}
       </Text>
       <Text style={styles.textContent} numberOfLines={2} ellipsizeMode="tail">
-        {item.content}
+        {item.rating.rating_review}
       </Text>
       <View style={styles.containerRow}>
         <SvgXml xml={PremiumIcon.place(item.iconColor)} />
@@ -133,7 +78,7 @@ const PopularReviews: React.FC = () => {
           style={styles.textPlaceAndActor}
           numberOfLines={1}
           ellipsizeMode="tail">
-          {item.place}
+          {item.location} {item.seat}
         </Text>
       </View>
       <View style={styles.containerRow}>
@@ -142,12 +87,14 @@ const PopularReviews: React.FC = () => {
           style={styles.textPlaceAndActor}
           numberOfLines={1}
           ellipsizeMode="tail">
-          {item.actor}
+          {item.actors}
         </Text>
       </View>
       <View style={[styles.containerRow, {marginTop: 9}]}>
         <SvgXml xml={PremiumIcon.like} />
-        <Text style={styles.textLikeCount}>{item.likeCount}</Text>
+        <Text style={styles.textLikeCount}>
+          {item.like_data.like_count_res.total_like_count}
+        </Text>
       </View>
     </View>
   );
@@ -156,7 +103,7 @@ const PopularReviews: React.FC = () => {
     <View style={{width: windowWidth}}>
       <FlatList
         ref={flatListRef}
-        data={data}
+        data={dataWithColors}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}

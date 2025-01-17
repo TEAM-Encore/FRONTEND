@@ -1,10 +1,10 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
-  FlatList,
   View,
   Text,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
@@ -18,6 +18,7 @@ import PopularReviews from '@/components/premium/PopularReviews';
 import Tags from '@/components/premium/Tags';
 import ItemReview from '@/components/premium/ItemReview';
 import ToolTipModal from '@/components/alertModal/ToolTipModal';
+import {getPremiumReview, getPopularPremiumReviews} from '@/api/premium.api';
 
 type RootStackParamList = {
   PremiumWritePage: undefined;
@@ -70,6 +71,12 @@ export default function PremiumPage() {
     right: 0,
   });
   const [reviewModalVisible, setReviewModalVisible] = useState(true);
+  const [popularPremiumReviews, setPopularPremiumReviews] = useState([]);
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [cursor, setCursor] = useState<number | null>(null);
+  const [isFetching, setIsFetching] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [selectedTag, setSelectedTag] = useState<string>('');
 
   const handleLayout = (event: any) => {
     const {x, y, width, height} = event.nativeEvent.layout;
@@ -80,56 +87,110 @@ export default function PremiumPage() {
     setReviewModalVisible(false);
   };
 
-  const renderHeader = () => (
-    <View style={PremiumStyles.containerHeader}>
-      <View style={PremiumStyles.containerIcons}>
-        <Text style={PremiumStyles.textTitle}>프리미엄</Text>
-        <View style={PremiumStyles.containerRow}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('PremiumSearchDefaultPage')}
-            onLayout={handleLayout}>
-            <IconSearch style={{marginRight: 20}} />
-          </TouchableOpacity>
-          <IconNotification />
-        </View>
-      </View>
+  useEffect(() => {
+    const fetchPremiumReviewList = async () => {
+      if (isFetching || !hasMore) return;
+      setIsFetching(true);
 
-      {reviewModalVisible && (
-        <ToolTipModal
-          visible={reviewModalVisible}
-          position={reviewModalPosition}
-          text={[
-            {text: '원하는 후기를', isBold: false},
-            {text: '빠르게', isBold: true},
-            {text: '찾아보세요!', isBold: false},
-          ]}
-          onCancel={handleModalCancel}
-        />
-      )}
+      try {
+        const pageable: any = {
+          size: 3,
+          sort: ['createdat'],
+        };
 
-      <Text style={PremiumStyles.textPopularReviewsTilte}>
-        오늘의 인기 리뷰
-      </Text>
-      <View style={PremiumStyles.containerPopularReviews}>
-        <PopularReviews />
-      </View>
+        const response = await getPremiumReview(
+          null,
+          cursor,
+          selectedTag,
+          pageable,
+        );
+        const newReviews = Array.isArray(response.data.data)
+          ? response.data.data
+          : [];
 
-      <View style={PremiumStyles.containerTages}>
-        <Tags />
-      </View>
+        setReviews(prev => [...prev, ...newReviews]);
+        setCursor(
+          newReviews.length > 0 ? newReviews[newReviews.length - 1].id : null,
+        );
+        setHasMore(newReviews.length > 0);
 
-      {/* <ItemReview postList={data} /> */}
-    </View>
-  );
+        console.log('프리미엄 리스트', response.data.data);
+      } catch (error) {
+        console.error('프리미엄 리스트 조회 오류: ', error);
+      } finally {
+        setIsFetching(false);
+      }
+    };
+
+    fetchPremiumReviewList();
+  }, [cursor, selectedTag, hasMore, isFetching]);
+
+  useEffect(() => {
+    const fetchPopularPremiumReviewList = async () => {
+      try {
+        const response = await getPopularPremiumReviews();
+        setPopularPremiumReviews(response.data.data);
+      } catch (error) {
+        console.error('인기 프리미엄 리뷰 조회 오류: ', error);
+      }
+    };
+
+    fetchPopularPremiumReviewList();
+  }, []);
+
+  const handleTagSelect = (tag: string) => {
+    setSelectedTag(tag);
+  };
 
   return (
     <SafeAreaView style={PremiumStyles.container}>
-      <FlatList
-        data={data}
-        ListHeaderComponent={renderHeader}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({item}) => <ItemReview postList={[item]} />}
-      />
+      <ScrollView contentContainerStyle={PremiumStyles.containerHeader}>
+        <View style={PremiumStyles.containerIcons}>
+          <Text style={PremiumStyles.textTitle}>프리미엄</Text>
+          <View style={PremiumStyles.containerRow}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('PremiumSearchDefaultPage')}
+              onLayout={handleLayout}>
+              <IconSearch style={{marginRight: 20}} />
+            </TouchableOpacity>
+            <IconNotification />
+          </View>
+        </View>
+
+        {reviewModalVisible && (
+          <ToolTipModal
+            visible={reviewModalVisible}
+            position={reviewModalPosition}
+            text={[
+              {text: '원하는 후기를', isBold: false},
+              {text: '빠르게', isBold: true},
+              {text: '찾아보세요!', isBold: false},
+            ]}
+            onCancel={handleModalCancel}
+          />
+        )}
+
+        <Text style={PremiumStyles.textPopularReviewsTilte}>
+          오늘의 인기 리뷰
+        </Text>
+        <View style={PremiumStyles.containerPopularReviews}>
+          <PopularReviews popularReviews={popularPremiumReviews} />
+        </View>
+
+        <View style={PremiumStyles.containerTages}>
+          <Tags onTagSelect={handleTagSelect} />
+        </View>
+
+        <ItemReview
+          postList={reviews}
+          onEndReached={() => {
+            if (!isFetching && hasMore) {
+              setCursor(reviews[reviews.length - 1]?.id || null);
+            }
+          }}
+          onEndReachedThreshold={0.5}
+        />
+      </ScrollView>
 
       {/* 글쓰기 버튼 */}
       <TouchableOpacity

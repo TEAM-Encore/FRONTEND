@@ -24,7 +24,7 @@ import Colors from '@/assets/colors/Colors';
 
 type RootStackParamList = {
   AddTicketPage: undefined;
-  TicketDetailPage: undefined;
+  TicketDetailPage: {ticket: TicketItem};
 };
 
 type TicketItem = {
@@ -60,6 +60,7 @@ export default function TicketBookPage() {
       }
       const response = await getTicketBookList(period);
       setTicketList(response.data.data);
+      // console.log(response.data.data);
     } catch (error) {
       console.error('티켓북 리스트 조회 오류: ', error);
     }
@@ -70,6 +71,7 @@ export default function TicketBookPage() {
   }, [category]);
 
   const Ticket = ({
+    item,
     image,
     title,
     date,
@@ -80,6 +82,7 @@ export default function TicketBookPage() {
     hasReview,
     color,
   }: {
+    item: TicketItem;
     image: any;
     title: string;
     date: string;
@@ -93,7 +96,7 @@ export default function TicketBookPage() {
     return (
       <TouchableOpacity
         style={{alignItems: 'center', marginBottom: 21}}
-        onPress={() => navigation.navigate('TicketDetailPage')}>
+        onPress={() => navigation.navigate('TicketDetailPage', {ticket: item})}>
         <View style={HomeStyles.containerTicket}>
           <View style={HomeStyles.ticket1}>
             <Image
@@ -213,6 +216,7 @@ export default function TicketBookPage() {
 
           return (
             <Ticket
+              item={item}
               image={ticketBackground}
               title={item.musical_title}
               season={item.series}

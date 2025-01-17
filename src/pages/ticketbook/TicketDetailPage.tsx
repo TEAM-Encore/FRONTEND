@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -17,24 +17,12 @@ import {HomeIcon} from '@/assets/icons/home/HomeIcon';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import {TicketBookIcon} from '@/assets/icons/ticketbook/TicketBookIcon';
 
-export default function TicketDetailPage() {
+export default function TicketDetailPage({route}: {route: any}) {
+  const {ticket} = route.params;
   const navigation = useNavigation();
-  const [ticketAuth, setTicketAuth] = useState(null);
-  const [review, setReview] = useState(null);
 
   const handleGoBack = () => {
     navigation.goBack();
-  };
-
-  const data = {
-    id: 1,
-    image: require('@/assets/images/home/TicketBackground.png'),
-    title: '지킬 앤 하이드',
-    season: '3연',
-    date: '24.10.16',
-    place: '세종문화회관 A구역 6열 4번',
-    actor: '전동석 김성철 선민 최수진',
-    star: 0,
   };
 
   return (
@@ -59,29 +47,37 @@ export default function TicketDetailPage() {
           <View style={TicketDetailStyles.containerTicket}>
             <Image style={TicketDetailStyles.containerTicketImage} />
             <View style={HomeStyles.containerTicketText}>
-              <Text style={HomeStyles.textTicketTitle}>{data.title}</Text>
+              <Text style={HomeStyles.textTicketTitle}>
+                {ticket.musical_title}
+              </Text>
               <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
                 <SvgXml xml={HomeIcon.season} />
                 <Text style={HomeStyles.textTicketDateActor}>
-                  {data.season}
+                  {ticket.series}
                 </Text>
               </View>
               <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
                 <SvgXml xml={HomeIcon.date} />
-                <Text style={HomeStyles.textTicketDateActor}>{data.date}</Text>
+                <Text style={HomeStyles.textTicketDateActor}>
+                  {ticket.viewed_date}
+                </Text>
               </View>
               <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
                 <SvgXml xml={HomeIcon.place} />
-                <Text style={HomeStyles.textTicketDateActor}>{data.place}</Text>
+                <Text style={HomeStyles.textTicketDateActor}>
+                  {ticket.location} {ticket.seat}
+                </Text>
               </View>
               <View style={HomeStyles.containerRow}>
                 <SvgXml xml={HomeIcon.actor} />
-                <Text style={HomeStyles.textTicketDateActor}>{data.actor}</Text>
+                <Text style={HomeStyles.textTicketDateActor}>
+                  {ticket.actors}
+                </Text>
               </View>
             </View>
           </View>
 
-          {ticketAuth == null ? (
+          {ticket.ticket_image_url == null ? (
             <View style={TicketDetailStyles.containerDashed}>
               <View style={TicketDetailStyles.containerAddImage}>
                 <SvgXml xml={TicketBookIcon.addImage} />
@@ -89,7 +85,10 @@ export default function TicketDetailPage() {
               </View>
             </View>
           ) : (
-            <Image style={TicketDetailStyles.ticketAuthImage} />
+            <Image
+              source={{uri: ticket.ticket_image_url}}
+              style={TicketDetailStyles.ticketAuthImage}
+            />
           )}
 
           <View style={TicketDetailStyles.containerReview}>
@@ -97,7 +96,7 @@ export default function TicketDetailPage() {
               xml={TicketBookIcon.pencil}
               style={TicketDetailStyles.iconPencil}
             />
-            {review == null ? (
+            {ticket.has_review == false ? (
               <View>
                 <Text style={TicketDetailStyles.textReviewTitle}>
                   공연 감상을 기록하고 싶다면?
