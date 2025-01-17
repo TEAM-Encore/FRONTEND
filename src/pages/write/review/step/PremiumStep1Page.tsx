@@ -42,7 +42,7 @@ const PremiumStep1Page: React.FC<PremiumProp> = ({goToNext, saveData}) => {
   const fetchreviewData = async () => {
     try {
       const response = await getTicketBookList('NULL');
-      console.log('API 요청 결과값: ', response.data.data);
+      // console.log('API 요청 결과값: ', response.data.data);
       setReviewData(response.data.data);
     } catch (error) {
       console.log(error);

@@ -147,6 +147,8 @@ const PremiumStep6Page: React.FC<PremiumProp> = ({
   console.log('티켓 아이디: ', ticket_id);
 
   const handleRegister = async () => {
+    let isMounted = true;
+
     try {
       setLoading(true);
       setModalVisible(true);
@@ -166,14 +168,23 @@ const PremiumStep6Page: React.FC<PremiumProp> = ({
       const reviewId = response.data.data.review_id;
 
       // 이동
-      navigation.navigate('PremiumMyPage', {reviewId});
+      if (isMounted) {
+        const reviewId = response.data.data.review_id;
+        navigation.navigate('PremiumMyPage', {reviewId});
+      }
     } catch (error) {
       console.error('API Error:', error.response?.data || error.message);
       Alert.alert('리뷰 등록 중 문제가 발생했습니다. 다시 시도해주세요.');
     } finally {
-      setModalVisible(false);
-      setLoading(false);
+      if (isMounted) {
+        setModalVisible(false);
+        setLoading(false);
+      }
     }
+
+    return () => {
+      isMounted = false;
+    };
   };
 
   return (
