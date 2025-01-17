@@ -24,6 +24,8 @@ type PostProps = {
     view_count: number;
     elapsed_time: string;
     star: number;
+    rating: string[];
+    total_rating: number;
   }[];
   onEndReached: () => void;
   onEndReachedThreshold?: number;
@@ -37,7 +39,7 @@ const ItemReview: React.FC<PostProps> = ({
   const navigation = useNavigation<NavigationProp>();
 
   const handlePremiumPost = () => {
-    navigation.navigate('PremiumOthersPage');
+    navigation.navigate('PremiumOthersPage', {postList: postList});
     console.log('뿅');
   };
 
@@ -63,14 +65,16 @@ const ItemReview: React.FC<PostProps> = ({
                   <View style={styles.containerRow}>
                     <Text style={styles.textWriterDate}>{item.nickname} ·</Text>
                     <Text style={styles.textWriterDate}>
-                      {timeAgo(item.elapsed_time)}
+                      {item.elapsed_time}
                     </Text>
                   </View>
 
                   <View style={styles.containerInfo}>
                     <View style={styles.containerRow}>
                       <SvgXml xml={PremiumIcon.star} />
-                      <Text style={styles.textStar}>총평 {item.star}</Text>
+                      <Text style={styles.textStar}>
+                        총평 {item.rating.total_rating}
+                      </Text>
                     </View>
                     <View style={styles.containerRow}>
                       <SvgXml xml={PremiumIcon.view} />
