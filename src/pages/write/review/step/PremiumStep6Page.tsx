@@ -17,7 +17,7 @@ import RegisterReviewModal from '@/components/alertModal/RegisterReviewModal';
 import PremiumWriteStyles from '../PremiumWriteStyles';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../../../styles/typography';
-import {postTicketReview} from '@/api/review.api';
+import {postTicketReview, getTicketReview} from '@/api/review.api';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from 'types';
 
@@ -147,44 +147,43 @@ const PremiumStep6Page: React.FC<PremiumProp> = ({
   console.log('티켓 아이디: ', ticket_id);
 
   const handleRegister = async () => {
-    let isMounted = true;
-
     try {
       setLoading(true);
       setModalVisible(true);
 
+      // 데이터 저장
       saveData(6, {scores, title: searchText});
 
       const ticket_id = stepData['1']?.id;
-      console.log('Ticket ID:', ticket_id);
+      // console.log('Ticket ID:', ticket_id);
 
       const requestData = transformStepDataToRequest(stepData);
-      console.log('Request Data:', JSON.stringify(requestData, null, 2));
+      // console.log('Request Data:', JSON.stringify(requestData, null, 2));
 
-      const response = await postTicketReview(ticket_id, requestData);
+      const postResponse = await postTicketReview(ticket_id, requestData);
 
-      console.log('완료 되었다: ', response.data.data);
+      const {review_id} = postResponse.data.data;
+      console.log('생성된 Review ID:', review_id);
 
-      const reviewId = response.data.data.review_id;
-
-      // 이동
-      if (isMounted) {
-        const reviewId = response.data.data.review_id;
-        navigation.navigate('PremiumMyPage', {reviewId});
+      // 이 부분이 필요가 없는데, 있어야 에러가 안나고 PremiumMyPage로 넘어갈 수 있어서 일단 추가함
+      try {
+        const getResponse = await getTicketReview(String(review_id));
+        console.log(
+          'Review Detail Data:',
+          JSON.stringify(getResponse.data.data, null, 2),
+        );
+      } catch (error) {
+        // console.error('Error:', error);
       }
+
+      navigation.navigate('PremiumMyPage', {reviewId: review_id});
     } catch (error) {
-      console.error('API Error:', error.response?.data || error.message);
+      console.error('오류 발생:', error);
       Alert.alert('리뷰 등록 중 문제가 발생했습니다. 다시 시도해주세요.');
     } finally {
-      if (isMounted) {
-        setModalVisible(false);
-        setLoading(false);
-      }
+      setModalVisible(false);
+      setLoading(false);
     }
-
-    return () => {
-      isMounted = false;
-    };
   };
 
   return (
