@@ -7,12 +7,17 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
+  Image,
 } from 'react-native';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 import OnboardingStyles from './OnboardingStyles';
 import Colors from '@/assets/colors/Colors';
-import {Image, SvgXml} from 'react-native-svg';
+import {SvgXml} from 'react-native-svg';
 import {OnboardingIcon} from '@/assets/icons/onboarding/OnboardingIcon';
+import {getNicknameValidation} from '@/api/users.api';
+import {PostPresignedUrl} from '@/api/image.api';
+import {useOnboarding} from '@/state/OnboardingContext';
 
 type PremiumProp = {
   goToNext: any;
@@ -27,10 +32,70 @@ export default function OnboardingStep1Page({
 }: PremiumProp) {
   const screenWidth = Dimensions.get('window').width;
 
-  const [nickname, setNickname] = useState('');
-  const [profileImage, setprofileImage] = useState(null);
+  const {updateOnboardingData} = useOnboarding();
 
-  const isNextButtonActive = nickname === '';
+  const [imageUrl, setImageUrl] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [nicknameValidation, setNicknameValidation] = useState<boolean | null>(
+    null,
+  );
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleSelectImage = async () => {
+    return new Promise<string | null>(async resolve => {
+      launchImageLibrary(
+        {
+          mediaType: 'photo',
+        },
+        async res => {
+          if (res.assets && res.assets.length > 0) {
+            const imageFileName = res.assets[0].fileName || '';
+
+            try {
+              const response = await PostPresignedUrl(imageFileName);
+              const urlWithoutQuery = response.data.split('?')[0];
+              setImageUrl(urlWithoutQuery);
+              resolve(null);
+            } catch (error) {
+              console.error('Presigned URL 생성 실패: ', error);
+              resolve(null);
+            }
+          } else {
+            resolve(null);
+          }
+        },
+      );
+    });
+  };
+
+  const fetchNicknameValidation = async () => {
+    try {
+      const response = await getNicknameValidation(nickname);
+      if (response.data.data == true) {
+        setNicknameValidation(true);
+        setErrorMessage(null);
+      }
+    } catch (error) {
+      console.error('닉네임 중복확인 오류:', error);
+      setNicknameValidation(false);
+      setErrorMessage(error.message);
+    }
+  };
+
+  const handleNicknameChange = (text: string) => {
+    setNickname(text);
+    setNicknameValidation(true);
+    setErrorMessage(null);
+  };
+
+  const handleNextButton = () => {
+    updateOnboardingData({
+      profileUrl: imageUrl,
+      nickname: nickname,
+    });
+    saveData(1, nickname);
+    goToNext(2);
+  };
 
   return (
     <>
@@ -54,8 +119,10 @@ export default function OnboardingStep1Page({
           </Text>
 
           <View style={{alignItems: 'center'}}>
-            <View style={OnboardingStyles.profile}>
-              {profileImage == null ? (
+            <TouchableOpacity
+              style={OnboardingStyles.profile}
+              onPress={handleSelectImage}>
+              {imageUrl === '' ? (
                 <>
                   <SvgXml
                     xml={OnboardingIcon.profile}
@@ -68,20 +135,48 @@ export default function OnboardingStep1Page({
                   />
                 </>
               ) : (
-                <Image />
+                <Image source={{uri: imageUrl}} />
               )}
-            </View>
+            </TouchableOpacity>
           </View>
           <Text style={OnboardingStyles.textNickname}>닉네임</Text>
           <View style={OnboardingStyles.containerTextInput}>
             <TextInput
-              style={OnboardingStyles.textInputNickname}
-              onChangeText={text => setNickname(text)}
+              style={[
+                OnboardingStyles.textInputNickname,
+                nicknameValidation === false &&
+                  errorMessage !== null && {
+                    borderColor: '#FF692D',
+                  },
+              ]}
+              onChangeText={handleNicknameChange}
               value={nickname}
             />
-            <TouchableOpacity style={OnboardingStyles.containerDuplicateCheck}>
-              <Text style={OnboardingStyles.textDuplicateCheck}>중복확인</Text>
-            </TouchableOpacity>
+            {nicknameValidation === false && errorMessage !== null ? (
+              <SvgXml
+                xml={OnboardingIcon.errorIcon}
+                style={[
+                  OnboardingStyles.containerDuplicateCheck,
+                  {backgroundColor: '#fff'},
+                ]}
+              />
+            ) : nicknameValidation === false && errorMessage === null ? (
+              <SvgXml
+                xml={OnboardingIcon.successIcon}
+                style={[
+                  OnboardingStyles.containerDuplicateCheck,
+                  {backgroundColor: '#fff'},
+                ]}
+              />
+            ) : (
+              <TouchableOpacity
+                style={OnboardingStyles.containerDuplicateCheck}
+                onPress={fetchNicknameValidation}>
+                <Text style={OnboardingStyles.textDuplicateCheck}>
+                  중복확인
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </ScrollView>
 
@@ -89,18 +184,19 @@ export default function OnboardingStep1Page({
           <TouchableOpacity
             style={[
               OnboardingStyles.containerNextButton,
-              isNextButtonActive && {backgroundColor: Colors.sub_04},
+              errorMessage === null &&
+                nicknameValidation === false && {
+                  backgroundColor: Colors.sub_04,
+                },
             ]}
-            onPress={() => {
-              saveData(1, nickname);
-              goToNext(2);
-            }}
-            // disabled={!isNextButtonActive}>
+            onPress={handleNextButton}
+            // disabled={errorMessage === null || nicknameValidation !== true}
           >
             <Text
               style={[
                 OnboardingStyles.textNextButton,
-                isNextButtonActive && {color: Colors.gray_12},
+                errorMessage === null &&
+                  nicknameValidation === false && {color: Colors.gray_12},
               ]}>
               다음
             </Text>

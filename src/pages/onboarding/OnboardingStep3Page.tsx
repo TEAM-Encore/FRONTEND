@@ -11,6 +11,7 @@ import {useNavigation, NavigationProp} from '@react-navigation/native';
 
 import OnboardingStyles from './OnboardingStyles';
 import Colors from '@/assets/colors/Colors';
+import {useOnboarding} from '@/state/OnboardingContext';
 
 type PremiumProp = {
   goToNext: any;
@@ -30,9 +31,23 @@ export default function OnboardingStep3Page({
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const [selectedFrequency, setSelectedFrequency] = useState(stepData[1] || '');
+  const {updateOnboardingData} = useOnboarding();
+
+  const [selectedFrequency, setSelectedFrequency] = useState('');
+
+  const handleFrequencySelect = (frequency: string) => {
+    setSelectedFrequency(frequency);
+  };
 
   const isNextButtonActive = selectedFrequency !== '';
+
+  const handleNextButton = () => {
+    updateOnboardingData({
+      frequency: selectedFrequency,
+    });
+    saveData(3, selectedFrequency);
+    navigation.navigate('ProfileCardPage');
+  };
 
   return (
     <>
@@ -52,18 +67,60 @@ export default function OnboardingStep3Page({
             공연 관람 빈도를 선택해주세요.
           </Text>
 
-          <TouchableOpacity style={OnboardingStyles.containerFrequency}>
-            <Text style={OnboardingStyles.textFrequency}>
+          <TouchableOpacity
+            style={[
+              OnboardingStyles.containerFrequency,
+              selectedFrequency === '연 1~3회' && {
+                backgroundColor: '#FFDD56',
+              },
+            ]}
+            onPress={() => handleFrequencySelect('연 1~3회')}>
+            <Text
+              style={[
+                OnboardingStyles.textFrequency,
+                selectedFrequency === '연 1~3회' && {
+                  fontFamily: 'Pretendard-SemiBold',
+                  color: Colors.gray_12,
+                },
+              ]}>
               일년에 1~3회 내로 보러가요
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={OnboardingStyles.containerFrequency}>
-            <Text style={OnboardingStyles.textFrequency}>
+          <TouchableOpacity
+            style={[
+              OnboardingStyles.containerFrequency,
+              selectedFrequency === '연 4~7회' && {
+                backgroundColor: '#FFDD56',
+              },
+            ]}
+            onPress={() => handleFrequencySelect('연 4~7회')}>
+            <Text
+              style={[
+                OnboardingStyles.textFrequency,
+                selectedFrequency === '연 4~7회' && {
+                  fontFamily: 'Pretendard-SemiBold',
+                  color: Colors.gray_12,
+                },
+              ]}>
               일년에 4~7회 내로 보러가요
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={OnboardingStyles.containerFrequency}>
-            <Text style={OnboardingStyles.textFrequency}>
+          <TouchableOpacity
+            style={[
+              OnboardingStyles.containerFrequency,
+              selectedFrequency === '연 8회 이상' && {
+                backgroundColor: '#FFDD56',
+              },
+            ]}
+            onPress={() => handleFrequencySelect('연 8회 이상')}>
+            <Text
+              style={[
+                OnboardingStyles.textFrequency,
+                selectedFrequency === '연 8회 이상' && {
+                  fontFamily: 'Pretendard-SemiBold',
+                  color: Colors.gray_12,
+                },
+              ]}>
               일년에 8회 이상 보러가요
             </Text>
           </TouchableOpacity>
@@ -75,11 +132,7 @@ export default function OnboardingStep3Page({
               OnboardingStyles.containerNextButton,
               isNextButtonActive && {backgroundColor: Colors.sub_04},
             ]}
-            onPress={() => {
-              saveData(3, selectedFrequency);
-              // goToNext(2);
-              navigation.navigate('ProfileCardPage');
-            }}
+            onPress={handleNextButton}
             // disabled={!isNextButtonActive}>
           >
             <Text
