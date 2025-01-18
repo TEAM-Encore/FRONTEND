@@ -14,7 +14,6 @@ const SignUpStyles = StyleSheet.create({
     fontFamily: 'Pretendard-SemiBold',
     paddingTop: 8,
     color: Colors.gray_12,
-    marginHorizontal: 20,
     marginTop: 31,
     marginBottom: 32,
   },
@@ -47,7 +46,7 @@ const SignUpStyles = StyleSheet.create({
     backgroundColor: Colors.gray_03,
   },
   containerButton: {
-    marginTop: 303,
+    marginTop: 340,
     marginHorizontal: 20,
   },
   containerNextButton: {

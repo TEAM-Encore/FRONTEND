@@ -8,7 +8,7 @@ import HomeBannerStyles from '@/pages/home/HomeBannerStyles';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import Colors from '@/assets/colors/Colors';
 import {OnboardingIcon} from '@/assets/icons/onboarding/OnboardingIcon';
-import {TicketBookIcon} from '@/assets/icons/ticketbook/TicketBookIcon';
+import {useOnboarding} from '@/state/OnboardingContext';
 
 type RootStackParamList = {
   OnboardingPage: undefined;
@@ -16,9 +16,51 @@ type RootStackParamList = {
 
 export default function SignUpPage() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [musicalTitle, setMusicalTitle] = useState('');
 
-  const isNextButtonActive = musicalTitle !== '';
+  const {updateOnboardingData} = useOnboarding();
+
+  const [agreeStates, setAgreeStates] = useState<string[]>([]);
+
+  const AGREEMENT_TYPES = {
+    SERVICE_TERMS: '서비스 이용약관',
+    PRIVACY_POLICY: '개인정보 수집 및 이용 동의',
+    MARKETING_CONSENT: '마케팅 정보 수신 동의',
+  };
+
+  const isServiceAgree = agreeStates.includes(AGREEMENT_TYPES.SERVICE_TERMS);
+  const isPrivacyAgree = agreeStates.includes(AGREEMENT_TYPES.PRIVACY_POLICY);
+  const isMarketingAgree = agreeStates.includes(
+    AGREEMENT_TYPES.MARKETING_CONSENT,
+  );
+
+  const getCheckIcon = (isChecked: boolean) => {
+    return isChecked ? OnboardingIcon.check : OnboardingIcon.nonCheck;
+  };
+
+  const isNextButtonActive = isServiceAgree && isPrivacyAgree;
+
+  const toggleAgreement = (type: string) => {
+    setAgreeStates(prev =>
+      prev.includes(type)
+        ? prev.filter(item => item !== type)
+        : [...prev, type],
+    );
+  };
+
+  const toggleAllAgreements = () => {
+    if (isServiceAgree && isPrivacyAgree && isMarketingAgree) {
+      setAgreeStates([]);
+    } else {
+      setAgreeStates(Object.values(AGREEMENT_TYPES));
+    }
+  };
+
+  const handleNextButton = () => {
+    updateOnboardingData({
+      agreements: agreeStates,
+    });
+    navigation.navigate('OnboardingPage');
+  };
 
   return (
     <>
@@ -32,28 +74,46 @@ export default function SignUpPage() {
           <Text style={HomeBannerStyles.textTitle}>회원가입</Text>
         </View>
 
-        <Text style={SignUpStyles.textTitle}>
-          서비스 이용 약관에 동의해주세요.
-        </Text>
         <View style={{paddingHorizontal: 20}}>
-          <View
+          <Text style={SignUpStyles.textTitle}>
+            서비스 이용 약관에 동의해주세요.
+          </Text>
+          <TouchableOpacity
             style={[
               SignUpStyles.containerAgree,
               {backgroundColor: Colors.gray_03},
-            ]}>
-            <SvgXml xml={OnboardingIcon.check('')} style={{marginRight: 10}} />
+            ]}
+            onPress={toggleAllAgreements}>
+            <SvgXml
+              xml={getCheckIcon(
+                isServiceAgree && isPrivacyAgree && isMarketingAgree,
+              )}
+              style={{marginRight: 10}}
+            />
             <Text style={SignUpStyles.textAgreeTitle}>전체 동의</Text>
-          </View>
-          <View style={SignUpStyles.containerAgree}>
-            <SvgXml xml={OnboardingIcon.check('')} style={{marginRight: 10}} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={SignUpStyles.containerAgree}
+            onPress={() => toggleAgreement(AGREEMENT_TYPES.SERVICE_TERMS)}>
+            <SvgXml
+              xml={getCheckIcon(isServiceAgree)}
+              style={{marginRight: 10}}
+            />
             <Text style={SignUpStyles.textAgree}>(필수) 서비스 이용약관</Text>
             <SvgXml
               xml={OnboardingIcon.arrowRight}
               style={SignUpStyles.iconArrowRight}
             />
-          </View>
-          <View style={SignUpStyles.containerAgree}>
-            <SvgXml xml={OnboardingIcon.check('')} style={{marginRight: 10}} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={SignUpStyles.containerAgree}
+            onPress={() => toggleAgreement(AGREEMENT_TYPES.PRIVACY_POLICY)}>
+            <SvgXml
+              xml={getCheckIcon(isPrivacyAgree)}
+              style={{marginRight: 10}}
+            />
             <Text style={SignUpStyles.textAgree}>
               (필수) 개인정보 수집/이용 동의
             </Text>
@@ -61,9 +121,15 @@ export default function SignUpPage() {
               xml={OnboardingIcon.arrowRight}
               style={SignUpStyles.iconArrowRight}
             />
-          </View>
-          <View style={SignUpStyles.containerAgree}>
-            <SvgXml xml={OnboardingIcon.check('')} style={{marginRight: 10}} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={SignUpStyles.containerAgree}
+            onPress={() => toggleAgreement(AGREEMENT_TYPES.MARKETING_CONSENT)}>
+            <SvgXml
+              xml={getCheckIcon(isMarketingAgree)}
+              style={{marginRight: 10}}
+            />
             <Text style={SignUpStyles.textAgree}>
               (선택) 마케팅 정보 수신 동의
             </Text>
@@ -71,7 +137,7 @@ export default function SignUpPage() {
               xml={OnboardingIcon.arrowRight}
               style={SignUpStyles.iconArrowRight}
             />
-          </View>
+          </TouchableOpacity>
         </View>
 
         <View style={SignUpStyles.containerButton}>
@@ -80,9 +146,8 @@ export default function SignUpPage() {
               SignUpStyles.containerNextButton,
               isNextButtonActive && {backgroundColor: Colors.sub_04},
             ]}
-            onPress={() => navigation.navigate('OnboardingPage')}
-            // disabled={!isNextButtonActive}>
-          >
+            onPress={handleNextButton}
+            disabled={!isNextButtonActive}>
             <Text
               style={[
                 SignUpStyles.textNextButton,
