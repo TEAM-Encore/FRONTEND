@@ -9,6 +9,8 @@ const PremiumWriteStyles = StyleSheet.create({
   },
   field_container: {
     marginHorizontal: 20,
+    marginBottom: 140,
+    position: 'relative',
   },
   progressText: {
     ...typography.body01,
@@ -181,6 +183,13 @@ const PremiumWriteStyles = StyleSheet.create({
     ...typography.subhead02,
     color: Colors.gray_11,
     marginLeft: 4,
+  },
+  fadeLayer: {
+    position: 'absolute', // 화면 위에 겹치도록 설정
+    bottom: 0, // 하단에 고정
+    left: 0,
+    right: 0,
+    height: 50, // 페이드 효과 높이
   },
 });
 

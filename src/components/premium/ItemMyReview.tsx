@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {FlatList, View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 
@@ -17,36 +17,27 @@ type NavigationProp = {
 
 type PostProps = {
   postList: {
-    review_id: any;
+    id: any;
     nickname: string;
     title: string;
     like_count: number;
     view_count: number;
-    elapsed_time: string;
+    created_at: string;
     star: number;
-    rating: string[];
-    total_rating: number;
   }[];
-  onEndReached: () => void;
-  onEndReachedThreshold?: number;
 };
 
-const ItemReview: React.FC<PostProps> = ({
-  postList,
-  onEndReached,
-  onEndReachedThreshold = 0.5,
-}) => {
+const ItemMyReview: React.FC<PostProps> = ({postList}) => {
   const navigation = useNavigation<NavigationProp>();
 
   const handlePremiumPost = () => {
-    navigation.navigate('PremiumOthersPage', {postList: postList});
-    console.log('뿅');
+    navigation.navigate('PremiumOthersPage');
   };
 
   return (
     <FlatList
       data={postList}
-      keyExtractor={item => item.review_id}
+      keyExtractor={item => item.id}
       renderItem={({item, index}) => {
         return (
           <>
@@ -63,7 +54,7 @@ const ItemReview: React.FC<PostProps> = ({
                   </Text>
 
                   <View style={styles.containerRow}>
-                    <Text style={styles.textWriterDate}>{item.nickname} ·</Text>
+                    <Text style={styles.textWriterDate}>뮤사랑 ·</Text>
                     <Text style={styles.textWriterDate}>
                       {item.elapsed_time}
                     </Text>
@@ -73,7 +64,7 @@ const ItemReview: React.FC<PostProps> = ({
                     <View style={styles.containerRow}>
                       <SvgXml xml={PremiumIcon.star} />
                       <Text style={styles.textStar}>
-                        총평 {item.rating.total_rating}
+                        총평 {item.review_data_res.rating.total_rating}
                       </Text>
                     </View>
                     <View style={styles.containerRow}>
@@ -83,7 +74,7 @@ const ItemReview: React.FC<PostProps> = ({
                       </Text>
                       <SvgXml xml={PremiumIcon.like} />
                       <Text style={styles.textViewAndLike}>
-                        {item.like_count}
+                        {item.like_res.like_count_res.total_like_count}
                       </Text>
                     </View>
                   </View>
@@ -100,15 +91,12 @@ const ItemReview: React.FC<PostProps> = ({
           </>
         );
       }}
-      onEndReached={onEndReached}
-      onEndReachedThreshold={onEndReachedThreshold}
     />
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 20,
     paddingVertical: 10,
   },
   containerRow: {
@@ -148,4 +136,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ItemReview;
+export default ItemMyReview;

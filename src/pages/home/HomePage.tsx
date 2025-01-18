@@ -25,7 +25,7 @@ import IconNotification from '@/assets/icons/home/IconNotification';
 import IconLike from '@/assets/icons/home/IconLike';
 import IconComment from '@/assets/icons/home/IconComment';
 import ToolTipModal from '@/components/alertModal/ToolTipModal';
-import {getTicketBookList} from '@/api/ticketbook.api';
+import {getTicketBookList} from '@/api/ticketBook.api';
 import {getPopularPremiumReviews} from '@/api/premium.api';
 import {getFeturedMusical, getUpcomingMusical} from '@/api/musical.api';
 
@@ -624,6 +624,9 @@ const HomePage: React.FC<HomePageProps> = () => {
           <Text style={HomeStyles.textTitle}>개봉 예정 뮤지컬</Text>
         </View>
         <FlatList
+          keyExtractor={(item, index) =>
+            item.id?.toString() || index.toString()
+          }
           style={{marginHorizontal: 12.5, marginBottom: 37}}
           ref={flatListRef}
           data={releaseMusicalInfo}

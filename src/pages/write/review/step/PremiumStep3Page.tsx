@@ -46,7 +46,7 @@ const PremiumStep3Page: React.FC<PremiumProp> = ({
   const [searchText, setSearchText] = useState<string>('');
 
   const isButtonDisabled =
-    !selectedId || searchText.trim() === '' || searchText.trim().length > 20;
+    !selectedId || searchText.trim() === '' || searchText.trim().length < 20;
 
   const renderItem: ListRenderItem<ReviewItems> = ({item}) => {
     const isSelected = selectedId === item.id;
@@ -120,7 +120,7 @@ const PremiumStep3Page: React.FC<PremiumProp> = ({
               style={PremiumWriteStyles.seat_input}
               value={searchText}
               onChangeText={setSearchText}
-              placeholder="시야에 대한 후기를 작성해주세요. (최대 20자)"
+              placeholder="시야에 대한 후기를 작성해주세요. (최소 20자)"
               multiline={true}
             />
           </View>

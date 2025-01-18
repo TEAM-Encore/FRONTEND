@@ -27,6 +27,17 @@ type PremiumOthersPageRouteProp = RouteProp<
 
 interface PremiumOthersPageProps {
   route: PremiumOthersPageRouteProp;
+  postList: {
+    review_id: any;
+    nickname: string;
+    title: string;
+    like_count: number;
+    view_count: number;
+    elapsed_time: string;
+    star: number;
+    rating: string[];
+    total_rating: number;
+  }[];
 }
 
 type ModalPosition = {
@@ -75,7 +86,7 @@ const reviewData = [
   },
 ];
 
-const PremiumOthersPage: React.FC<PremiumOthersPageProps> = () => {
+const PremiumOthersPage: React.FC<PremiumOthersPageProps> = ({postList}) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalPosition, setModalPosition] = useState<ModalPosition | null>(
@@ -84,32 +95,20 @@ const PremiumOthersPage: React.FC<PremiumOthersPageProps> = () => {
   const iconRef = useRef<View>(null);
 
   const handleGoBack = () => {
-    const previousState = navigation.getState();
-    const previousRouteName =
-      previousState?.routes[previousState.routes.length - 2]?.name;
-
-    if (previousRouteName === 'WritePage') {
-      // 이전 화면이 WritePage일 경우 goBack() 두 번 호출
-      navigation.goBack();
-      navigation.goBack();
-    } else {
-      navigation.goBack();
-    }
+    navigation.goBack();
   };
 
   const handleIconPress = () => {
     if (iconRef.current) {
       iconRef.current.measureInWindow((x, y, width, height) => {
-        console.log('Measured Position:', {x, y, width, height}); // 위치 디버깅
+        console.log('Measured Position:', {x, y, width, height});
         setModalPosition({x, y, width, height});
-        setModalVisible(true); // 모달 상태 변경
+        setModalVisible(true);
       });
     } else {
-      console.warn('iconRef is null'); // Ref가 null인 경우 확인
+      console.warn('iconRef is null');
     }
   };
-
-  console.log('Modal Position:', modalPosition); // 위치값 디버깅
 
   const [fadeVisible, setFadeVisible] = useState(true); // fade 레이어 상태 관리
 
@@ -137,7 +136,7 @@ const PremiumOthersPage: React.FC<PremiumOthersPageProps> = () => {
           </View>
         )}
         <FlatList
-          data={reviewData}
+          data={postList}
           ListHeaderComponent={
             <>
               {/* 헤더 컴포넌트 */}
@@ -185,7 +184,7 @@ const PremiumOthersPage: React.FC<PremiumOthersPageProps> = () => {
               </View>
 
               <Text style={PremiumStyles.reviewTitle}>
-                뮤지컬 고인물의 시카고 후기 4
+                지저스 크라이스트 수퍼스타 리뷰
               </Text>
 
               {/* 티켓 */}
@@ -211,7 +210,7 @@ const PremiumOthersPage: React.FC<PremiumOthersPageProps> = () => {
                           PremiumWriteStyles.list_title,
                           {color: Colors.gray_12},
                         ]}>
-                        시카고
+                        지저스 크라이스트 수퍼스타
                       </Text>
                       <View style={PremiumWriteStyles.icon_container}>
                         <SvgXml
@@ -236,7 +235,7 @@ const PremiumOthersPage: React.FC<PremiumOthersPageProps> = () => {
                             PremiumWriteStyles.list_text,
                             {color: Colors.gray_09},
                           ]}>
-                          샤롯데 시어터 B구역 6열 4번
+                          광림아트센터 BBCH홀 B구역 6열 4번
                         </Text>
                       </View>
                       <View style={PremiumWriteStyles.icon_container}>
@@ -277,9 +276,8 @@ const PremiumOthersPage: React.FC<PremiumOthersPageProps> = () => {
                 시야 후기
               </Text>
               <Text style={PremiumStyles.reviewText}>
-                2층이기에 큰 기대를 하지 않았음에도 탁 트인 시야로 공연의
-                분위기가 온전히 전달됨. 3회차인 1층 마지막열과 비교했을 때
-                오히려 탁 트여 더 만족스러웠음.
+                중앙 앞줄에서 관람했는데, 배우들 표정 하나하나가 너무 잘 보여서
+                감정 몰입이 제대로 됐어요. 🥹
               </Text>
               <View style={PremiumStyles.seatReviewContainer}>
                 <View
@@ -306,7 +304,7 @@ const PremiumOthersPage: React.FC<PremiumOthersPageProps> = () => {
                     <View style={PremiumStyles.containerRow}>
                       <SvgXml xml={PremiumIcon.sofaIcon} />
                       <Text style={PremiumStyles.seatInfoText}>
-                        세종문화회관 A구역 6열 4번
+                        광림아트센터 BBCH홀 B구역 6열 4번
                       </Text>
                     </View>
 
@@ -328,9 +326,8 @@ const PremiumOthersPage: React.FC<PremiumOthersPageProps> = () => {
                 </Text>
               </View>
               <Text style={PremiumStyles.reviewText}>
-                음향이 매우 좋은편은 아니나, 큰 거슬림 없이 잘 관람할 수 있을
-                정도였음. 타 공연의 음향에 비해서 음질이 좋고 크기도 적당했기에
-                좋음을 선택함.
+                오케스트라와 배우들의 목소리가 진짜 환상적이었어요! 특히
+                감미로운 넘버들이 귀를 완전 사로잡았답니다. 🎼💕
               </Text>
               {/* 시설 후기 */}
               <Text style={{...PremiumStyles.reviewSubTitle, marginTop: 44}}>
@@ -343,9 +340,8 @@ const PremiumOthersPage: React.FC<PremiumOthersPageProps> = () => {
                 </Text>
               </View>
               <Text style={PremiumStyles.reviewText}>
-                세종문화회관은 다른 공연장에 비해 매우 쾌적한 편이기에 좋다고
-                선택함. 우선 좌석 간의 간격으로 인해 불쾌감도 전혀 없었고 시설이
-                매우 쾌적했음.
+                좌석 간격도 넓고 대기 공간도 충분해서 정말 쾌적했어요! 디테일이
+                살아있는 무대 디자인도 대박! 😍
               </Text>
 
               {/* 총평 */}
@@ -353,8 +349,8 @@ const PremiumOthersPage: React.FC<PremiumOthersPageProps> = () => {
                 총평
               </Text>
               <Text style={PremiumStyles.reviewText}>
-                전반적으로 시설에 만족하며 배우들의 합과 넘버의 퀄리티도 매우
-                만족스러워 재관람 할 의사가 있음.
+                마타하리의 슬픈 이야기와 강렬한 연기가 너무 와닿았어요. 무대
+                연출과 의상이 진짜 압권이라 눈이 호강했어요. 또 보고 싶어요! 🌹
               </Text>
               <View style={PremiumStyles.containerRow}>
                 <View style={PremiumStyles.chipContainer}>
@@ -371,10 +367,11 @@ const PremiumOthersPage: React.FC<PremiumOthersPageProps> = () => {
               <Text style={{...PremiumStyles.reviewSubTitle, marginBottom: 29}}>
                 뮤사랑님의 또 다른 리뷰
               </Text>
+              <ItemOthersReview postList={reviewData} />
             </>
           }
-          keyExtractor={item => item.id.toString()}
-          renderItem={({item}) => <ItemOthersReview postList={[item]} />}
+          keyExtractor={(item, index) => item.id || index.toString()}
+          renderItem={null}
           ListFooterComponent={
             <>
               <View
