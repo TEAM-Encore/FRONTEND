@@ -13,6 +13,7 @@ import {SvgXml} from 'react-native-svg';
 import OnboardingStyles from './OnboardingStyles';
 import Colors from '@/assets/colors/Colors';
 import {OnboardingIcon} from '@/assets/icons/onboarding/OnboardingIcon';
+import {useOnboarding} from '@/state/OnboardingContext';
 
 type PremiumProp = {
   goToNext: any;
@@ -33,9 +34,11 @@ export default function OnboardingStep2Page({
 }: PremiumProp) {
   const screenWidth = Dimensions.get('window').width;
 
-  const [selectedKeyword, setSelectedKeyword] = useState('');
+  const {updateOnboardingData} = useOnboarding();
 
-  const isNextButtonActive = selectedKeyword === '';
+  const [selectedKeyword, setSelectedKeyword] = useState<string[]>([]);
+
+  const isNextButtonActive = selectedKeyword.length > 0;
 
   const data: DataItem[] = [
     {
@@ -85,12 +88,23 @@ export default function OnboardingStep2Page({
     },
   ];
 
-  const renderItem = ({item}: {item: any}) => (
-    <TouchableOpacity style={OnboardingStyles.containerKeyword}>
-      <Text style={OnboardingStyles.textKeyword}>{item.title}</Text>
-      <SvgXml xml={item.icon} style={OnboardingStyles.iconKeyword} />
-    </TouchableOpacity>
-  );
+  const handleKeywordSelect = (title: string) => {
+    if (selectedKeyword.includes(title)) {
+      setSelectedKeyword(selectedKeyword.filter(keyword => keyword !== title));
+    } else {
+      if (selectedKeyword.length < 3) {
+        setSelectedKeyword([...selectedKeyword, title]);
+      }
+    }
+  };
+
+  const handleNextButton = () => {
+    updateOnboardingData({
+      keywords: selectedKeyword,
+    });
+    saveData(2, selectedKeyword);
+    goToNext(3);
+  };
 
   return (
     <>
@@ -123,19 +137,13 @@ export default function OnboardingStep2Page({
                 key={item.id}
                 style={[
                   OnboardingStyles.containerKeyword,
-                  selectedKeyword === item.title && {
+                  selectedKeyword.includes(item.title) && {
                     backgroundColor: Colors.sub_04,
                   },
                 ]}
-                onPress={() => setSelectedKeyword(item.title)}>
+                onPress={() => handleKeywordSelect(item.title)}>
                 <SvgXml xml={item.icon} style={OnboardingStyles.iconKeyword} />
-                <Text
-                  style={[
-                    OnboardingStyles.textKeyword,
-                    selectedKeyword === item.title && {color: Colors.white},
-                  ]}>
-                  {item.title}
-                </Text>
+                <Text style={OnboardingStyles.textKeyword}>{item.title}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -147,12 +155,8 @@ export default function OnboardingStep2Page({
               OnboardingStyles.containerNextButton,
               isNextButtonActive && {backgroundColor: Colors.sub_04},
             ]}
-            onPress={() => {
-              saveData(2, selectedKeyword);
-              goToNext(3);
-            }}
-            // disabled={!isNextButtonActive}>
-          >
+            onPress={handleNextButton}
+            disabled={!isNextButtonActive}>
             <Text
               style={[
                 OnboardingStyles.textNextButton,

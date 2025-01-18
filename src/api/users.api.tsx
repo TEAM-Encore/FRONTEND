@@ -11,3 +11,25 @@ export const patchMyInfo = (data: {
 }) => {
   return httpApi.patch(`/api/v1/users/me`, data);
 };
+
+export const createUser = (
+  email: string,
+  password: string,
+  name: string,
+  provider: string,
+  role: string,
+) => {
+  const requestBody = {
+    email,
+    password,
+    name,
+    provider,
+    role,
+  };
+
+  return httpApi.post('/api/v1/users/signup', requestBody);
+};
+
+export const getNicknameValidation = (nickname: string) => {
+  return httpApi.get(`api/v1/users/nickname-validation/${nickname}`);
+};

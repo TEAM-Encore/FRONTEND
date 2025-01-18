@@ -120,6 +120,7 @@ const OnboardingStyles = StyleSheet.create({
     marginVertical: 7.5,
     paddingHorizontal: 9.81,
     paddingVertical: 8.17,
+    color: '#3D3D3D',
   },
   textKeyword: {
     ...body01,
@@ -148,6 +149,8 @@ const OnboardingStyles = StyleSheet.create({
   // profileCard
   textProfileCard: {
     ...subhead05,
+    marginTop: 56,
+    marginBottom: 37,
   },
 });
 

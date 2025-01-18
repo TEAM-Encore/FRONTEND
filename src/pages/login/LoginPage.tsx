@@ -5,8 +5,10 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {LoginIcon} from '@/assets/icons/login/LoginIcon';
 import LoginStyles from './LoginStyles';
 import Colors from '@/assets/colors/Colors';
+import {createUser} from '@/api/users.api';
 
 type RootStackParamList = {
+  Tabs: undefined;
   PremiumWritePage: undefined;
   PremiumSearchDefaultPage: undefined;
   SignUpPage: undefined;
@@ -14,6 +16,22 @@ type RootStackParamList = {
 
 export default function LoginPage() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const fetchSignUp = async () => {
+    try {
+      const response = await createUser(
+        'encore@gmail.com',
+        'password',
+        '앙코르',
+        'GOOGLE',
+        'BASIC',
+      );
+      // console.log(response.data.data);
+      navigation.navigate('SignUpPage');
+    } catch (error) {
+      console.error('회원가입 오류:', error);
+    }
+  };
 
   return (
     <SafeAreaView style={LoginStyles.container}>
@@ -30,7 +48,7 @@ export default function LoginPage() {
 
       <View style={{paddingHorizontal: 20, alignItems: 'center'}}>
         <TouchableOpacity
-          onPress={() => navigation.navigate('SignUpPage')}
+          onPress={fetchSignUp}
           style={[
             LoginStyles.containerLogin,
             {backgroundColor: '#fff', borderColor: Colors.gray_04},
@@ -56,7 +74,9 @@ export default function LoginPage() {
             Apple 로그인
           </Text>
         </View>
-        <Text style={LoginStyles.textGuestLogin}>게스트 로그인</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Tabs')}>
+          <Text style={LoginStyles.textGuestLogin}>게스트 로그인</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
