@@ -71,12 +71,11 @@ export default function OnboardingStep1Page({
   const fetchNicknameValidation = async () => {
     try {
       const response = await getNicknameValidation(nickname);
-      if (response.data.data == true) {
-        setNicknameValidation(true);
-        setErrorMessage(null);
-      }
+      // console.log(response.data.data.is_valid);
+      setNicknameValidation(true);
+      setErrorMessage(null);
     } catch (error) {
-      console.error('닉네임 중복확인 오류:', error);
+      // console.error('닉네임 중복확인 오류:', error.response.data);
       setNicknameValidation(false);
       setErrorMessage(error.message);
     }
@@ -84,7 +83,7 @@ export default function OnboardingStep1Page({
 
   const handleNicknameChange = (text: string) => {
     setNickname(text);
-    setNicknameValidation(true);
+    setNicknameValidation(null);
     setErrorMessage(null);
   };
 
@@ -160,7 +159,7 @@ export default function OnboardingStep1Page({
                   {backgroundColor: '#fff'},
                 ]}
               />
-            ) : nicknameValidation === false && errorMessage === null ? (
+            ) : nicknameValidation === true ? (
               <SvgXml
                 xml={OnboardingIcon.successIcon}
                 style={[
@@ -185,18 +184,17 @@ export default function OnboardingStep1Page({
             style={[
               OnboardingStyles.containerNextButton,
               errorMessage === null &&
-                nicknameValidation === false && {
+                nicknameValidation === true && {
                   backgroundColor: Colors.sub_04,
                 },
             ]}
             onPress={handleNextButton}
-            // disabled={errorMessage === null || nicknameValidation !== true}
-          >
+            disabled={nicknameValidation !== true}>
             <Text
               style={[
                 OnboardingStyles.textNextButton,
                 errorMessage === null &&
-                  nicknameValidation === false && {color: Colors.gray_12},
+                  nicknameValidation === true && {color: Colors.gray_12},
               ]}>
               다음
             </Text>

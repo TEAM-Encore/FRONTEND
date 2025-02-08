@@ -24,6 +24,7 @@ type PremiumProp = {
 type DataItem = {
   id: number;
   icon: string;
+  icon2: string;
   title: string;
 };
 
@@ -44,46 +45,55 @@ export default function OnboardingStep2Page({
     {
       id: 1,
       icon: OnboardingIcon.keywordTouched,
+      icon2: OnboardingIcon.keywordTouched2,
       title: '깊은 감동을\n받게 되는',
     },
     {
       id: 2,
       icon: OnboardingIcon.keywordInteresting,
+      icon2: OnboardingIcon.keywordInteresting2,
       title: '흥미롭고\n재미있는',
     },
     {
       id: 3,
       icon: OnboardingIcon.keywordNumber,
+      icon2: OnboardingIcon.keywordNumber2,
       title: '넘버 퀄리티가\n뛰어난',
     },
     {
       id: 4,
       icon: OnboardingIcon.keywordDirecting,
+      icon2: OnboardingIcon.keywordDirecting2,
       title: '무대 연출력이\n뛰어난',
     },
     {
       id: 5,
       icon: OnboardingIcon.keywordTouched,
+      icon2: OnboardingIcon.keywordTouched2,
       title: '캐스팅\n페어합이 좋은',
     },
     {
       id: 6,
       icon: OnboardingIcon.keywordActor,
+      icon2: OnboardingIcon.keywordActor2,
       title: '배우의\n연기력이 좋은',
     },
     {
       id: 7,
       icon: OnboardingIcon.keywordLikeActor,
+      icon2: OnboardingIcon.keywordLikeActor2,
       title: '최애 배우가\n출연하는',
     },
     {
       id: 8,
       icon: OnboardingIcon.keywordLight,
+      icon2: OnboardingIcon.keywordLight2,
       title: '가볍게\n보기 좋은',
     },
     {
       id: 9,
       icon: OnboardingIcon.keywordStory,
+      icon2: OnboardingIcon.keywordStory2,
       title: '스토리 라인이\n탄탄한',
     },
   ];
@@ -119,12 +129,16 @@ export default function OnboardingStep2Page({
           <View style={[OnboardingStyles.line, {width: screenWidth / 3}]} />
         </View>
 
-        <ScrollView style={{marginHorizontal: 20}}>
-          <Text style={OnboardingStyles.textProgress}>2/3</Text>
-          <Text style={OnboardingStyles.textTitle}>
-            선호하는 공연 키워드를 선택해주세요.
-          </Text>
-          <Text style={OnboardingStyles.textSubTitle}>최대 3개 선택 가능</Text>
+        <ScrollView>
+          <View style={{marginHorizontal: 20}}>
+            <Text style={OnboardingStyles.textProgress}>2/3</Text>
+            <Text style={OnboardingStyles.textTitle}>
+              선호하는 공연 키워드를 선택해주세요.
+            </Text>
+            <Text style={OnboardingStyles.textSubTitle}>
+              최대 3개 선택 가능
+            </Text>
+          </View>
 
           <View
             style={{
@@ -142,7 +156,14 @@ export default function OnboardingStep2Page({
                   },
                 ]}
                 onPress={() => handleKeywordSelect(item.title)}>
-                <SvgXml xml={item.icon} style={OnboardingStyles.iconKeyword} />
+                <SvgXml
+                  xml={
+                    selectedKeyword.includes(item.title)
+                      ? item.icon2
+                      : item.icon
+                  }
+                  style={OnboardingStyles.iconKeyword}
+                />
                 <Text style={OnboardingStyles.textKeyword}>{item.title}</Text>
               </TouchableOpacity>
             ))}

@@ -1,6 +1,7 @@
 import React, {createContext, useContext, useState, ReactNode} from 'react';
 
 interface OnboardingData {
+  emailNumber: number;
   agreements: string[];
   profileUrl: string;
   nickname: string;
@@ -33,6 +34,7 @@ interface OnboardingProps {
 
 export const OnboardingProvider = ({children}: OnboardingProps) => {
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({
+    emailNumber: 30,
     agreements: [],
     profileUrl: '',
     nickname: '',
