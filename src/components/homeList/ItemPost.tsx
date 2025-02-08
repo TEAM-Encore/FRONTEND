@@ -13,7 +13,8 @@ import {useNavigation} from '@react-navigation/native';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
-import {createLikePost, deleteLikePost} from '@/api/post.api';
+// import {createLikePost, deleteLikePost} from '@/api/post.api';
+import {createAndDeleteLikePost} from '@/api/post.api';
 import {timeAgo} from '../../util/timeAgo';
 
 const {subhead03, body01, caption} = typography;
@@ -79,7 +80,7 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
 
   const handleLike = async (user_id: number, post_id: number) => {
     try {
-      await createLikePost(user_id, post_id);
+      await createAndDeleteLikePost(user_id, post_id);
       setIsLiked(prev => !prev);
     } catch (error) {
       console.error('좋아요 토글 오류:', error);
@@ -87,95 +88,99 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
   };
 
   return (
-    <FlatList
-      data={postList}
-      keyExtractor={item => item.id}
-      renderItem={({item, index}) => {
-        const category = getMappedCategory(item.category);
-        const thumbnail = item.thumbnail;
+    <>
+      <FlatList
+        data={postList}
+        keyExtractor={item => item.id}
+        renderItem={({item, index}) => {
+          const category = getMappedCategory(item.category);
+          const thumbnail = item.thumbnail;
 
-        return (
-          <>
-            <TouchableOpacity
-              style={styles.container}
-              onPress={() =>
-                navigation.navigate('PostPage', {
-                  postId: item.id,
-                })
-              }>
-              {category && (
-                <View
-                  style={[
-                    styles.containerCategory,
-                    {backgroundColor: category?.boxColor},
-                  ]}>
-                  <Text style={[styles.textCategory, {color: category?.color}]}>
-                    {category?.label}
-                  </Text>
-                </View>
-              )}
-              <View style={styles.containerRow}>
-                <View style={{flex: 1}}>
-                  <Text
-                    style={styles.textTitle}
-                    numberOfLines={1}
-                    ellipsizeMode="tail">
-                    {item.title}
-                  </Text>
-                  <Text
-                    style={styles.textContent}
-                    numberOfLines={1}
-                    ellipsizeMode="tail">
-                    {item.content}
-                  </Text>
+          return (
+            <>
+              <TouchableOpacity
+                style={styles.container}
+                onPress={() =>
+                  navigation.navigate('PostPage', {
+                    postId: item.id,
+                  })
+                }>
+                {category && (
+                  <View
+                    style={[
+                      styles.containerCategory,
+                      {backgroundColor: category?.boxColor},
+                    ]}>
+                    <Text
+                      style={[styles.textCategory, {color: category?.color}]}>
+                      {category?.label}
+                    </Text>
+                  </View>
+                )}
+                <View style={styles.containerRow}>
+                  <View style={{flex: 1}}>
+                    <Text
+                      style={styles.textTitle}
+                      numberOfLines={1}
+                      ellipsizeMode="tail">
+                      {item.title}
+                    </Text>
+                    <Text
+                      style={styles.textContent}
+                      numberOfLines={1}
+                      ellipsizeMode="tail">
+                      {item.content}
+                    </Text>
 
-                  <View style={styles.line} />
+                    <View style={styles.line} />
 
-                  <View style={styles.containerInfo}>
-                    <View style={styles.containerRow}>
-                      <Text style={styles.textIsWriterDate}>
-                        {item.nickname} ·
-                      </Text>
-                      <Text style={styles.textIsWriterDate}>
-                        {timeAgo(item.created_at)}
-                      </Text>
-                    </View>
+                    <View style={styles.containerInfo}>
+                      <View style={styles.containerRow}>
+                        <Text style={styles.textIsWriterDate}>
+                          {item.nickname} ·
+                        </Text>
+                        <Text style={styles.textIsWriterDate}>
+                          {timeAgo(item.created_at)}
+                        </Text>
+                      </View>
 
-                    <View style={styles.containerRow}>
-                      <TouchableOpacity
-                        onPress={() => handleLike(user_id, item.id)}>
-                        <SvgXml
-                          xml={
-                            isLiked ? PostIcon.fullLike : PostIcon.commentLike
-                          }
-                        />
-                      </TouchableOpacity>
-                      <Text style={styles.textLikeComment}>
-                        {item.like_count}
-                      </Text>
-                      <SvgXml xml={PostIcon.commentComment} />
-                      <Text style={styles.textLikeComment}>
-                        {item.comment_count}
-                      </Text>
+                      <View style={styles.containerRow}>
+                        <TouchableOpacity
+                          onPress={() => handleLike(user_id, item.id)}>
+                          <SvgXml
+                            xml={
+                              isLiked ? PostIcon.fullLike : PostIcon.commentLike
+                            }
+                          />
+                        </TouchableOpacity>
+                        <Text style={styles.textLikeComment}>
+                          {item.like_count}
+                        </Text>
+                        <SvgXml xml={PostIcon.commentComment} />
+                        <Text style={styles.textLikeComment}>
+                          {item.comment_count}
+                        </Text>
+                      </View>
                     </View>
                   </View>
+                  {thumbnail && (
+                    <Image style={styles.image} source={{uri: thumbnail}} />
+                  )}
                 </View>
-                {thumbnail && (
-                  <Image style={styles.image} source={{uri: thumbnail}} />
-                )}
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
 
-            <View style={styles.containerRow}></View>
-            {index < postList.length - 1 ? (
-              <View style={styles.line2} />
-            ) : (
-              <View style={{marginBottom: 16}} />
-            )}
-          </>
-        );
-      }}
-    />
+              <View style={styles.containerRow}></View>
+              {index < postList.length - 1 ? (
+                <View style={styles.line2} />
+              ) : (
+                <View />
+              )}
+            </>
+          );
+        }}
+      />
+      <View style={styles.line2} />
+    </>
   );
 };
 
