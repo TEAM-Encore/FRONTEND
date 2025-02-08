@@ -328,18 +328,19 @@ const HomePage: React.FC<HomePageProps> = () => {
 
   return (
     <SafeAreaView style={HomeStyles.container}>
+      <View style={HomeStyles.containerIcons}>
+        <SvgXml xml={HomeIcon.iconTitle} />
+        <View style={HomeStyles.containerRow}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('HomeSearchDefaultPage')}>
+            <IconSearch style={{marginRight: 20}} />
+          </TouchableOpacity>
+          <IconNotification />
+        </View>
+      </View>
+
       <ScrollView>
         <View style={HomeStyles.containerHeader}>
-          <View style={HomeStyles.containerIcons}>
-            <SvgXml xml={HomeIcon.iconTitle} />
-            <View style={HomeStyles.containerRow}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('HomeSearchDefaultPage')}>
-                <IconSearch style={{marginRight: 20}} />
-              </TouchableOpacity>
-              <IconNotification />
-            </View>
-          </View>
           <FlatList
             ref={bannerRef}
             data={circularCarouselTicketList}

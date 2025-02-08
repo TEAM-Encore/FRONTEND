@@ -11,7 +11,7 @@ const HomeStyles = StyleSheet.create({
     backgroundColor: Colors.gray_01,
   },
   containerHeader: {
-    height: 280,
+    height: 210,
     overflow: 'hidden',
   },
   containerIcons: {
