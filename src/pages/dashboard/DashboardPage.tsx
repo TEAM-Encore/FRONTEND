@@ -23,27 +23,23 @@ type RootStackParamList = {
 const DashboardPage: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const renderHeader = () => (
-    <View style={DashboardStyles.containerHeader}>
-      <View style={DashboardStyles.containerIcons}>
-        <Text style={DashboardStyles.textTitle}>게시판</Text>
-        <View style={DashboardStyles.containerRow}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('DashboardSearchDefaultPage')}>
-            <IconSearch style={{marginRight: 20}} />
-          </TouchableOpacity>
-          <IconNotification />
-        </View>
-      </View>
-    </View>
-  );
-
   return (
     <SafeAreaView style={DashboardStyles.container}>
+      <View style={DashboardStyles.containerHeader}>
+        <View style={DashboardStyles.containerIcons}>
+          <Text style={DashboardStyles.textTitle}>게시판</Text>
+          <View style={DashboardStyles.containerRow}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('DashboardSearchDefaultPage')}>
+              <IconSearch style={{marginRight: 20}} />
+            </TouchableOpacity>
+            <IconNotification />
+          </View>
+        </View>
+      </View>
       <FlatList
         keyExtractor={item => String(item.id)}
         data={[]}
-        ListHeaderComponent={renderHeader}
         renderItem={null}
         ListFooterComponent={<DashboardTabs />}
       />

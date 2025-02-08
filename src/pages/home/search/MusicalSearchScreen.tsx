@@ -91,7 +91,6 @@ const MusicalSearchScreen: React.FC<SearchScreenProps> = ({postData, text}) => {
           }
         />
       </View>
-      <View style={HomeStyles.line2} />
     </View>
   );
 };

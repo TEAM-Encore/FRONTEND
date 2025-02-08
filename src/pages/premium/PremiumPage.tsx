@@ -135,6 +135,19 @@ export default function PremiumPage() {
 
   return (
     <SafeAreaView style={PremiumStyles.container}>
+      <View style={PremiumStyles.containerHeader}>
+        <View style={PremiumStyles.containerIcons}>
+          <Text style={PremiumStyles.textTitle}>프리미엄</Text>
+          <View style={PremiumStyles.containerRow}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('PremiumSearchDefaultPage')}
+              onLayout={handleLayout}>
+              <IconSearch style={{marginRight: 20}} />
+            </TouchableOpacity>
+            <IconNotification />
+          </View>
+        </View>
+      </View>
       <FlatList
         data={data}
         keyExtractor={(item, index) => item.id || index.toString()}
@@ -147,20 +160,6 @@ export default function PremiumPage() {
         ListHeaderComponent={
           <>
             <View style={PremiumStyles.containerHeader}>
-              <View style={PremiumStyles.containerIcons}>
-                <Text style={PremiumStyles.textTitle}>프리미엄</Text>
-                <View style={PremiumStyles.containerRow}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('PremiumSearchDefaultPage')
-                    }
-                    onLayout={handleLayout}>
-                    <IconSearch style={{marginRight: 20}} />
-                  </TouchableOpacity>
-                  <IconNotification />
-                </View>
-              </View>
-
               {reviewModalVisible && (
                 <ToolTipModal
                   visible={reviewModalVisible}

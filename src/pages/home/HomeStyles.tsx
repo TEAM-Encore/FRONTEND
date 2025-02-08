@@ -11,7 +11,7 @@ const HomeStyles = StyleSheet.create({
     backgroundColor: Colors.gray_01,
   },
   containerHeader: {
-    height: 280,
+    height: 210,
     overflow: 'hidden',
   },
   containerIcons: {
@@ -117,7 +117,9 @@ const HomeStyles = StyleSheet.create({
   textTicketDateActor: {
     ...caption,
     color: Colors.gray_12,
+    width: 200,
     marginLeft: 6,
+    overflow: 'hidden',
   },
   ticketLine: {
     position: 'absolute',

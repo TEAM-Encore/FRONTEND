@@ -328,18 +328,19 @@ const HomePage: React.FC<HomePageProps> = () => {
 
   return (
     <SafeAreaView style={HomeStyles.container}>
+      <View style={HomeStyles.containerIcons}>
+        <SvgXml xml={HomeIcon.iconTitle} />
+        <View style={HomeStyles.containerRow}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('HomeSearchDefaultPage')}>
+            <IconSearch style={{marginRight: 20}} />
+          </TouchableOpacity>
+          <IconNotification />
+        </View>
+      </View>
+
       <ScrollView>
         <View style={HomeStyles.containerHeader}>
-          <View style={HomeStyles.containerIcons}>
-            <SvgXml xml={HomeIcon.iconTitle} />
-            <View style={HomeStyles.containerRow}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('HomeSearchDefaultPage')}>
-                <IconSearch style={{marginRight: 20}} />
-              </TouchableOpacity>
-              <IconNotification />
-            </View>
-          </View>
           <FlatList
             ref={bannerRef}
             data={circularCarouselTicketList}
@@ -424,7 +425,10 @@ const HomePage: React.FC<HomePageProps> = () => {
                 </View>
                 <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
                   <SvgXml xml={HomeIcon.place} />
-                  <Text style={HomeStyles.textTicketDateActor}>
+                  <Text
+                    style={HomeStyles.textTicketDateActor}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
                     {ticketList?.location} {ticketList?.seat}
                   </Text>
                 </View>
@@ -477,7 +481,7 @@ const HomePage: React.FC<HomePageProps> = () => {
           <Text style={HomeStyles.textWriteReview}>전체보기 {'>'}</Text>
         </View>
         <View style={{alignItems: 'center'}}>
-          {popularPremiumReviews.map((review, index) => (
+          {popularPremiumReviews.slice(0, 3).map((review, index) => (
             <View
               key={review.review_id}
               style={HomeStyles.containerPremiumReviews}>

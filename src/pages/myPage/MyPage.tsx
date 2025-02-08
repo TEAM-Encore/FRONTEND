@@ -58,8 +58,8 @@ export default function MyPage() {
     console.log('Updated userData:', userData);
   }, [userData]);
 
-  const renderHeader = () => (
-    <>
+  return (
+    <SafeAreaView style={MyPageStyles.container}>
       <View style={MyPageStyles.containerHeader}>
         <View style={MyPageStyles.containerIcons}>
           <Text style={MyPageStyles.textTitle}>마이페이지</Text>
@@ -77,17 +77,11 @@ export default function MyPage() {
           </View>
         </View>
       </View>
-    </>
-  );
-
-  return (
-    <SafeAreaView style={MyPageStyles.container}>
       <FlatList
         keyExtractor={item => item.id.toString()}
         data={[]}
         ListHeaderComponent={
           <>
-            {renderHeader()}
             <View style={MyPageStyles.containerHeader}>
               <View style={MyPageStyles.rectContainer}>
                 <SvgXml xml={MyPageIcon.rectangle1} />

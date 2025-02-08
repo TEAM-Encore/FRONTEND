@@ -163,18 +163,6 @@ export default function TicketBookPage() {
 
   const renderHeader = () => (
     <>
-      <View style={TicketBookStyles.containerHeader}>
-        <View style={TicketBookStyles.containerIcons}>
-          <Text style={TicketBookStyles.textTitle}>티켓북</Text>
-          <View style={TicketBookStyles.containerRow}>
-            <TouchableOpacity>
-              <IconSearch style={{marginRight: 20}} />
-            </TouchableOpacity>
-            <IconNotification />
-          </View>
-        </View>
-      </View>
-
       <TouchableOpacity
         style={{
           flexDirection: 'row',
@@ -236,6 +224,17 @@ export default function TicketBookPage() {
 
   return (
     <SafeAreaView style={TicketBookStyles.container}>
+      <View style={TicketBookStyles.containerHeader}>
+        <View style={TicketBookStyles.containerIcons}>
+          <Text style={TicketBookStyles.textTitle}>티켓북</Text>
+          <View style={TicketBookStyles.containerRow}>
+            <TouchableOpacity>
+              <IconSearch style={{marginRight: 20}} />
+            </TouchableOpacity>
+            <IconNotification />
+          </View>
+        </View>
+      </View>
       <FlatList
         data={[]}
         ListHeaderComponent={renderHeader}
