@@ -72,6 +72,7 @@ const MusicalDetailPage: React.FC<MusicalDetailPageProps> = ({route}) => {
     <SafeAreaView style={MusicalDetailStyles.container}>
       <FlatList
         data={[]}
+        keyExtractor={item => item.id.toString()}
         ListHeaderComponent={
           <>
             <View style={MusicalDetailStyles.imageContainer}>

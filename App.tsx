@@ -262,11 +262,14 @@ export default function App() {
                   cardStyle: {backgroundColor: '#FBFBFB'},
                 }}
               />
-              <Stack.Screen
+              {/* <Stack.Screen
                 name="Tabs"
                 component={props => <Tabs {...props} postData={postData} />}
                 options={{headerShown: false}}
-              />
+              /> */}
+              <Stack.Screen name="Tabs" options={{headerShown: false}}>
+                {props => <Tabs {...props} postData={postData} />}
+              </Stack.Screen>
               <Stack.Screen
                 name="HomeBannerPage"
                 component={HomeBannerPage}
