@@ -78,7 +78,7 @@ const SearchStyles = StyleSheet.create({
     color: Colors.wireframe_400,
   },
   recentSearchItem: {
-    paddingVertical: 10,
+    paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
     flexDirection: 'row',
@@ -86,7 +86,7 @@ const SearchStyles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   recentSearchText: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#333',
   },
   noHistoryContainer: {

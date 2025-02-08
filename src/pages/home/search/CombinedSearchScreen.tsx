@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text} from 'react-native';
+import {View} from 'react-native';
 import MusicalSearchScreen from './MusicalSearchScreen';
 import DashboardSearchScreen from '@/pages/dashboard/search/DashboardSearchScreen';
 import PremiumSearchScreen from './PremiumSearchScreen';
@@ -16,6 +16,7 @@ const CombinedSearchScreen: React.FC<SearchScreenProps> = ({
   return (
     <>
       <MusicalSearchScreen postData={postData} text={text} />
+      <View style={{marginTop: 32}} />
       <DashboardSearchScreen postData={postData} />
       <PremiumSearchScreen postData={postData} text={text} />
     </>
