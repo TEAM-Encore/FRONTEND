@@ -28,7 +28,7 @@ const MyPageStyles = StyleSheet.create({
   coinContainer: {
     backgroundColor: Colors.sub_04,
     borderRadius: 4,
-    width: 51,
+    width: 60,
     height: 26,
     justifyContent: 'center',
     alignItems: 'center',
