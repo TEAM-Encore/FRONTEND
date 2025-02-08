@@ -35,7 +35,7 @@ const PremiumStep5Page: React.FC<PremiumProp> = ({
   const options = [
     {
       id: '1',
-      label: '매우 퀘적해요',
+      label: '매우 쾌적해요',
       labelColor: Colors.sub_05,
       icon1: ReviewWriteIcon.goodIcon1,
       icon2: ReviewWriteIcon.goodIcon2,

@@ -18,6 +18,7 @@ import {PostPresignedUrl} from '@/api/image.api';
 import {createTicket} from '@/api/ticketBook.api';
 
 import {TicketBookIcon} from '@/assets/icons/ticketbook/TicketBookIcon';
+import {useNavigation} from '@react-navigation/native';
 
 type PremiumProp = {
   goToNext: any;
@@ -26,6 +27,7 @@ type PremiumProp = {
 };
 
 export default function AddTicketStep5Page({}: PremiumProp) {
+  const navigation = useNavigation();
   const screenWidth = Dimensions.get('window').width;
   const [imageUrl, setImageUrl] = useState('');
   const {addTicketData} = useAddTicket();
@@ -39,10 +41,41 @@ export default function AddTicketStep5Page({}: PremiumProp) {
         async res => {
           if (res.assets && res.assets.length > 0) {
             const imageFileName = res.assets[0].fileName || '';
+            const fileUri = res.assets[0].uri || '';
+            const fileType = res.assets[0].type || 'image/jpeg';
 
             try {
               const response = await PostPresignedUrl(imageFileName);
+              const presignedUrl = response.data;
               const urlWithoutQuery = response.data.split('?')[0];
+
+              // PUT 요청으로 이미지 업로드
+              const file = {
+                uri: fileUri,
+                name: imageFileName,
+                type: fileType,
+              };
+
+              const putResponse = await fetch(presignedUrl, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': file.type,
+                },
+                body: await fetch(file.uri).then(res => res.blob()),
+              });
+
+              if (putResponse.ok) {
+                // console.log('이미지 업로드 성공:', urlWithoutQuery);
+                resolve(urlWithoutQuery); // URL 반환
+              } else {
+                console.error(
+                  '이미지 업로드 실패: ',
+                  putResponse.status,
+                  await putResponse.text(),
+                );
+                resolve(null);
+              }
+
               setImageUrl(urlWithoutQuery);
               resolve(null);
             } catch (error) {
@@ -71,6 +104,7 @@ export default function AddTicketStep5Page({}: PremiumProp) {
           imageUrl,
         );
         // console.log(response.data);
+        navigation.goBack();
       } catch (error) {
         console.error('티켓 생성 실패:', error);
       }

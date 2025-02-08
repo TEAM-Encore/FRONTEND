@@ -46,7 +46,7 @@ const SignUpStyles = StyleSheet.create({
     backgroundColor: Colors.gray_03,
   },
   containerButton: {
-    marginTop: 340,
+    marginTop: 310,
     marginHorizontal: 20,
   },
   containerNextButton: {

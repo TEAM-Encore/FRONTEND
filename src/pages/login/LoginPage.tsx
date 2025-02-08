@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {SafeAreaView, View, Text, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
@@ -6,6 +6,7 @@ import {LoginIcon} from '@/assets/icons/login/LoginIcon';
 import LoginStyles from './LoginStyles';
 import Colors from '@/assets/colors/Colors';
 import {createUser} from '@/api/users.api';
+import {useOnboarding} from '@/state/OnboardingContext';
 
 type RootStackParamList = {
   Tabs: undefined;
@@ -17,19 +18,23 @@ type RootStackParamList = {
 export default function LoginPage() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
+  const {onboardingData, updateOnboardingData} = useOnboarding();
+
+  // const [emailCounter, setEmailCounter] = useState(onboardingData.emailNumber);
+
   const fetchSignUp = async () => {
     try {
-      const response = await createUser(
-        'encore@gmail.com',
-        'password',
-        '앙코르',
-        'GOOGLE',
-        'BASIC',
-      );
-      // console.log(response.data.data);
+      const email = `encore${onboardingData.emailNumber}@gmail.com`;
+      console.log(onboardingData.emailNumber);
+      updateOnboardingData({
+        emailNumber: (onboardingData.emailNumber += 1),
+      });
+      await createUser(email, 'password', '앙코르', 'GOOGLE', 'BASIC');
+
+      // setEmailCounter((prev: number) => prev + 1);
       navigation.navigate('SignUpPage');
     } catch (error) {
-      console.error('회원가입 오류:', error);
+      // console.error('회원가입 오류:', error.response.data);
     }
   };
 

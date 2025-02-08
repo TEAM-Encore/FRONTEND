@@ -41,6 +41,7 @@ const DashboardPage: React.FC = () => {
   return (
     <SafeAreaView style={DashboardStyles.container}>
       <FlatList
+        keyExtractor={item => String(item.id)}
         data={[]}
         ListHeaderComponent={renderHeader}
         renderItem={null}

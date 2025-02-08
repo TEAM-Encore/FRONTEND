@@ -83,6 +83,7 @@ export default function MyPage() {
   return (
     <SafeAreaView style={MyPageStyles.container}>
       <FlatList
+        keyExtractor={item => item.id.toString()}
         data={[]}
         ListHeaderComponent={
           <>

@@ -58,7 +58,7 @@ export default function TicketBookPage() {
       } else if (category == '최근 1년') {
         period = 'YEAR';
       }
-      const response = await getTicketBookList(period);
+      const response = await getTicketBookList('NULL');
       setTicketList(response.data.data);
       // console.log(response.data.data);
     } catch (error) {
@@ -199,6 +199,7 @@ export default function TicketBookPage() {
 
       <FlatList
         contentContainerStyle={{justifyContent: 'center'}}
+        keyExtractor={item => item.id.toString()}
         data={ticketList}
         renderItem={({item}) => {
           let ticketBackground;
@@ -239,6 +240,7 @@ export default function TicketBookPage() {
         data={[]}
         ListHeaderComponent={renderHeader}
         renderItem={null}
+        keyExtractor={item => item.id}
       />
 
       <TouchableOpacity

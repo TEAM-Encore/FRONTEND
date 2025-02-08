@@ -121,6 +121,7 @@ const OnboardingStyles = StyleSheet.create({
     paddingHorizontal: 9.81,
     paddingVertical: 8.17,
     color: '#3D3D3D',
+    overflow: 'hidden',
   },
   textKeyword: {
     ...body01,
@@ -129,6 +130,11 @@ const OnboardingStyles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     bottom: 0,
+  },
+  iconKeyword2: {
+    position: 'absolute',
+    right: -10,
+    bottom: -15,
   },
 
   // step3

@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   TouchableOpacity,
@@ -18,26 +18,27 @@ import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import Colors from '@/assets/colors/Colors';
 import {patchMyInfo} from '@/api/users.api';
 import {useOnboarding} from '@/state/OnboardingContext';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 type RootStackParamList = {
   Tabs: undefined;
 };
 
 export default function ProfileCardPage() {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const {onboardingData} = useOnboarding();
 
   const keywordsMapping: {[key: string]: string} = {
-    EMOTIONAL: '깊은 감동을 받게되는',
-    ENTERTAINING: '흥미롭고 재미있는',
-    QUALITY: '넘버 퀄리티가 뛰어난',
-    STAGE_DESIGN: '무대 연출력이 뛰어난',
-    CASTING: '캐스팅 페어합이 좋은',
-    ACTING: '배우의 연기력이 좋은',
-    ACTOR: '최애 배우가 출연하는',
-    LIGHT: '가볍게 보기 좋은',
-    STORY: '스토리 라인이 탄탄한',
+    '깊은 감동을 받게되는': 'EMOTIONAL',
+    '흥미롭고 재미있는': 'ENTERTAINING',
+    '넘버 퀄리티가 뛰어난': 'QUALITY',
+    '무대 연출력이 뛰어난': 'STAGE_DESIGN',
+    '캐스팅 페어합이 좋은': 'CASTING',
+    '배우의 연기력이 좋은': 'ACTING',
+    '최애 배우가 출연하는': 'ACTOR',
+    '가볍게 보기 좋은': 'LIGHT',
+    '스토리 라인이 탄탄한': 'STORY',
   };
 
   const updatedKeywords = onboardingData.keywords.map(keyword =>
@@ -49,9 +50,9 @@ export default function ProfileCardPage() {
   );
 
   const frequencyMapping: {[key: string]: string} = {
-    LEVEL1: '연 1~3회',
-    LEVEL2: '연 4~7회',
-    LEVEL3: '연 8회 이상',
+    '연 1~3회': 'LEVEL1',
+    '연 4~7회': 'LEVEL2',
+    '연 8회 이상': 'LEVEL3',
   };
 
   const mappedFrequency =
@@ -70,10 +71,16 @@ export default function ProfileCardPage() {
     nickname: onboardingData.nickname,
     num_of_subscriber: 0,
     num_of_write_post: 0,
-    preferred_keywords: mappedKeywords,
-    viewing_frequency: mappedFrequency,
+    preferred_keywords: updatedKeywords,
+    viewing_frequency: onboardingData.frequency,
     email: '',
   });
+
+  useEffect(() => {
+    console.log(onboardingData.nickname);
+    console.log(mappedFrequency);
+    console.log(updatedKeywords);
+  }, []);
 
   const fetchPatchInfo = async () => {
     try {
@@ -172,7 +179,7 @@ export default function ProfileCardPage() {
           </View>
         </ScrollView>
 
-        <View style={[OnboardingStyles.containerButton, {marginTop: 235}]}>
+        <View style={[OnboardingStyles.containerButton, {marginTop: 205}]}>
           <TouchableOpacity
             style={[
               OnboardingStyles.containerNextButton,
@@ -180,7 +187,7 @@ export default function ProfileCardPage() {
             ]}
             onPress={async () => {
               await fetchPatchInfo();
-              navigation.navigate('Tabs');
+              navigation.replace('Tabs');
             }}>
             <Text
               style={[
