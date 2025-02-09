@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   FlatList,
@@ -22,6 +22,7 @@ type RootStackParamList = {
 
 const DashboardPage: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [selectedTab, setSelectedTab] = useState('Entire');
 
   return (
     <SafeAreaView style={DashboardStyles.container}>
@@ -37,11 +38,45 @@ const DashboardPage: React.FC = () => {
           </View>
         </View>
       </View>
+
+      <View style={DashboardStyles.tabContainer}>
+        {['Entire', 'Information', 'Review', 'Actor', 'Free'].map(
+          (tab, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => setSelectedTab(tab)}
+              style={[
+                DashboardStyles.tabButton,
+                selectedTab === tab && DashboardStyles.activeTabButton,
+              ]}>
+              <Text
+                style={[
+                  DashboardStyles.tabText,
+                  selectedTab === tab && DashboardStyles.activeTabText,
+                ]}>
+                {tab === 'Entire'
+                  ? '전체'
+                  : tab === 'Information'
+                  ? '정보'
+                  : tab === 'Review'
+                  ? '후기'
+                  : tab === 'Actor'
+                  ? '배우'
+                  : '자유'}
+              </Text>
+              {selectedTab === tab && (
+                <View style={DashboardStyles.activeTabUnderline} />
+              )}
+            </TouchableOpacity>
+          ),
+        )}
+      </View>
+
       <FlatList
-        keyExtractor={item => String(item.id)}
+        // keyExtractor={item => String(item.id)}
         data={[]}
         renderItem={null}
-        ListFooterComponent={<DashboardTabs />}
+        ListFooterComponent={<DashboardTabs selectedTab={selectedTab} />}
       />
 
       {/* 글쓰기 버튼 */}
