@@ -13,8 +13,6 @@ import {useNavigation} from '@react-navigation/native';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
-// import {createLikePost, deleteLikePost} from '@/api/post.api';
-import {createAndDeleteLikePost} from '@/api/post.api';
 import {timeAgo} from '../../util/timeAgo';
 
 const {subhead03, body01, caption} = typography;
@@ -75,18 +73,6 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
     return categoryMapping[category];
   };
 
-  // 일단 사용자 아이디 1로 고정
-  const user_id = 1;
-
-  const handleLike = async (user_id: number, post_id: number) => {
-    try {
-      await createAndDeleteLikePost(user_id, post_id);
-      setIsLiked(prev => !prev);
-    } catch (error) {
-      console.error('좋아요 토글 오류:', error);
-    }
-  };
-
   return (
     <>
       <FlatList
@@ -145,14 +131,11 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
                       </View>
 
                       <View style={styles.containerRow}>
-                        <TouchableOpacity
-                          onPress={() => handleLike(user_id, item.id)}>
-                          <SvgXml
-                            xml={
-                              isLiked ? PostIcon.fullLike : PostIcon.commentLike
-                            }
-                          />
-                        </TouchableOpacity>
+                        <SvgXml
+                          xml={
+                            isLiked ? PostIcon.fullLike : PostIcon.commentLike
+                          }
+                        />
                         <Text style={styles.textLikeComment}>
                           {item.like_count}
                         </Text>
@@ -169,12 +152,12 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
                 </View>
               </TouchableOpacity>
 
-              <View style={styles.containerRow}></View>
+              {/* <View style={styles.containerRow}></View>
               {index < postList.length - 1 ? (
                 <View style={styles.line2} />
               ) : (
                 <View />
-              )}
+              )} */}
             </>
           );
         }}
