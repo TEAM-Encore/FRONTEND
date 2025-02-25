@@ -184,37 +184,37 @@ const SavePage: React.FC = () => {
             ) : (
               savedPosts.map(item => (
                 <View key={item.post_id} style={SaveStyles.list_container}>
-                  <View style={SaveStyles.list}>
-                    <View style={SaveStyles.sub_container}>
-                      <TouchableOpacity
-                        onPress={() => handleClick(item.post_id)}>
+                  <TouchableOpacity onPress={() => handleClick(item.post_id)}>
+                    <View style={SaveStyles.list}>
+                      <View style={SaveStyles.sub_container}>
                         <Text style={SaveStyles.list_title}>{item.title}</Text>
-                      </TouchableOpacity>
 
-                      <TouchableOpacity
-                        onPress={() =>
-                          openModal(
-                            selectedTitle,
-                            selectedSubTitle,
-                            topButton,
-                            bottomButton,
-                            item.post_id,
-                          )
-                        }>
-                        <View>
-                          <Text style={SaveStyles.delete}>삭제</Text>
-                        </View>
-                      </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() =>
+                            openModal(
+                              selectedTitle,
+                              selectedSubTitle,
+                              topButton,
+                              bottomButton,
+                              item.post_id,
+                            )
+                          }>
+                          <View>
+                            <Text style={SaveStyles.delete}>삭제</Text>
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                      <View style={SaveStyles.sub_container}>
+                        <Text style={SaveStyles.list_date}>
+                          {timeAgo(item.modified_at)}
+                        </Text>
+                        <Text style={SaveStyles.list_expire_date}>
+                          {deleteTimeAgo(item.modified_at).message}
+                        </Text>
+                      </View>
                     </View>
-                    <View style={SaveStyles.sub_container}>
-                      <Text style={SaveStyles.list_date}>
-                        {timeAgo(item.modified_at)}
-                      </Text>
-                      <Text style={SaveStyles.list_expire_date}>
-                        {deleteTimeAgo(item.modified_at).message}
-                      </Text>
-                    </View>
-                  </View>
+                  </TouchableOpacity>
+
                   <View style={SaveStyles.line} />
                 </View>
               ))

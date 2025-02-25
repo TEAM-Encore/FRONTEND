@@ -285,6 +285,16 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
             </View>
             <View style={WriteStyles.photos}>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <TouchableOpacity
+                  style={[
+                    WriteStyles.photo,
+                    photoCount == 10 && {opacity: 0.4},
+                  ]}
+                  onPress={handleSelectImage}
+                  disabled={photoCount == 10}>
+                  <SvgXml xml={DashboardIcon.camera} />
+                  <Text style={WriteStyles.photo_text}>사진 추가</Text>
+                </TouchableOpacity>
                 {imgUrls.map((url, index) => (
                   <View key={index} style={WriteStyles.photo_wrapper}>
                     <Image
@@ -303,16 +313,6 @@ const WritePage: React.FC<WritePageProps> = ({setPostData}) => {
                     </TouchableOpacity>
                   </View>
                 ))}
-                <TouchableOpacity
-                  style={[
-                    WriteStyles.photo,
-                    photoCount == 10 && {opacity: 0.4},
-                  ]}
-                  onPress={handleSelectImage}
-                  disabled={photoCount == 10}>
-                  <SvgXml xml={DashboardIcon.camera} />
-                  <Text style={WriteStyles.photo_text}>사진 추가</Text>
-                </TouchableOpacity>
               </ScrollView>
             </View>
           </View>
