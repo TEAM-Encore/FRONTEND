@@ -1,22 +1,16 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   Modal,
-  StyleSheet,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Animated,
-  Dimensions,
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
-
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import Colors from '@/assets/colors/Colors';
-import {typography} from '../../styles/typography';
+import ModalCategoryStyles from './ModalCategoryStyles';
 import {ScrollView} from 'react-native-gesture-handler';
-
-const {headline, body02, caption} = typography;
 
 type ModalCategoryProps = {
   modalVisible: boolean;
@@ -26,6 +20,7 @@ type ModalCategoryProps = {
   onSelect: (selectedItem: string) => void;
 };
 
+// 게시판 작성 페이지 내 카테고리 선택 시 뜨는 모달
 const ModalCategory: React.FC<ModalCategoryProps> = ({
   modalVisible,
   setModalVisible,
@@ -57,29 +52,31 @@ const ModalCategory: React.FC<ModalCategoryProps> = ({
       animationType={'fade'}
       transparent
       statusBarTranslucent>
-      <View style={styles.overlay}>
+      <View style={ModalCategoryStyles.overlay}>
         <TouchableWithoutFeedback onPress={closeModal}>
-          <View style={styles.background} />
+          <View style={ModalCategoryStyles.background} />
         </TouchableWithoutFeedback>
-        <View style={styles.container}>
-          <TouchableOpacity style={styles.iconCancel} onPress={closeModal}>
+        <View style={ModalCategoryStyles.container}>
+          <TouchableOpacity
+            style={ModalCategoryStyles.iconCancel}
+            onPress={closeModal}>
             <SvgXml xml={DashboardIcon.cancel} />
           </TouchableOpacity>
-          <View style={styles.containerTitle}>
-            <Text style={styles.textTitle}>{modalTitle}</Text>
+          <View style={ModalCategoryStyles.containerTitle}>
+            <Text style={ModalCategoryStyles.textTitle}>{modalTitle}</Text>
           </View>
           <ScrollView>
             {categoryList.map(item => (
               <TouchableOpacity
                 key={item}
                 style={[
-                  styles.containerList,
+                  ModalCategoryStyles.containerList,
                   selectedItem === item && {backgroundColor: Colors.gray_03},
                 ]}
                 onPress={() => handleSelect(item)}>
                 <Text
                   style={[
-                    styles.textList,
+                    ModalCategoryStyles.textList,
                     selectedItem === item && {color: Colors.gray_12},
                   ]}>
                   {item}
@@ -87,71 +84,15 @@ const ModalCategory: React.FC<ModalCategoryProps> = ({
               </TouchableOpacity>
             ))}
           </ScrollView>
-          <TouchableOpacity style={styles.buttonCheck} onPress={handleConfirm}>
-            <Text style={styles.textButton}>확인</Text>
+          <TouchableOpacity
+            style={ModalCategoryStyles.buttonCheck}
+            onPress={handleConfirm}>
+            <Text style={ModalCategoryStyles.textButton}>확인</Text>
           </TouchableOpacity>
         </View>
       </View>
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-  },
-  background: {
-    flex: 1,
-  },
-  container: {
-    width: '100%',
-    maxHeight: 397,
-    justifyContent: 'center',
-    borderTopStartRadius: 25,
-    borderTopEndRadius: 25,
-    backgroundColor: Colors.gray_01,
-  },
-  containerTitle: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 20,
-  },
-  textTitle: {
-    ...headline,
-  },
-  iconCancel: {
-    position: 'absolute',
-    top: 26.5,
-    right: 20,
-  },
-  containerList: {
-    height: 56,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textList: {
-    ...body02,
-    color: Colors.gray_07,
-  },
-  buttonCheck: {
-    height: 51,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    backgroundColor: Colors.sub_04,
-    marginHorizontal: 20,
-    marginTop: 19,
-    marginBottom: 33,
-  },
-  textButton: {
-    fontFamily: 'Pretendard-SemiBold',
-    fontSize: 18,
-    lineHeight: 24,
-    letterSpacing: -0.3,
-  },
-});
 
 export default ModalCategory;

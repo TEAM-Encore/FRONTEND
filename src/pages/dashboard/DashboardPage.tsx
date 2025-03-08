@@ -13,13 +13,13 @@ import DashboardStyles from './DashboardStyles';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import IconSearch from '@/assets/icons/dashboard/IconSearch';
 import IconNotification from '@/assets/icons/dashboard/IconNotification';
-import {GetPostList} from '@/api/post.api';
 
 type RootStackParamList = {
   WritePage: undefined;
   DashboardSearchDefaultPage: undefined;
 };
 
+// 게시판 페이지 (default)
 const DashboardPage: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [selectedTab, setSelectedTab] = useState('Entire');

@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import AlertModalStyle from './AlertModalStyle';
 
+// 모달 내 왼쪽, 오른쪽 버튼을 불러옴
 type CheckTempModalProps = {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;

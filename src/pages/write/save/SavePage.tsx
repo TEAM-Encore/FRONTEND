@@ -42,43 +42,6 @@ const SavePage: React.FC = () => {
   const [count, setCount] = useState(0);
   const [savedPosts, setSavedPosts] = useState<any[]>([]);
 
-  // const fetchSavedPosts = async () => {
-  //   try {
-  //     const storedData = await AsyncStorage.getItem('temporaryPosts');
-  //     console.log('스토리지에 저장된 임시 저장 글: ', storedData);
-  //     const parsedData = JSON.parse(storedData || '[]');
-
-  //     const fetchedPosts = await Promise.all(
-  //       parsedData.map(async (post: {post_id: number}) => {
-  //         const response = await getPost(post.post_id);
-  //         // console.log('getPost 호출 결과값: ', response.data.data);
-  //         return response.data.data;
-  //       }),
-  //     );
-
-  //     setSavedPosts(fetchedPosts);
-  //     setCount(fetchedPosts.length);
-  //     // console.log('Fetched Posts:', fetchedPosts);
-
-  //     if (parsedData.length === 0) {
-  //       setCount(0);
-  //       setSavedPosts([]);
-  //       return;
-  //     }
-  //   } catch (error) {
-  //     if (count === 0) {
-  //       setSavedPosts([]);
-  //     } else {
-  //       console.error('Error fetching saved posts:', error);
-  //       Alert.alert(
-  //         '임시 저장 목록을 불러오는 도중 문제가 발생했습니다. 다시 시도해주세요.',
-  //       );
-  //     }
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
   const fetchSavedPosts = async () => {
     try {
       const storedData = await AsyncStorage.getItem('temporaryPosts');

@@ -9,7 +9,7 @@ import {
 import AlertModalStyle from './AlertModalStyle';
 import {useFocusEffect} from '@react-navigation/native';
 
-// 리뷰 등록 시 뜨는 모달
+// 프리미엄 리뷰 등록 시 뜨는 모달
 type RegisterReviewProps = {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;

@@ -17,7 +17,6 @@ const ActorList: React.FC = () => {
   const [isFetching, setIsFetching] = useState<boolean>(false); // 추가 데이터 로딩 상태
   const [hasMore, setHasMore] = useState<boolean>(true); // 마지막 데이터인지 확인
   const [cursor, setCursor] = useState<number | undefined>(undefined);
-  const [modalVisible, setModalVisible] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<'최신순' | '인기순'>(
     '최신순',
   );

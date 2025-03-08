@@ -11,11 +11,11 @@ import {SvgXml} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
 
 import HomeStyles from '@/pages/home/HomeStyles';
-import TicketDetailStyles from '@/pages/ticketbook/TicketDetailStyles';
+import TicketDetailStyles from '@/pages/ticketBook/TicketDetailStyles';
 
 import {HomeIcon} from '@/assets/icons/home/HomeIcon';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
-import {TicketBookIcon} from '@/assets/icons/ticketbook/TicketBookIcon';
+import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
 
 export default function TicketDetailPage({route}: {route: any}) {
   const {ticket} = route.params;

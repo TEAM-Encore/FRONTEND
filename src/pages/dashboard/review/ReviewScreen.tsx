@@ -5,6 +5,7 @@ import ReviewList from './ReviewList';
 
 type ReviewScreenProps = {};
 
+// 게시판 리뷰 페이지
 const ReviewScreen: React.FC<ReviewScreenProps> = () => {
   return (
     <SafeAreaView style={PostStyles.container}>

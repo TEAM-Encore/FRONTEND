@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import AlertModalStyle from './AlertModalStyle';
 import {deletePost} from '@/api/post.api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// 임시 저장 글 삭제 시 뜨는 모달
+// 게시판 작성 페이지 내 임시 저장 글 삭제 시 뜨는 모달
 type DeleteTempModalProps = {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;

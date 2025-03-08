@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
 import AlertModalStyle from './AlertModalStyle';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// 임시 저장 글 개수가 10개 초과 시 뜨는 모달
+// 게시판 작성 페이지 내 임시 저장 글 개수가 10개 초과 시 뜨는 모달
 type DeleteFirstTempModalProps = {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
@@ -29,7 +29,6 @@ const DeleteFirstTempModal: React.FC<DeleteFirstTempModalProps> = ({
   subTitle,
   topButton,
   bottomButton,
-  savedPosts,
   setSavedPosts,
 }) => {
   const deleteFirstPost = async () => {

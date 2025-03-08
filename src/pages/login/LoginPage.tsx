@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {SafeAreaView, View, Text, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
@@ -17,9 +17,7 @@ type RootStackParamList = {
 
 export default function LoginPage() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
   const {onboardingData, updateOnboardingData} = useOnboarding();
-
   // const [emailCounter, setEmailCounter] = useState(onboardingData.emailNumber);
 
   const fetchSignUp = async () => {

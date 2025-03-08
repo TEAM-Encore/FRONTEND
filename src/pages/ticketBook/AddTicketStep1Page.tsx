@@ -15,7 +15,7 @@ import {useAddTicket} from '@/state/AddTicketContext';
 
 import Colors from '@/assets/colors/Colors';
 import {SvgXml} from 'react-native-svg';
-import {TicketBookIcon} from '@/assets/icons/ticketbook/TicketBookIcon';
+import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
 import {getMusicalSearch} from '@/api/search.api';
 
 type PremiumProp = {

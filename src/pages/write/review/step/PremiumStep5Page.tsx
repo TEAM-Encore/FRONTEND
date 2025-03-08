@@ -6,9 +6,6 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
-  ListRenderItem,
-  Image,
-  FlatList,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';

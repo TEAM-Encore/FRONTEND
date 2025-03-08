@@ -1,6 +1,5 @@
 import {StyleSheet} from 'react-native';
 import Colors from '@/assets/colors/Colors';
-import {typography} from '../../../styles/typography';
 
 const PremiumMyStyles = StyleSheet.create({
   container: {

@@ -3,16 +3,7 @@ import Colors from '@/assets/colors/Colors';
 
 import {typography} from '../../styles/typography';
 
-const {
-  display01,
-  subhead03,
-  subhead02,
-  subhead01,
-  subheadLong02,
-  headline,
-  body01,
-  caption,
-} = typography;
+const {display01, subhead03} = typography;
 
 const DashboardStyles = StyleSheet.create({
   container: {

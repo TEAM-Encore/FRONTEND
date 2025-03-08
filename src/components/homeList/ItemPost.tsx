@@ -1,21 +1,11 @@
 import React, {useState} from 'react';
-import {
-  FlatList,
-  View,
-  Image,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import {FlatList, View, Image, Text, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
-
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import Colors from '@/assets/colors/Colors';
-import {typography} from '../../styles/typography';
 import {timeAgo} from '../../util/timeAgo';
-
-const {subhead03, body01, caption} = typography;
+import ItemPostStyles from './ItemPostStyles';
 
 type NavigationProp = {
   navigate: (screen: 'PostPage') => void;
@@ -35,6 +25,7 @@ type PostProps = {
   }[];
 };
 
+// 게시판에서 정보, 후기 탭에서 게시글 리스트 (카테고리 있는 버전)
 const ItemPost: React.FC<PostProps> = ({postList}) => {
   const navigation = useNavigation<NavigationProp>();
   const [isLiked, setIsLiked] = useState(false);
@@ -85,153 +76,83 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
           return (
             <>
               <TouchableOpacity
-                style={styles.container}
-                onPress={() =>
-                  navigation.navigate('PostPage', {
-                    postId: item.id,
-                  })
-                }>
+                style={ItemPostStyles.container}
+                onPress={navigation.navigate('PostPage', {
+                  postId: item.id,
+                })}>
                 {category && (
                   <View
                     style={[
-                      styles.containerCategory,
+                      ItemPostStyles.containerCategory,
                       {backgroundColor: category?.boxColor},
                     ]}>
                     <Text
-                      style={[styles.textCategory, {color: category?.color}]}>
+                      style={[
+                        ItemPostStyles.textCategory,
+                        {color: category?.color},
+                      ]}>
                       {category?.label}
                     </Text>
                   </View>
                 )}
-                <View style={styles.containerRow}>
+                <View style={ItemPostStyles.containerRow}>
                   <View style={{flex: 1}}>
                     <Text
-                      style={styles.textTitle}
+                      style={ItemPostStyles.textTitle}
                       numberOfLines={1}
                       ellipsizeMode="tail">
                       {item.title}
                     </Text>
                     <Text
-                      style={styles.textContent}
+                      style={ItemPostStyles.textContent}
                       numberOfLines={1}
                       ellipsizeMode="tail">
                       {item.content}
                     </Text>
 
-                    <View style={styles.line} />
+                    <View style={ItemPostStyles.line} />
 
-                    <View style={styles.containerInfo}>
-                      <View style={styles.containerRow}>
-                        <Text style={styles.textIsWriterDate}>
+                    <View style={ItemPostStyles.containerInfo}>
+                      <View style={ItemPostStyles.containerRow}>
+                        <Text style={ItemPostStyles.textIsWriterDate}>
                           {item.nickname} ·
                         </Text>
-                        <Text style={styles.textIsWriterDate}>
+                        <Text style={ItemPostStyles.textIsWriterDate}>
                           {timeAgo(item.created_at)}
                         </Text>
                       </View>
 
-                      <View style={styles.containerRow}>
+                      <View style={ItemPostStyles.containerRow}>
                         <SvgXml
                           xml={
                             isLiked ? PostIcon.fullLike : PostIcon.commentLike
                           }
                         />
-                        <Text style={styles.textLikeComment}>
+                        <Text style={ItemPostStyles.textLikeComment}>
                           {item.like_count}
                         </Text>
                         <SvgXml xml={PostIcon.commentComment} />
-                        <Text style={styles.textLikeComment}>
+                        <Text style={ItemPostStyles.textLikeComment}>
                           {item.comment_count}
                         </Text>
                       </View>
                     </View>
                   </View>
                   {thumbnail && (
-                    <Image style={styles.image} source={{uri: thumbnail}} />
+                    <Image
+                      style={ItemPostStyles.image}
+                      source={{uri: thumbnail}}
+                    />
                   )}
                 </View>
               </TouchableOpacity>
-
-              {/* <View style={styles.containerRow}></View>
-              {index < postList.length - 1 ? (
-                <View style={styles.line2} />
-              ) : (
-                <View />
-              )} */}
             </>
           );
         }}
       />
-      <View style={styles.line2} />
+      <View style={ItemPostStyles.line2} />
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  containerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  containerCategory: {
-    height: 24,
-    borderRadius: 4.27,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    backgroundColor: '#FFE9DC',
-    paddingHorizontal: 12,
-    paddingVertical: 2,
-    marginBottom: 22,
-  },
-  textCategory: {
-    fontFamily: 'Pretendard-Bold',
-    fontSize: 12,
-    lineHeight: 18,
-    letterSpacing: -0.3,
-  },
-  textTitle: {
-    ...subhead03,
-    marginBottom: 4,
-  },
-  textContent: {
-    ...body01,
-    color: Colors.gray_09,
-  },
-  containerInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  textIsWriterDate: {
-    ...caption,
-    color: Colors.gray_09,
-  },
-  textLikeComment: {
-    ...caption,
-    color: '#878787',
-    marginLeft: 4,
-    marginRight: 4,
-  },
-  image: {
-    width: 84,
-    height: 92,
-    borderRadius: 9,
-    marginLeft: 36,
-  },
-  line: {
-    height: 0.75,
-    backgroundColor: Colors.gray_04,
-    marginVertical: 14,
-  },
-  line2: {
-    height: 4,
-    backgroundColor: Colors.gray_03,
-    marginVertical: 16,
-  },
-});
 
 export default ItemPost;

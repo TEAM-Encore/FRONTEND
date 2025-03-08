@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '../../styles/typography';
 
-const {subhead02, subhead03, body01, caption} = typography;
+const {subhead02, subhead03, body01} = typography;
 
 // 정보, 후기, 배우, 자유 게시판에서 사용되는 스타일
 const PostStyles = StyleSheet.create({

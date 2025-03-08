@@ -5,7 +5,6 @@ import {
   View,
   Text,
   TextInput,
-  FlatList,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
@@ -19,6 +18,35 @@ import Colors from '@/assets/colors/Colors';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import {getMyInfo, patchMyInfo} from '@/api/users.api';
+
+const frequencyList = ['연 1~3회', '연 4~7회', '연 8회 이상'];
+const options = [
+  '감동적인',
+  '연기력이 좋은',
+  '재미있는',
+  '최애 배우가 출연하는',
+  '넘버 퀄리티가 높은',
+  '가볍게 보기 좋은',
+  '연출력이 좋은',
+  '스토리가 탄탄한',
+  '페어합이 좋은',
+];
+const keywordMapping: Record<string, string> = {
+  감동적인: 'EMOTIONAL',
+  '연기력이 좋은': 'ACTING',
+  재미있는: 'ENTERTAINING',
+  '최애 배우가 출연하는': 'ACTOR',
+  '넘버 퀄리티가 높은': 'QUALITY',
+  '가볍게 보기 좋은': 'LIGHT',
+  '연출력이 좋은': 'STAGE_DESIGN',
+  '스토리가 탄탄한': 'STORY',
+  '페어합이 좋은': 'CASTING',
+};
+const frequencyMapping: Record<string, string> = {
+  '연 1~3회': 'LEVEL1',
+  '연 4~7회': 'LEVEL2',
+  '연 8회 이상': 'LEVEL3',
+};
 
 const ModifyProfileImg = () => {
   const [userData, setUserData] = useState<{
@@ -60,26 +88,13 @@ const ModifyProfileImg = () => {
   const [searchText, setSearchText] = useState<string>('');
   const [modalVisible, setModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
-  const [frequency, setFrequency] = useState<string | null>(null);
+  const [frequency, setFrequency] = useState<string>('');
 
   useEffect(() => {
     if (userData && userData.viewing_frequency) {
       setFrequency(userData.viewing_frequency);
     }
   }, [userData]);
-
-  const frequencyList = ['연 1~3회', '연 4~7회', '연 8회 이상'];
-  const options = [
-    '감동적인',
-    '연기력이 좋은',
-    '재미있는',
-    '최애 배우가 출연하는',
-    '넘버 퀄리티가 높은',
-    '가볍게 보기 좋은',
-    '연출력이 좋은',
-    '스토리가 탄탄한',
-    '페어합이 좋은',
-  ];
 
   const handleToggle = () => {
     setIsToggle(prev => !prev);
@@ -112,24 +127,6 @@ const ModifyProfileImg = () => {
     setModalTitle('뮤지컬 관람 빈도');
   };
 
-  const keywordMapping: Record<string, string> = {
-    감동적인: 'EMOTIONAL',
-    '연기력이 좋은': 'ACTING',
-    재미있는: 'ENTERTAINING',
-    '최애 배우가 출연하는': 'ACTOR',
-    '넘버 퀄리티가 높은': 'QUALITY',
-    '가볍게 보기 좋은': 'LIGHT',
-    '연출력이 좋은': 'STAGE_DESIGN',
-    '스토리가 탄탄한': 'STORY',
-    '페어합이 좋은': 'CASTING',
-  };
-
-  const frequencyMapping: Record<string, string> = {
-    '연 1~3회': 'LEVEL1',
-    '연 4~7회': 'LEVEL2',
-    '연 8회 이상': 'LEVEL3',
-  };
-
   const mappedOptions = checkedOptions.map(option => keywordMapping[option]);
   const mappedFrequency = frequencyMapping[frequency];
 
@@ -146,7 +143,7 @@ const ModifyProfileImg = () => {
       });
       console.log('서버 응답: ', response.data);
       // 약간의 대기 후 데이터 재조회
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise<void>(resolve => setTimeout(() => resolve(), 500));
       await fetchMyInfo();
     } catch (error) {
       console.error('정보 업데이트 실패: ', error);

@@ -25,7 +25,7 @@ type PremiumProp = {
   goToNext: any;
   saveData: any;
   stepData: any;
-  reviewId: number;
+  reviewId?: number;
 };
 
 type NavigationProp = NativeStackNavigationProp<
@@ -167,7 +167,7 @@ const PremiumStep6Page: React.FC<PremiumProp> = ({
 
       // 이 부분이 필요가 없는데, 있어야 에러가 안나고 PremiumMyPage로 넘어갈 수 있어서 일단 추가함
       try {
-        const getResponse = await getTicketReview(String(review_id));
+        const getResponse = await getTicketReview(Number(review_id));
         console.log(
           'Review Detail Data:',
           JSON.stringify(getResponse.data.data, null, 2),

@@ -17,7 +17,7 @@ import {useAddTicket} from '@/state/AddTicketContext';
 import {PostPresignedUrl} from '@/api/image.api';
 import {createTicket} from '@/api/ticketBook.api';
 
-import {TicketBookIcon} from '@/assets/icons/ticketbook/TicketBookIcon';
+import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
 import {useNavigation} from '@react-navigation/native';
 
 type PremiumProp = {
