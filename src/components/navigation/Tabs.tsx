@@ -2,11 +2,11 @@ import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import HomePage from '@/pages/home/HomePage';
-import PremiumPage from '@/pages/premium/PremiumPage';
-import DashboardPage from '@/pages/dashboard/DashboardPage';
-import TicketBookPage from '@/pages/ticketBook/TicketBookPage';
-import MyPage from '@/pages/myPage/MyPage';
+import HomeScreen from '@/screens/home/HomeScreen';
+import PremiumScreen from '@/screens/premium/PremiumScreen';
+import DashboardScreen from '@/screens/dashboard/DashboardScreen';
+import TicketBookScreen from '@/screens/ticketBook/TicketBookScreen';
+import MyScreen from '@/screens/myScreen/MyScreen';
 
 import {SvgXml} from 'react-native-svg';
 import {TabSvg} from '@/assets/icons/TabSvg';
@@ -28,32 +28,32 @@ export default function Tabs({route}: {route: TabsRouteProp}) {
   const tabList = [
     {
       name: '홈',
-      content: HomePage,
+      content: HomeScreen,
       icon: TabSvg.HomeIcon,
       tabIcon: TabSvg.tabHomeIcon,
     },
     {
       name: '프리미엄',
-      content: PremiumPage,
+      content: PremiumScreen,
       icon: TabSvg.PremiumIcon,
       tabIcon: TabSvg.tabPremiumIcon,
     },
     {
       name: '게시판',
-      content: DashboardPage,
+      content: DashboardScreen,
       icon: TabSvg.DashboardIcon,
       tabIcon: TabSvg.tabDashboardIcon,
     },
     {
       name: '티켓북',
-      content: TicketBookPage,
+      content: TicketBookScreen,
       icon: TabSvg.TicketBookIcon,
       tabIcon: TabSvg.tabTicketBookIcon,
     },
     {
       name: '마이',
       content: props => (
-        <MyPage
+        <MyScreen
           {...props}
           frequency={frequency}
           checkedOptions={checkedOptions}
@@ -69,7 +69,7 @@ export default function Tabs({route}: {route: TabsRouteProp}) {
   return (
     <>
       <Tab.Navigator
-        initialRouteName="HomePage"
+        initialRouteName="HomeScreen"
         screenOptions={{
           headerShown: false,
           tabBarStyle: {

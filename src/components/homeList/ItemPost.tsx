@@ -8,7 +8,7 @@ import {timeAgo} from '../../util/timeAgo';
 import ItemPostStyles from './ItemPostStyles';
 
 type NavigationProp = {
-  navigate: (screen: 'PostPage') => void;
+  navigate: (screen: 'PostScreen') => void;
 };
 
 type PostProps = {
@@ -77,7 +77,7 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
             <>
               <TouchableOpacity
                 style={ItemPostStyles.container}
-                onPress={navigation.navigate('PostPage', {
+                onPress={navigation.navigate('PostScreen', {
                   postId: item.id,
                 })}>
                 {category && (

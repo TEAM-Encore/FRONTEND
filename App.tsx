@@ -8,31 +8,30 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import {RootStackParamList} from './types';
 import Tabs from './src/components/navigation/Tabs';
-import PremiumWritePage from './src/pages/write/review/PremiumWritePage';
-import PremiumOthersPage from './src/pages/premium/others/PremiumOthersPage';
-import PremiumMyPage from './src/pages/premium/mine/PremiumMyPage';
+import PremiumWriteScreen from './src/screens/write/review/PremiumWriteScreen';
+import PremiumOthersScreen from './src/screens/premium/others/PremiumOthersScreen';
+import PremiumMyScreen from './src/screens/premium/mine/PremiumMyScreen';
 import StopReviewModal from './src/components/alertModal/StopReviewModal';
-import WritePage from './src/pages/write/post/WritePage';
-import PostPage from './src/pages/dashboard/post/PostPage';
-import ModifyPage from './src/pages/write/post/ModifyPage';
-import SavePage from './src/pages/write/save/SavePage';
-import DashboardSearchPage from './src/pages/dashboard/search/DashboardSearchPage';
-import DashboardSearchDefaultPage from './src/pages/search/DashboardSearchDefaultPage';
-import HomeSearchPage from './src/pages/home/search/HomeSearchPage';
-import HomeSearchDefaultPage from './src/pages/search/HomeSearchDefaultPage';
-import HomeBannerPage from './src/pages/home/HomeBannerPage';
-import AddTicketPage from './src/pages/ticketBook/AddTicketPage';
-import TicketDetailPage from './src/pages/ticketBook/TicketDetailPage';
-import LoginPage from './src/pages/login/LoginPage';
-import SignUpPage from './src/pages/onboarding/SignUpPage';
-import OnboardingPage from './src/pages/onboarding/OnboardingPage';
-import ProfileCardPage from './src/pages/onboarding/ProfileCardPage';
+import WriteScreen from './src/screens/write/post/WriteScreen';
+import PostScreen from './src/screens/dashboard/post/PostScreen';
+import ModifyScreen from './src/screens/write/post/ModifyScreen';
+import SaveScreen from './src/screens/write/save/SaveScreen';
+import DashboardSearchScreenList from './src/screens/dashboard/search/DashboardSearchScreenList';
+import DashboardSearchDefaultScreen from './src/screens/search/DashboardSearchDefaultScreen';
+import HomeSearchScreen from './src/screens/home/search/HomeSearchScreen';
+import HomeSearchDefaultScreen from './src/screens/search/HomeSearchDefaultScreen';
+import HomeBannerScreen from './src/screens/home/HomeBannerScreen';
+import AddTicketScreen from './src/screens/ticketBook/AddTicketScreen';
+import TicketDetailScreen from './src/screens/ticketBook/TicketDetailScreen';
+import LoginScreen from './src/screens/login/LoginScreen';
+import SignUpScreen from './src/screens/onboarding/SignUpScreen';
+import OnboardingScreen from './src/screens/onboarding/OnboardingScreen';
+import ProfileCardScreen from './src/screens/onboarding/ProfileCardScreen';
 
 import {AddTicketProvider} from './src/state/AddTicketContext';
 import {OnboardingProvider} from './src/state/OnboardingContext';
-import MusicalDetailPage from './src/pages/home/musical/MusicalDetailPage';
-import ModifyProfileImg from './src/pages/myPage/ModifyProfileImg';
-
+import MusicalDetailScreen from './src/screens/home/musical/MusicalDetailScreen';
+import ModifyProfileImg from './src/screens/myScreen/ModifyProfileImg';
 import {createPost, putPost} from './src/api/post.api';
 import {ensureAsyncStorageDir} from './src/util/ensureAsyncStorageDir';
 
@@ -166,7 +165,7 @@ export default function App() {
           alert('글이 성공적으로 등록되었습니다.');
 
           setTimeout(() => {
-            navigation.navigate('PostPage', {postId});
+            navigation.navigate('PostScreen', {postId});
           }, 0);
         } else {
           alert('게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.');
@@ -220,7 +219,7 @@ export default function App() {
         console.error('게시글 수정 오류:', error);
       }
     } else {
-      console.log('No data from ModifyPage');
+      console.log('No data from ModifyScreen');
     }
   };
 
@@ -229,27 +228,27 @@ export default function App() {
       <OnboardingProvider>
         <AddTicketProvider>
           <NavigationContainer independent={true}>
-            <Stack.Navigator initialRouteName="LoginPage">
+            <Stack.Navigator initialRouteName="LoginScreen">
               {/* 로그인 페이지 */}
               <Stack.Screen
-                name="LoginPage"
-                component={LoginPage}
+                name="LoginScreen"
+                component={LoginScreen}
                 options={{
                   headerShown: false,
                   cardStyle: {backgroundColor: '#FBFBFB'},
                 }}
               />
               <Stack.Screen
-                name="SignUpPage"
-                component={SignUpPage}
+                name="SignUpScreen"
+                component={SignUpScreen}
                 options={{
                   headerShown: false,
                   cardStyle: {backgroundColor: '#FBFBFB'},
                 }}
               />
               <Stack.Screen
-                name="OnboardingPage"
-                component={OnboardingPage}
+                name="OnboardingScreen"
+                component={OnboardingScreen}
                 options={{
                   headerShown: false,
                   cardStyle: {backgroundColor: '#FBFBFB'},
@@ -257,8 +256,8 @@ export default function App() {
               />
               {/* 프로필 카드 페이지 */}
               <Stack.Screen
-                name="ProfileCardPage"
-                component={ProfileCardPage}
+                name="ProfileCardScreen"
+                component={ProfileCardScreen}
                 options={{
                   headerShown: false,
                   cardStyle: {backgroundColor: '#FBFBFB'},
@@ -270,8 +269,8 @@ export default function App() {
               </Stack.Screen>
               {/* 홈 배너 페이지 */}
               <Stack.Screen
-                name="HomeBannerPage"
-                component={HomeBannerPage}
+                name="HomeBannerScreen"
+                component={HomeBannerScreen}
                 options={{
                   headerShown: false,
                   cardStyle: {backgroundColor: '#FBFBFB'},
@@ -280,24 +279,24 @@ export default function App() {
 
               {/* 홈 검색 페이지 */}
               <Stack.Screen
-                name="HomeSearchPage"
-                component={HomeSearchPage}
+                name="HomeSearchScreen"
+                component={HomeSearchScreen}
                 options={{
                   headerShown: false,
                   cardStyle: {backgroundColor: '#FBFBFB'},
                 }}
               />
               <Stack.Screen
-                name="HomeSearchDefaultPage"
-                component={HomeSearchDefaultPage}
+                name="HomeSearchDefaultScreen"
+                component={HomeSearchDefaultScreen}
                 options={{
                   headerShown: false,
                   cardStyle: {backgroundColor: '#FBFBFB'},
                 }}
               />
               <Stack.Screen
-                name="MusicalDetailPage"
-                component={MusicalDetailPage}
+                name="MusicalDetailScreen"
+                component={MusicalDetailScreen}
                 options={({navigation}) => ({
                   headerStyle: {
                     height: 123,
@@ -312,7 +311,7 @@ export default function App() {
               />
               {/* 프리미엄 후기 작성 페이지*/}
               <Stack.Screen
-                name="PremiumWritePage"
+                name="PremiumWriteScreen"
                 options={({navigation}) => ({
                   headerStyle: {
                     height: 123,
@@ -323,13 +322,13 @@ export default function App() {
                   headerLeft: () => (
                     <CustomPreviousButton
                       goToPrevious={() => {
-                        const premiumWritePageInstance = navigation
+                        const premiumWriteScreenInstance = navigation
                           .getState()
                           .routes.find(
-                            route => route.name === 'PremiumWritePage',
+                            route => route.name === 'PremiumWriteScreen',
                           );
-                        if (premiumWritePageInstance?.params?.goToPrevious) {
-                          premiumWritePageInstance.params.goToPrevious();
+                        if (premiumWriteScreenInstance?.params?.goToPrevious) {
+                          premiumWriteScreenInstance.params.goToPrevious();
                         } else {
                           navigation.goBack();
                         }
@@ -341,7 +340,7 @@ export default function App() {
                   ),
                 })}>
                 {props => (
-                  <PremiumWritePage
+                  <PremiumWriteScreen
                     {...props}
                     goToPrevious={props.route.params?.goToPrevious}
                   />
@@ -349,19 +348,19 @@ export default function App() {
               </Stack.Screen>
               {/* 다른 사람 프리미엄 리뷰 상세 페이지*/}
               <Stack.Screen
-                name="PremiumOthersPage"
-                component={PremiumOthersPage}
+                name="PremiumOthersScreen"
+                component={PremiumOthersScreen}
                 options={{headerShown: false}}
               />
               {/* 자신이 작성한 프리미엄 리뷰 상세 페이지 */}
               <Stack.Screen
-                name="PremiumMyPage"
-                component={PremiumMyPage}
+                name="PremiumMyScreen"
+                component={PremiumMyScreen}
                 options={{headerShown: false}}
               />
               {/* 게시판 작성 페이지*/}
               <Stack.Screen
-                name="WritePage"
+                name="WriteScreen"
                 options={({navigation}) => ({
                   headerStyle: {
                     height: 123,
@@ -382,18 +381,18 @@ export default function App() {
                     </TouchableOpacity>
                   ),
                 })}>
-                {props => <WritePage {...props} setPostData={setPostData} />}
+                {props => <WriteScreen {...props} setPostData={setPostData} />}
               </Stack.Screen>
               {/* 게시글 상세 페이지 */}
               <Stack.Screen
-                name="PostPage"
-                component={PostPage}
+                name="PostScreen"
+                component={PostScreen}
                 initialParams={{postId: 5}}
                 options={{headerShown: false}}
               />
               {/* 게시글 수정 페이지 */}
               <Stack.Screen
-                name="ModifyPage"
+                name="ModifyScreen"
                 options={({navigation}) => ({
                   headerStyle: {
                     height: 123,
@@ -415,13 +414,13 @@ export default function App() {
                   ),
                 })}>
                 {props => (
-                  <ModifyPage {...props} setModifyData={setModifyData} />
+                  <ModifyScreen {...props} setModifyData={setModifyData} />
                 )}
               </Stack.Screen>
               {/* 게시글 임시 저장 목록 페이지 */}
               <Stack.Screen
-                name="SavePage"
-                component={SavePage}
+                name="SaveScreen"
+                component={SaveScreen}
                 options={({navigation}) => ({
                   headerStyle: {
                     height: 123,
@@ -436,32 +435,32 @@ export default function App() {
               />
               {/* 게시판 검색 페이지 */}
               <Stack.Screen
-                name="DashboardSearchPage"
-                component={DashboardSearchPage}
+                name="DashboardSearchScreenList"
+                component={DashboardSearchScreenList}
                 options={{
                   headerShown: false,
                   cardStyle: {backgroundColor: '#FBFBFB'},
                 }}
               />
               <Stack.Screen
-                name="DashboardSearchDefaultPage"
-                component={DashboardSearchDefaultPage}
+                name="DashboardSearchDefaultScreen"
+                component={DashboardSearchDefaultScreen}
                 options={{
                   headerShown: false,
                   cardStyle: {backgroundColor: '#FBFBFB'},
                 }}
               />
               <Stack.Screen
-                name="AddTicketPage"
-                component={AddTicketPage}
+                name="AddTicketScreen"
+                component={AddTicketScreen}
                 options={{
                   headerShown: false,
                   cardStyle: {backgroundColor: '#FBFBFB'},
                 }}
               />
               <Stack.Screen
-                name="TicketDetailPage"
-                component={TicketDetailPage}
+                name="TicketDetailScreen"
+                component={TicketDetailScreen}
                 options={{
                   headerShown: false,
                   cardStyle: {backgroundColor: '#FBFBFB'},
