@@ -1,15 +1,11 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, Alert, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
 import {useNavigation} from '@react-navigation/native';
-
-import Colors from '@/assets/colors/Colors';
-import {typography} from '../../styles/typography';
 import {deletePost} from '@/api/post.api';
 import {deleteComment} from '@/api/comment.api';
 import CheckTempModal from '@/components/alertModal/CheckTempModal';
-
-const {subhead03} = typography;
+import ModalStyles from './ModalStyles';
 
 type NavigationProp = {
   navigate: (screen: 'ModifyPage') => void;
@@ -24,6 +20,7 @@ type ModalModifyDeleteProps = {
   onNavigation: any | null;
 };
 
+// 게시글 수정, 삭제 모달
 const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
   modalVisible,
   setModalVisible,
@@ -64,6 +61,7 @@ const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
     openCheckTempModal();
   };
 
+  // 댓글 삭제 모달
   const openCheckTempModalComment = () => {
     setSelectedTitle('댓글을 삭제할까요?');
     setSelectedSubtitle('댓글이 삭제되며,\n이는 돌이킬 수 없습니다.');
@@ -92,7 +90,7 @@ const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
     <Modal
       isVisible={modalVisible}
       style={[
-        styles.modal,
+        ModalStyles.modal,
         {
           top: position.y - position.height,
           left: position.x - (position.width + 70),
@@ -102,18 +100,19 @@ const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
       backdropColor="rgba(0, 0, 0, 0.3)"
       animationIn="fadeIn"
       animationOut="fadeOut">
-      <View style={styles.container}>
+      <View style={ModalStyles.container}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('ModifyPage', {postId: postId});
+            navigation.navigate('ModifyPage');
+            // navigation.navigate('ModifyPage', {postId: postId});
             setModalVisible(false);
           }}>
-          <Text style={styles.text}>수정</Text>
+          <Text style={ModalStyles.text}>수정</Text>
         </TouchableOpacity>
-        <View style={styles.line} />
+        <View style={ModalStyles.line} />
         <TouchableOpacity
           onPress={commentId ? handleCommentDelete : handleDelete}>
-          <Text style={[styles.text, {color: '#FF6464'}]}>삭제</Text>
+          <Text style={[ModalStyles.text, {color: '#FF6464'}]}>삭제</Text>
         </TouchableOpacity>
         <CheckTempModal
           modalVisible={checkTempModalVisible}
@@ -132,28 +131,5 @@ const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  modal: {
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-  },
-  container: {
-    width: 77,
-    height: 84,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    backgroundColor: Colors.gray_01,
-  },
-  line: {
-    height: 0.75,
-    backgroundColor: Colors.gray_03,
-  },
-  text: {
-    ...subhead03,
-    marginVertical: 10,
-  },
-});
 
 export default ModalModifyDelete;

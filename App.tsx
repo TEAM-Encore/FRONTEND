@@ -21,8 +21,8 @@ import DashboardSearchDefaultPage from './src/pages/search/DashboardSearchDefaul
 import HomeSearchPage from './src/pages/home/search/HomeSearchPage';
 import HomeSearchDefaultPage from './src/pages/search/HomeSearchDefaultPage';
 import HomeBannerPage from './src/pages/home/HomeBannerPage';
-import AddTicketPage from './src/pages/ticketbook/AddTicketPage';
-import TicketDetailPage from './src/pages/ticketbook/TicketDetailPage';
+import AddTicketPage from './src/pages/ticketBook/AddTicketPage';
+import TicketDetailPage from './src/pages/ticketBook/TicketDetailPage';
 import LoginPage from './src/pages/login/LoginPage';
 import SignUpPage from './src/pages/onboarding/SignUpPage';
 import OnboardingPage from './src/pages/onboarding/OnboardingPage';
@@ -230,6 +230,7 @@ export default function App() {
         <AddTicketProvider>
           <NavigationContainer independent={true}>
             <Stack.Navigator initialRouteName="LoginPage">
+              {/* 로그인 페이지 */}
               <Stack.Screen
                 name="LoginPage"
                 component={LoginPage}
@@ -254,6 +255,7 @@ export default function App() {
                   cardStyle: {backgroundColor: '#FBFBFB'},
                 }}
               />
+              {/* 프로필 카드 페이지 */}
               <Stack.Screen
                 name="ProfileCardPage"
                 component={ProfileCardPage}
@@ -262,14 +264,11 @@ export default function App() {
                   cardStyle: {backgroundColor: '#FBFBFB'},
                 }}
               />
-              {/* <Stack.Screen
-                name="Tabs"
-                component={props => <Tabs {...props} postData={postData} />}
-                options={{headerShown: false}}
-              /> */}
+              {/* 전체 탭 네비게이션 */}
               <Stack.Screen name="Tabs" options={{headerShown: false}}>
                 {props => <Tabs {...props} postData={postData} />}
               </Stack.Screen>
+              {/* 홈 배너 페이지 */}
               <Stack.Screen
                 name="HomeBannerPage"
                 component={HomeBannerPage}
@@ -485,6 +484,7 @@ export default function App() {
                 })}
               />
             </Stack.Navigator>
+            {/* 프리미엄 리뷰 그만둘 시 뜨는 모달 */}
             <StopReviewModal
               modalVisible={modalVisible}
               setModalVisible={setModalVisible}

@@ -26,6 +26,7 @@ import {timeAgo} from '../../../util/timeAgo';
 import ModalModifyDelete from '@/components/modifyDeleteModal/ModalModifyDelete';
 import ItemComment from '@/components/comment/ItemComment';
 
+// 게시글 상세 페이지
 type PostPageRouteProp = RouteProp<RootStackParamList, 'PostPage'>;
 
 interface PostPageProps {
@@ -40,7 +41,7 @@ type ModalPosition = {
 };
 
 const PostPage: React.FC<PostPageProps> = ({route}) => {
-  const {postId} = route.params; // imgUrls 추가
+  const {postId} = route.params;
   const navigation = useNavigation();
   const iconRef = useRef<View>(null);
   const [postData, setPostData] = useState<{

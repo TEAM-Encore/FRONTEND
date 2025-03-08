@@ -3,7 +3,7 @@ import Colors from '@/assets/colors/Colors';
 
 import {typography} from '../../styles/typography';
 
-const {headline, display01, subhead03} = typography;
+const {display01, subhead03} = typography;
 
 const TicketBookStyles = StyleSheet.create({
   container: {

@@ -4,7 +4,7 @@ export const getDetailedMusical = (musical_id: number) => {
   return httpApi.get(`/api/v1/musical/${musical_id}`);
 };
 
-export const getFeturedMusical = () => {
+export const getFeaturedMusical = () => {
   return httpApi.get(`/api/v1/musical/featured`);
 };
 

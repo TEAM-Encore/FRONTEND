@@ -1,15 +1,10 @@
 import React from 'react';
-import {FlatList, View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {FlatList, View, Text, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
-
-import Colors from '@/assets/colors/Colors';
-import {typography} from '../../styles/typography';
-
 import {PremiumIcon} from '@/assets/icons/premium/PremiumIcon';
 import {timeAgo} from '../../util/timeAgo';
 import {useNavigation} from '@react-navigation/native';
-
-const {subhead03, caption} = typography;
+import ItemReviewStyles from './ItemReviewStyles';
 
 type NavigationProp = {
   navigate: (screen: 'PremiumOthersPage') => void;
@@ -27,6 +22,7 @@ type PostProps = {
   }[];
 };
 
+// 프리미엄 후기 리스트: 다른 사람의 후기 리스트
 const ItemOthersReview: React.FC<PostProps> = ({postList}) => {
   const navigation = useNavigation<NavigationProp>();
 
@@ -42,36 +38,40 @@ const ItemOthersReview: React.FC<PostProps> = ({postList}) => {
         return (
           <>
             <TouchableOpacity
-              style={styles.container}
+              style={ItemReviewStyles.container}
               onPress={handlePremiumPost}>
-              <View style={styles.containerRow}>
+              <View style={ItemReviewStyles.containerRow}>
                 <View style={{flex: 1}}>
                   <Text
-                    style={styles.textTitle}
+                    style={ItemReviewStyles.textTitle}
                     numberOfLines={1}
                     ellipsizeMode="tail">
                     {item.title}
                   </Text>
 
-                  <View style={styles.containerRow}>
-                    <Text style={styles.textWriterDate}>{item.nickname} ·</Text>
-                    <Text style={styles.textWriterDate}>
+                  <View style={ItemReviewStyles.containerRow}>
+                    <Text style={ItemReviewStyles.textWriterDate}>
+                      {item.nickname} ·
+                    </Text>
+                    <Text style={ItemReviewStyles.textWriterDate}>
                       {timeAgo(item.created_at)}
                     </Text>
                   </View>
 
-                  <View style={styles.containerInfo}>
-                    <View style={styles.containerRow}>
+                  <View style={ItemReviewStyles.containerInfo}>
+                    <View style={ItemReviewStyles.containerRow}>
                       <SvgXml xml={PremiumIcon.star} />
-                      <Text style={styles.textStar}>총평 {item.star}</Text>
+                      <Text style={ItemReviewStyles.textStar}>
+                        총평 {item.star}
+                      </Text>
                     </View>
-                    <View style={styles.containerRow}>
+                    <View style={ItemReviewStyles.containerRow}>
                       <SvgXml xml={PremiumIcon.view} />
-                      <Text style={styles.textViewAndLike}>
+                      <Text style={ItemReviewStyles.textViewAndLike}>
                         {item.view_count}
                       </Text>
                       <SvgXml xml={PremiumIcon.like} />
-                      <Text style={styles.textViewAndLike}>
+                      <Text style={ItemReviewStyles.textViewAndLike}>
                         {item.like_count}
                       </Text>
                     </View>
@@ -80,9 +80,9 @@ const ItemOthersReview: React.FC<PostProps> = ({postList}) => {
               </View>
             </TouchableOpacity>
 
-            <View style={styles.containerRow}></View>
+            <View style={ItemReviewStyles.containerRow}></View>
             {index < postList.length - 1 ? (
-              <View style={styles.line} />
+              <View style={ItemReviewStyles.line} />
             ) : (
               <View style={{marginBottom: 16}} />
             )}
@@ -92,46 +92,5 @@ const ItemOthersReview: React.FC<PostProps> = ({postList}) => {
     />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 10,
-  },
-  containerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  textTitle: {
-    ...subhead03,
-    color: Colors.gray_12,
-    marginBottom: 4,
-  },
-  containerInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  textStar: {
-    ...caption,
-    color: Colors.gray_08,
-    marginLeft: 5,
-  },
-  textWriterDate: {
-    ...caption,
-    color: Colors.gray_07,
-  },
-  textViewAndLike: {
-    ...caption,
-    color: Colors.gray_08,
-    marginLeft: 2,
-    marginRight: 6,
-  },
-  line: {
-    height: 0.75,
-    backgroundColor: Colors.gray_04,
-    marginVertical: 10,
-  },
-});
 
 export default ItemOthersReview;

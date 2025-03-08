@@ -1,11 +1,9 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, Alert, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
-import Colors from '@/assets/colors/Colors';
-import {typography} from '../../styles/typography';
 import {deleteComment} from '@/api/comment.api';
 import CheckTempModal from '@/components/alertModal/CheckTempModal';
-const {subhead03} = typography;
+import ModalStyles from './ModalStyles';
 
 type ModalUserDeleteProps = {
   modalVisible: boolean;
@@ -13,6 +11,7 @@ type ModalUserDeleteProps = {
   position: any;
 };
 
+// 사용자 차단, 신고 모달
 const ModalUserDelete: React.FC<ModalUserDeleteProps> = ({
   modalVisible,
   setModalVisible,
@@ -35,6 +34,7 @@ const ModalUserDelete: React.FC<ModalUserDeleteProps> = ({
     console.log('checkTempModalVisible:', checkTempModalVisible);
   };
 
+  // API 연동 필요
   const fetchDeletePost = () => {
     setModalVisible(false);
   };
@@ -47,7 +47,7 @@ const ModalUserDelete: React.FC<ModalUserDeleteProps> = ({
     <Modal
       isVisible={modalVisible}
       style={[
-        styles.modal,
+        ModalStyles.modal,
         {
           top: Math.max(0, position.y - position.height),
           left: Math.max(0, position.x - (position.width + 70)),
@@ -57,19 +57,19 @@ const ModalUserDelete: React.FC<ModalUserDeleteProps> = ({
       backdropColor="rgba(0, 0, 0, 0.3)"
       animationIn="fadeIn"
       animationOut="fadeOut">
-      <View style={styles.container}>
+      <View style={ModalStyles.container}>
         <TouchableOpacity
           onPress={() => {
             setModalVisible(false);
           }}>
-          <Text style={styles.text}>차단</Text>
+          <Text style={ModalStyles.text}>차단</Text>
         </TouchableOpacity>
-        <View style={styles.line} />
+        <View style={ModalStyles.line} />
         <TouchableOpacity
           onPress={() => {
             setModalVisible(false);
           }}>
-          <Text style={styles.text}>신고</Text>
+          <Text style={ModalStyles.text}>신고</Text>
         </TouchableOpacity>
         <CheckTempModal
           modalVisible={checkTempModalVisible}
@@ -84,28 +84,5 @@ const ModalUserDelete: React.FC<ModalUserDeleteProps> = ({
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  modal: {
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-  },
-  container: {
-    width: 77,
-    height: 84,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    backgroundColor: Colors.gray_01,
-  },
-  line: {
-    height: 0.75,
-    backgroundColor: Colors.gray_03,
-  },
-  text: {
-    ...subhead03,
-    marginVertical: 10,
-  },
-});
 
 export default ModalUserDelete;

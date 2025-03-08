@@ -27,7 +27,7 @@ import IconComment from '@/assets/icons/home/IconComment';
 import ToolTipModal from '@/components/alertModal/ToolTipModal';
 import {getTicketBookList} from '@/api/ticketBook.api';
 import {getPopularPremiumReviews} from '@/api/premium.api';
-import {getFeturedMusical, getUpcomingMusical} from '@/api/musical.api';
+import {getFeaturedMusical, getUpcomingMusical} from '@/api/musical.api';
 
 type HomePageProps = {};
 
@@ -36,6 +36,7 @@ type RootStackParamList = {
   HomeSearchDefaultPage: undefined;
   HomeBannerPage: {bannerId: number};
   TicketDetailPage: {ticket: TicketItem};
+  MusicalDetailPage: {data: any};
 };
 
 type TicketItem = {
@@ -142,33 +143,9 @@ const HomePage: React.FC<HomePageProps> = () => {
     </TouchableOpacity>
   );
 
-  const bestMusicals = [
-    {
-      id: '1',
-      image: require('@/assets/images/home/Musical1.jpeg'),
-      title: '벤자민 버튼',
-      date: '24.06.21~24.07.21',
-      location: '샤롯데시어터',
-    },
-    {
-      id: '2',
-      image: require('@/assets/images/home/Musical2.jpeg'),
-      title: '카르밀라',
-      date: '24.06.21~24.07.21',
-      location: '샤롯데시어터',
-    },
-    {
-      id: '3',
-      image: require('@/assets/images/home/Musical3.jpeg'),
-      title: '몬테크리스토',
-      date: '24.06.21~24.07.21',
-      location: '샤롯데시어터',
-    },
-  ];
-
-  const fetchbestMusicals = async () => {
+  const fetchBestMusicals = async () => {
     try {
-      const response = await getFeturedMusical();
+      const response = await getFeaturedMusical();
       console.log('인기 뮤지컬 조회: ', response.data.data);
       setBestMusicalInfo(response.data.data);
     } catch (error) {
@@ -188,7 +165,7 @@ const HomePage: React.FC<HomePageProps> = () => {
 
   useFocusEffect(
     useCallback(() => {
-      fetchbestMusicals();
+      fetchBestMusicals();
       fetchReleaseMusicals();
     }, []),
   );
@@ -662,7 +639,7 @@ const HomePage: React.FC<HomePageProps> = () => {
               </Text>
             </View>
           )}
-          keyExtractor={item => item.id.toString()}
+          // keyExtractor={item => item.id.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
           nestedScrollEnabled

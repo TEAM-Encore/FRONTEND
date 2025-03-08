@@ -137,7 +137,7 @@ const PremiumOthersPage: React.FC<PremiumOthersPageProps> = ({postList}) => {
         )}
         <FlatList
           data={postList}
-          keyExtractor={item => item.id.toString()}
+          // keyExtractor={item => item.id.toString()}
           ListHeaderComponent={
             <>
               {/* 헤더 컴포넌트 */}
@@ -371,7 +371,7 @@ const PremiumOthersPage: React.FC<PremiumOthersPageProps> = ({postList}) => {
               <ItemOthersReview postList={reviewData} />
             </>
           }
-          keyExtractor={(item, index) => item.id || index.toString()}
+          // keyExtractor={(item, index) => item.id || index.toString()}
           renderItem={null}
           ListFooterComponent={
             <>

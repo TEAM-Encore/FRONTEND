@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState, useRef} from 'react';
+import React, {useCallback, useState, useRef} from 'react';
 import {
   SafeAreaView,
   FlatList,
@@ -23,6 +23,44 @@ import {PremiumIcon} from '@/assets/icons/premium/PremiumIcon';
 import ModalUserDelete from '@/components/modifyDeleteModal/ModalUserDelete';
 import ItemMyReview from '@/components/premium/ItemMyReview';
 
+import {RouteProp} from '@react-navigation/native';
+import {RootStackParamList} from 'types';
+
+type PremiumMyPageRouteProp = RouteProp<RootStackParamList, 'PremiumMyPage'>;
+
+type PremiumMyPageProps = {
+  route: PremiumMyPageRouteProp;
+};
+
+type ReviewData = {
+  review_id: number;
+  title: string;
+  elapsed_time: string;
+  view_count: number;
+  ticket: {
+    ticket_id: string;
+    image_url: string;
+    viewed_date: string;
+    seat: string;
+    actors: string[];
+  };
+  review_data_res: {
+    rating: {
+      total_rating: number;
+      rating_review: string;
+    };
+    view: {
+      view_review: string;
+    };
+    sound: {
+      sound_review: string;
+    };
+    facility: {
+      facility_review: string;
+    };
+  };
+};
+
 type ModalPosition = {
   x: number;
   y: number;
@@ -30,12 +68,13 @@ type ModalPosition = {
   height: number;
 };
 
-const PremiumMyPage: React.FC<{route: any}> = ({route}) => {
+const PremiumMyPage: React.FC<PremiumMyPageProps> = ({route}) => {
   const {reviewId} = route.params;
 
   console.log('전달 받은 리뷰 아이디:', reviewId);
 
-  const [reviewData, setReviewData] = useState<string[]>();
+  // const [reviewData, setReviewData] = useState<string[]>();
+  const [reviewData, setReviewData] = useState<ReviewData[]>([]);
 
   const fetchReviewData = async (reviewId: number) => {
     try {
@@ -306,14 +345,6 @@ const PremiumMyPage: React.FC<{route: any}> = ({route}) => {
               <Text style={PremiumStyles.reviewText}>
                 {item.review_data_res.rating.rating_review}
               </Text>
-              {/* <View style={PremiumStyles.containerRow}>
-                <View style={PremiumStyles.chipContainer}>
-                  <Text style={PremiumStyles.chipText}>#{item.tags[0]}</Text>
-                </View>
-                <View style={{...PremiumStyles.chipContainer, marginLeft: 8}}>
-                  <Text style={PremiumStyles.chipText}>#{item.tags[1]}</Text>
-                </View>
-              </View> */}
 
               <View style={PremiumStyles.line2} />
 

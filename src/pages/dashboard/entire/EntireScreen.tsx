@@ -6,6 +6,7 @@ import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import CarouselHottest from '@/components/carousel/dashboard/CarouselHottest';
 import EntireList from './EntireList';
 
+// 게시판 전체 페이지
 const EntireScreen: React.FC = () => {
   return (
     <View style={EntireStyles.container}>

@@ -16,7 +16,7 @@ import AddTicketStyles from './AddTicketStyles';
 import Colors from '@/assets/colors/Colors';
 import {useAddTicket} from '@/state/AddTicketContext';
 
-import {TicketBookIcon} from '@/assets/icons/ticketbook/TicketBookIcon';
+import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
 import {getActorSearch} from '@/api/search.api';
 
 type PremiumProp = {

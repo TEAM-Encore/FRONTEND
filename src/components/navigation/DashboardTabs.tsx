@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import React from 'react';
+import {View} from 'react-native';
 import EntireScreen from '@/pages/dashboard/entire/EntireScreen';
-import InformationScreen from '@/pages/dashboard/info/InfomationScreen';
+import InformationScreen from '@/pages/dashboard/info/InformationScreen';
 import ActorScreen from '@/pages/dashboard/actor/ActorScreen';
 import ReviewScreen from '@/pages/dashboard/review/ReviewScreen';
 import FreeScreen from '@/pages/dashboard/free/FreeScreen';
@@ -11,6 +11,7 @@ type DashboardProps = {
   selectedTab: string;
 };
 
+// 게시판 페이지에서 상위 탭에 따라 다른 화면을 렌더링하는 컴포넌트 (전체, 정보, 리뷰, 배우, 자유)
 const DashboardTabs: React.FC<DashboardProps> = ({selectedTab}) => {
   const renderScreen = () => {
     switch (selectedTab) {

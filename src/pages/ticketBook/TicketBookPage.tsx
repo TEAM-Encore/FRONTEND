@@ -11,10 +11,10 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {SvgXml} from 'react-native-svg';
 
 import HomeStyles from '@/pages/home/HomeStyles';
-import TicketBookStyles from '@/pages/ticketbook/TicketBookStyles';
+import TicketBookStyles from '@/pages/ticketBook/TicketBookStyles';
 import {HomeIcon} from '@/assets/icons/home/HomeIcon';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
-import {TicketBookIcon} from '@/assets/icons/ticketbook/TicketBookIcon';
+import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
 
 import IconSearch from '@/assets/icons/dashboard/IconSearch';
 import IconNotification from '@/assets/icons/dashboard/IconNotification';

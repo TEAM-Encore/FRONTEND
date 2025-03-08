@@ -8,13 +8,10 @@ import {
   Image,
 } from 'react-native';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
-
 import {SvgXml} from 'react-native-svg';
-
 import EntireStyles from '@/pages/dashboard/entire/EntireStyles';
 
 const windowWidth = Dimensions.get('window').width;
-const margin = 5; // 각 카드들 간격
 const cardSize = {width: 335, height: 128};
 const offset = cardSize.width + 10; // 넘길 때 간격
 type CarouselItem = {
@@ -26,6 +23,7 @@ type CarouselItem = {
   src: any;
 };
 
+// 캐러셀 아이템 가라 데이터로 추후에 api 연결 필요
 const data: CarouselItem[] = [
   {
     id: '1',
@@ -53,6 +51,7 @@ const data: CarouselItem[] = [
   },
 ];
 
+// 게시판 내 가장 인기 있는 게시글 캐러셀
 const CarouselHottest: React.FC = () => {
   const flatListRef = useRef<FlatList<CarouselItem>>(null);
 

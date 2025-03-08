@@ -5,13 +5,12 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import HomePage from '@/pages/home/HomePage';
 import PremiumPage from '@/pages/premium/PremiumPage';
 import DashboardPage from '@/pages/dashboard/DashboardPage';
-import TicketBookPage from '@/pages/ticketbook/TicketBookPage';
+import TicketBookPage from '@/pages/ticketBook/TicketBookPage';
 import MyPage from '@/pages/myPage/MyPage';
 
 import {SvgXml} from 'react-native-svg';
 import {TabSvg} from '@/assets/icons/TabSvg';
 import Colors from '@/assets/colors/Colors';
-import {useRoute} from '@react-navigation/native';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from 'types';
 
@@ -19,10 +18,13 @@ type TabsRouteProp = RouteProp<RootStackParamList, 'Tabs'>;
 
 export default function Tabs({route}: {route: TabsRouteProp}) {
   const Tab = createBottomTabNavigator();
-  const {
-    frequency = '연 8회 이상',
-    checkedOptions = ['감동적인', '넘버 퀄리티가 높은'],
-  } = route.params || {};
+
+  // MyPage에서 전달받은 props (임시로 설정해놓은 값으로 추후 수정 필요)
+  const {frequency, checkedOptions} = route.params ?? {
+    frequency: '연 8회 이상',
+    checkedOptions: ['감동적인', '넘버 퀄리티가 높은'],
+  };
+
   const tabList = [
     {
       name: '홈',
@@ -50,7 +52,6 @@ export default function Tabs({route}: {route: TabsRouteProp}) {
     },
     {
       name: '마이',
-      // content: MyPage,
       content: props => (
         <MyPage
           {...props}

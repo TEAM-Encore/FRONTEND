@@ -1,5 +1,8 @@
 export type RootStackParamList = {
-  Tabs: undefined;
+  Tabs?: {
+    frequency: string;
+    checkedOptions: string[];
+  };
   LoginPage: undefined;
   SignUpPage: undefined;
   OnboardingPage: undefined;

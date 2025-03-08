@@ -5,14 +5,9 @@ import {
   FlatList,
   Dimensions,
   ListRenderItem,
-  StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-
-import Colors from '@/assets/colors/Colors';
-import {typography} from '../../styles/typography';
-
-const {subhead02} = typography;
+import TagsStyles from './TagsStyles';
 
 const windowWidth = Dimensions.get('window').width;
 const cardSize = {width: 77.25, height: 30.625};
@@ -71,12 +66,15 @@ const Tags: React.FC<TagsProps> = ({onTagSelect}) => {
   const renderItem: ListRenderItem<CarouselItem> = ({item}) => (
     <TouchableOpacity
       style={[
-        styles.container,
-        selectedTag === item.tag && styles.selectedContainer,
+        TagsStyles.container,
+        selectedTag === item.tag && TagsStyles.selectedContainer,
       ]}
       onPress={() => handleTagSelect(item.tag)}>
       <Text
-        style={[styles.text, selectedTag === item.tag && styles.selectedText]}>
+        style={[
+          TagsStyles.text,
+          selectedTag === item.tag && TagsStyles.selectedText,
+        ]}>
         #{item.tag}
       </Text>
     </TouchableOpacity>
@@ -99,25 +97,4 @@ const Tags: React.FC<TagsProps> = ({onTagSelect}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    width: cardSize.width,
-    height: cardSize.height,
-    backgroundColor: Colors.sub_01,
-    borderRadius: 8,
-    marginRight: 10.62,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  selectedContainer: {
-    backgroundColor: Colors.sub_05,
-  },
-  text: {
-    ...subhead02,
-    color: Colors.sub_05,
-  },
-  selectedText: {
-    color: Colors.sub_01,
-  },
-});
 export default Tags;

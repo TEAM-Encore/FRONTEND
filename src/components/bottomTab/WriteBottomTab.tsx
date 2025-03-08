@@ -17,6 +17,7 @@ import {SelectImage} from '../selectImage/SelectImage';
 import {createPost} from '@/api/post.api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// 게시판 작성 페이지 하단 탭 (사진, 태그, 임시저장, 임시저장 목록)
 type RootStackParamList = {
   SavePage: undefined;
 };

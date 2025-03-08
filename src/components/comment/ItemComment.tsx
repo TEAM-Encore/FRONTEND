@@ -1,23 +1,11 @@
 import React, {useState, useRef, useEffect} from 'react';
-import {
-  FlatList,
-  View,
-  Image,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import {FlatList, View, Image, Text, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
-
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
-import Colors from '@/assets/colors/Colors';
-import {typography} from '../../styles/typography';
 import {timeAgo} from '../../util/timeAgo';
 import {createAndDeleteLikeComment} from '@/api/comment.api';
-
 import ModalModifyDelete from '@/components/modifyDeleteModal/ModalModifyDelete';
-
-const {caption, bodyLong01} = typography;
+import ItemCommentStyles from './ItemCommentStyles';
 
 type CommentProps = {
   commentList: {
@@ -42,13 +30,13 @@ type ModalPosition = {
   height: number;
 };
 
+// 게시글의 댓글 리스트
 const ItemComment: React.FC<CommentProps> = ({commentList}) => {
   const iconRef = useRef<View>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalPosition, setModalPosition] = useState<ModalPosition | null>(
     null,
   );
-
   const [comments, setComments] = useState(commentList);
 
   useEffect(() => {
@@ -93,27 +81,31 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
       renderItem={({item, index}) => {
         return (
           <>
-            <View style={styles.container}>
-              <View style={styles.containerWriterHeader}>
-                <View style={styles.containerRow}>
+            <View style={ItemCommentStyles.container}>
+              <View style={ItemCommentStyles.containerWriterHeader}>
+                <View style={ItemCommentStyles.containerRow}>
                   <>
                     <SvgXml xml={PostIcon.writerBackground} />
                     <Image
-                      style={styles.imageWriter}
+                      style={ItemCommentStyles.imageWriter}
                       source={require('@/assets/images/board/commentFace.png')}
                     />
                   </>
                   <View>
-                    <View style={styles.containerWriterText}>
-                      <View style={styles.containerRow}>
-                        <Text style={styles.textWriter}>{item.nickname}</Text>
+                    <View style={ItemCommentStyles.containerWriterText}>
+                      <View style={ItemCommentStyles.containerRow}>
+                        <Text style={ItemCommentStyles.textWriter}>
+                          {item.nickname}
+                        </Text>
                         <SvgXml xml={PostIcon.Badge} />
                       </View>
-                      <View style={styles.containerRow}>
+                      <View style={ItemCommentStyles.containerRow}>
                         {item.is_my_comment && (
-                          <Text style={styles.textIsWriterDate}>작성자 · </Text>
+                          <Text style={ItemCommentStyles.textIsWriterDate}>
+                            작성자 ·{' '}
+                          </Text>
                         )}
-                        <Text style={styles.textIsWriterDate}>
+                        <Text style={ItemCommentStyles.textIsWriterDate}>
                           {timeAgo(item.created_at)}
                         </Text>
                       </View>
@@ -137,10 +129,10 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
                 )}
               </View>
 
-              <Text style={styles.textContent}>{item.content}</Text>
-              <View style={styles.containerRow}>
+              <Text style={ItemCommentStyles.textContent}>{item.content}</Text>
+              <View style={ItemCommentStyles.containerRow}>
                 <TouchableOpacity
-                  style={styles.containerLike}
+                  style={ItemCommentStyles.containerLike}
                   onPress={() =>
                     fetchCreateAndDeleteLikeComment(item.post_id, item.id)
                   }>
@@ -149,13 +141,13 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
                       item.is_liked ? PostIcon.fullLike : PostIcon.commentLike
                     }
                   />
-                  <Text style={styles.textLikeComment}>
+                  <Text style={ItemCommentStyles.textLikeComment}>
                     하트 {item.like_count}
                   </Text>
                 </TouchableOpacity>
-                <View style={styles.containerRow}>
+                <View style={ItemCommentStyles.containerRow}>
                   <SvgXml xml={PostIcon.commentComment} />
-                  <Text style={styles.textLikeComment}>
+                  <Text style={ItemCommentStyles.textLikeComment}>
                     댓글 {item.child_comment_count}
                   </Text>
                 </View>
@@ -163,7 +155,7 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
             </View>
             {index < comments.length - 1 ? (
               <View style={{marginHorizontal: 20}}>
-                <View style={styles.line} />
+                <View style={ItemCommentStyles.line} />
               </View>
             ) : (
               <View style={{marginBottom: 26}} />
@@ -174,71 +166,5 @@ const ItemComment: React.FC<CommentProps> = ({commentList}) => {
     />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 26,
-    paddingVertical: 11,
-  },
-  containerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  containerWriterHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  containerWriter: {
-    flexDirection: 'row',
-    width: '100%',
-    height: 102,
-    backgroundColor: Colors.gray_03,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  imageWriter: {
-    position: 'absolute',
-    width: 40,
-    height: 40,
-  },
-  containerWriterText: {
-    marginLeft: 8,
-  },
-  textWriter: {
-    fontFamily: 'Pretendard-Bold',
-    fontSize: 14,
-    lineHeight: 24,
-    letterSpacing: -0.3,
-    marginRight: 4,
-  },
-  textIsWriterDate: {
-    ...caption,
-    color: '#878787',
-  },
-  containerLike: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 48,
-    marginRight: 8,
-  },
-  textLikeComment: {
-    ...caption,
-    color: '#878787',
-    marginLeft: 4,
-  },
-  textContent: {
-    ...bodyLong01,
-    marginLeft: 48,
-    marginTop: 9,
-    marginBottom: 16,
-  },
-  line: {
-    height: 0.75,
-    backgroundColor: Colors.gray_04,
-    marginVertical: 26,
-  },
-});
 
 export default ItemComment;
