@@ -8,7 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import WriteStyles from '@/pages/write/post/WriteStyles';
+import WriteStyles from '@/screens/write/post/WriteStyles';
 import {SvgXml} from 'react-native-svg';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
@@ -19,7 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // 게시판 작성 페이지 하단 탭 (사진, 태그, 임시저장, 임시저장 목록)
 type RootStackParamList = {
-  SavePage: undefined;
+  SaveScreen: undefined;
 };
 
 type WriteBottomTabProps = {
@@ -162,7 +162,7 @@ const WriteBottomTab: React.FC<WriteBottomTabProps> = ({
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.navigate('SavePage')}>
+          <TouchableOpacity onPress={() => navigation.navigate('SaveScreen')}>
             <Text style={WriteStyles.bottom_text}>목록</Text>
           </TouchableOpacity>
         </View>

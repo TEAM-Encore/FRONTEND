@@ -1,11 +1,11 @@
 import React from 'react';
 import {View} from 'react-native';
-import EntireScreen from '@/pages/dashboard/entire/EntireScreen';
-import InformationScreen from '@/pages/dashboard/info/InformationScreen';
-import ActorScreen from '@/pages/dashboard/actor/ActorScreen';
-import ReviewScreen from '@/pages/dashboard/review/ReviewScreen';
-import FreeScreen from '@/pages/dashboard/free/FreeScreen';
-import DashboardStyles from '@/pages/dashboard/DashboardStyles';
+import EntireScreen from '@/screens/dashboard/entire/EntireScreen';
+import InformationScreen from '@/screens/dashboard/info/InformationScreen';
+import ActorScreen from '@/screens/dashboard/actor/ActorScreen';
+import ReviewScreen from '@/screens/dashboard/review/ReviewScreen';
+import FreeScreen from '@/screens/dashboard/free/FreeScreen';
+import DashboardStyles from '@/screens/dashboard/DashboardStyles';
 
 type DashboardProps = {
   selectedTab: string;

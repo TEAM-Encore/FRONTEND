@@ -8,7 +8,7 @@ import {timeAgo} from '../../util/timeAgo';
 import ItemPostNoCategoryStyles from './ItemPostNoCategoryStyles';
 
 type NavigationProp = {
-  navigate: (screen: 'PostPage') => void;
+  navigate: (screen: 'PostScreen') => void;
 };
 
 type PostProps = {
@@ -54,8 +54,8 @@ const ItemPostNoCategory: React.FC<PostProps> = ({postList}) => {
             <TouchableOpacity
               style={ItemPostNoCategoryStyles.container}
               onPress={
-                // () => navigation.navigate('PostPage')
-                navigation.navigate('PostPage', {
+                // () => navigation.navigate('PostScreen')
+                navigation.navigate('PostScreen', {
                   postId: item.id,
                 })
               }>

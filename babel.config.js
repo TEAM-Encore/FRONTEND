@@ -7,7 +7,7 @@ module.exports = {
         root: ['./src'],
         extensions: ['.ios.js', '.android.js', '.js', '.ts', '.tsx', '.json'], // 쉼표 수정 및 확장자 업데이트
         alias: {
-          '@/pages': './src/pages',
+          '@/screens': './src/screens',
           '@/components': './src/components',
           '@/assets': './src/assets',
           '@/util': './src/util',

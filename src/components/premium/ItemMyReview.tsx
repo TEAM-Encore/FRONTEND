@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import ItemReviewStyles from './ItemReviewStyles';
 
 type NavigationProp = {
-  navigate: (screen: 'PremiumOthersPage') => void;
+  navigate: (screen: 'PremiumOthersScreen') => void;
 };
 
 type PostProps = {
@@ -33,7 +33,7 @@ const ItemMyReview: React.FC<PostProps> = ({postList}) => {
   const navigation = useNavigation<NavigationProp>();
 
   const handlePremiumPost = () => {
-    navigation.navigate('PremiumOthersPage');
+    navigation.navigate('PremiumOthersScreen');
   };
 
   return (

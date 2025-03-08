@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import {SvgXml} from 'react-native-svg';
-import EntireStyles from '@/pages/dashboard/entire/EntireStyles';
+import EntireStyles from '@/screens/dashboard/entire/EntireStyles';
 
 const windowWidth = Dimensions.get('window').width;
 const cardSize = {width: 335, height: 128};

@@ -3,27 +3,27 @@ export type RootStackParamList = {
     frequency: string;
     checkedOptions: string[];
   };
-  LoginPage: undefined;
-  SignUpPage: undefined;
-  OnboardingPage: undefined;
-  ProfileCardPage: undefined;
-  WritePage: {
+  LoginScreen: undefined;
+  SignUpScreen: undefined;
+  OnboardingScreen: undefined;
+  ProfileCardScreen: undefined;
+  WriteScreen: {
     setPostData: React.Dispatch<React.SetStateAction<PostData | null>>;
   };
-  PremiumWritePage: undefined;
-  PremiumOthersPage: undefined;
-  PremiumMyPage: {reviewId: number};
-  PostPage: {postId: number};
-  ModifyPage: {postId: number};
-  SavePage: undefined;
-  DashboardSearchPage: {postData: any; text: string};
-  DashboardSearchDefaultPage: undefined;
-  HomeSearchPage: {postData: any; text: string};
-  HomeSearchDefaultPage: undefined;
-  HomeBannerPage: {bannerId: number};
-  AddTicketPage: undefined;
-  TicketDetailPage: undefined;
-  MusicalDetailPage: {data: any};
+  PremiumWriteScreen: undefined;
+  PremiumOthersScreen: undefined;
+  PremiumMyScreen: {reviewId: number};
+  PostScreen: {postId: number};
+  ModifyScreen: {postId: number};
+  SaveScreen: undefined;
+  DashboardSearchScreenList: {postData: any; text: string};
+  DashboardSearchDefaultScreen: undefined;
+  HomeSearchScreen: {postData: any; text: string};
+  HomeSearchDefaultScreen: undefined;
+  HomeBannerScreen: {bannerId: number};
+  AddTicketScreen: undefined;
+  TicketDetailScreen: undefined;
+  MusicalDetailScreen: {data: any};
   ModifyProfileImg: undefined;
 };
 
@@ -35,7 +35,7 @@ export interface PostData {
   hashTags: string[];
 }
 
-export type SearchPageProps = {
-  route: SearchPageRouterProp;
-  navigation: SearchPageNavigationProp;
+export type SearchScreenProps = {
+  route: SearchScreenRouterProp;
+  navigation: SearchScreenNavigationProp;
 };

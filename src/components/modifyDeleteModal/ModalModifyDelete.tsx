@@ -8,7 +8,7 @@ import CheckTempModal from '@/components/alertModal/CheckTempModal';
 import ModalStyles from './ModalStyles';
 
 type NavigationProp = {
-  navigate: (screen: 'ModifyPage') => void;
+  navigate: (screen: 'ModifyScreen') => void;
 };
 
 type ModalModifyDeleteProps = {
@@ -103,8 +103,8 @@ const ModalModifyDelete: React.FC<ModalModifyDeleteProps> = ({
       <View style={ModalStyles.container}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('ModifyPage');
-            // navigation.navigate('ModifyPage', {postId: postId});
+            navigation.navigate('ModifyScreen');
+            // navigation.navigate('ModifyScreen', {postId: postId});
             setModalVisible(false);
           }}>
           <Text style={ModalStyles.text}>수정</Text>
