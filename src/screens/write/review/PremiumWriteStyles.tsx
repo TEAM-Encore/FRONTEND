@@ -51,6 +51,7 @@ const PremiumWriteStyles = StyleSheet.create({
     ...typography.subhead03,
     zIndex: 1,
     marginVertical: 14,
+    width: 180,
   },
   icons: {
     flexDirection: 'column',
@@ -67,6 +68,7 @@ const PremiumWriteStyles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 18,
     letterSpacing: -0.3,
+    width: 170,
   },
   white: {
     position: 'absolute',

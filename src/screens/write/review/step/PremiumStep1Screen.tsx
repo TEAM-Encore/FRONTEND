@@ -103,27 +103,35 @@ const PremiumStep1Screen: React.FC<PremiumProp> = ({goToNext, saveData}) => {
               />
               <View style={PremiumWriteStyles.icons}>
                 <Text
-                  style={[PremiumWriteStyles.list_title, {color: titleColor}]}>
+                  style={[PremiumWriteStyles.list_title, {color: titleColor}]}
+                  numberOfLines={1}
+                  ellipsizeMode="tail">
                   {item.musical_title}
                 </Text>
                 <View style={PremiumWriteStyles.icon_container}>
                   <SvgXml xml={time_icon} style={PremiumWriteStyles.icon} />
                   <Text
-                    style={[PremiumWriteStyles.list_text, {color: textColor}]}>
+                    style={[PremiumWriteStyles.list_text, {color: textColor}]}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
                     {item.location}
                   </Text>
                 </View>
                 <View style={PremiumWriteStyles.icon_container}>
                   <SvgXml xml={seat_icon} style={PremiumWriteStyles.icon} />
                   <Text
-                    style={[PremiumWriteStyles.list_text, {color: textColor}]}>
+                    style={[PremiumWriteStyles.list_text, {color: textColor}]}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
                     {item.seat}
                   </Text>
                 </View>
                 <View style={PremiumWriteStyles.icon_container}>
                   <SvgXml xml={person_icon} style={PremiumWriteStyles.icon} />
                   <Text
-                    style={[PremiumWriteStyles.list_text, {color: textColor}]}>
+                    style={[PremiumWriteStyles.list_text, {color: textColor}]}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
                     {item.actors}
                   </Text>
                 </View>
