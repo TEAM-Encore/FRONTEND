@@ -219,6 +219,74 @@ const MyScreenStyles = StyleSheet.create({
   next_button_text: {
     ...typography.subhead04,
   },
+  notificationContainer: {
+    flex: 1,
+    padding: 20,
+  },
+  notificationInfoTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  notificationItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    height: 70,
+    paddingVertical: 13,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  notificationText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  notificationSubText: {
+    fontSize: 14,
+    color: "#666",
+    marginTop: 2,
+  },
+  
+
+
+  // // 마케팅 정보 수신 항목 스타일
+  // marketingItemContainer: {
+  //   marginTop: 30, // 기존 항목과 구분되는 간격
+  // },
+
+  // // 마케팅 항목 아래 선
+  // fullWidthLine: {
+  //   width: "100%", // 선이 가로로 꽉 차게
+  //   height: 1, // 선의 두께
+  //   backgroundColor: "#ddd", // 선 색상
+  //   marginTop: 11, // 11 만큼 간격 추가
+  // },
+
+  marketingItemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    height: 70,
+    paddingVertical: 13,
+    paddingHorizontal: 20,
+  },
+  
+  fullWidthLine: {
+    width: "100%", // 선이 가로로 꽉 차게
+    height: 1, // 선의 두께
+    backgroundColor: "#ddd", // 선 색상
+    marginTop: 11, // 11 만큼 간격 추가
+  },
+
+  // 마케팅 정보 수신 동의 약관 스타일
+  termsText: {
+    marginTop: 11, // 간격 설정
+    color: "#A5A5A5", // 회색 텍스트 색상
+    textDecorationLine: "underline", // 밑줄 추가
+    fontSize: 14,
+  },
 });
 
 export default MyScreenStyles;
