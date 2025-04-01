@@ -1,15 +1,18 @@
 import React, { useState } from "react";
-import { SafeAreaView, FlatList, Text, View, Switch } from "react-native";
+import { SafeAreaView, FlatList, Text, View, Switch, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import MyScreenStyles from "./MyScreenStyles";
 
-// 알림 상태를 서버에 동기화하는 함수 (이미 구현했다고 가정)
+type NavigationProp = {
+    navigate: (screen: 'MarketingDetails') => void;
+  };
+
 const updateNotificationSetting = async (id: string, enabled: boolean) => {
-  // 서버와 동기화하는 로직을 여기에 구현
   console.log(`알림 ID: ${id}, 활성화 여부: ${enabled}`);
 };
 
 const NotificationSettings = () => {
-  // 알림 항목 및 상태
+  const navigation = useNavigation();
   const [notifications, setNotifications] = useState([
     { id: "1", label: "푸시 알림", enabled: false },
     { id: "2", label: "게시판 활동", subLabel: "좋아요, 댓글, 인기 게시글 등", enabled: false },
@@ -17,57 +20,41 @@ const NotificationSettings = () => {
     { id: "4", label: "해시태그 알림", subLabel: "해시태그가 포함된 게시글/리뷰", enabled: false },
   ]);
 
-  // 푸시 알림을 켰을 때 하위 항목들을 켬
+  const [marketingOptIn, setMarketingOptIn] = useState(false);
+
   const togglePushNotification = async () => {
     setNotifications((prev) =>
-      prev.map((item) => {
-        if (item.id === "1") {
-          const newEnabled = !item.enabled;
-          return { ...item, enabled: newEnabled };
-        }
-        return item;
-      })
+      prev.map((item) => (item.id === "1" ? { ...item, enabled: !item.enabled } : item))
     );
 
-    // 푸시 알림을 켰을 때 하위 항목들도 모두 켬
     const newEnabled = !notifications.find((item) => item.id === "1")?.enabled;
     setNotifications((prev) =>
-      prev.map((item) =>
-        item.id !== "1" ? { ...item, enabled: newEnabled } : item
-      )
+      prev.map((item) => (item.id !== "1" ? { ...item, enabled: newEnabled } : item))
     );
 
-    // 서버와 동기화
-    const updatedItem = notifications.find(item => item.id === "1");
+    const updatedItem = notifications.find((item) => item.id === "1");
     if (updatedItem) {
       await updateNotificationSetting("1", newEnabled);
     }
   };
 
-  // 하위 항목을 개별적으로 토글하고, 푸시 알림 상태를 확인
   const toggleSubItem = async (id: string) => {
     setNotifications((prev) => {
-      const newNotifications = prev.map((item) => {
-        if (item.id === id) {
-          return { ...item, enabled: !item.enabled };
-        }
-        return item;
-      });
+      const newNotifications = prev.map((item) =>
+        item.id === id ? { ...item, enabled: !item.enabled } : item
+      );
 
-      // 푸시 알림 상태 업데이트 로직
       const pushNotification = newNotifications.find((item) => item.id === "1");
       const allSubItemsDisabled = newNotifications
         .filter((item) => item.id !== "1")
         .every((item) => !item.enabled);
 
-      // 하위 항목들이 모두 꺼졌을 때 푸시 알림도 꺼짐
       if (pushNotification && allSubItemsDisabled) {
         return newNotifications.map((item) =>
           item.id === "1" ? { ...item, enabled: false } : item
         );
       }
 
-      // 하위 항목 중 하나라도 켜져 있으면 푸시 알림 켬
       if (pushNotification && !allSubItemsDisabled) {
         return newNotifications.map((item) =>
           item.id === "1" ? { ...item, enabled: true } : item
@@ -77,16 +64,32 @@ const NotificationSettings = () => {
       return newNotifications;
     });
 
-    // 서버와 동기화
-    const updatedItem = notifications.find(item => item.id === id);
+    const updatedItem = notifications.find((item) => item.id === id);
     if (updatedItem) {
       await updateNotificationSetting(id, !updatedItem.enabled);
     }
   };
 
-  // 렌더링 함수
-  const renderItem = ({ item }: { item: { id: string; label: string; subLabel?: string; enabled: boolean } }) => (
-    <View style={MyScreenStyles.notificationItem}>
+  const toggleMarketingOptIn = async () => {
+    const newStatus = !marketingOptIn;
+    setMarketingOptIn(newStatus);
+    await updateNotificationSetting("marketing", newStatus);
+  };
+
+  const renderItem = ({
+    item,
+    index,
+  }: {
+    item: { id: string; label: string; subLabel?: string; enabled: boolean };
+    index: number;
+  }) => (
+    <View
+      style={[
+        MyScreenStyles.notificationItem,
+        ["2", "3", "4"].includes(item.id) && { backgroundColor: "#F2F2F2" },
+        index === notifications.length - 1 && { borderBottomWidth: 0 }, // 마지막 아이템이면 아래 선 제거
+      ]}
+    >
       <View style={MyScreenStyles.notificationLabelContainer}>
         <Text style={MyScreenStyles.notificationText}>{item.label}</Text>
         {item.subLabel && <Text style={MyScreenStyles.notificationSubText}>{item.subLabel}</Text>}
@@ -94,14 +97,13 @@ const NotificationSettings = () => {
       <Switch
         value={item.enabled}
         onValueChange={() => {
-          // 푸시 알림일 경우
           if (item.id === "1") {
             togglePushNotification();
           } else {
             toggleSubItem(item.id);
           }
-        }} // 토글 시 서버와 동기화
-        trackColor={{ false: "#ddd", true: "#FFF1BB" }} // #FFD700
+        }}
+        trackColor={{ false: "#ddd", true: "#FFF1BB" }}
       />
     </View>
   );
@@ -112,6 +114,31 @@ const NotificationSettings = () => {
         data={notifications}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
+        contentContainerStyle={{ paddingTop: 39 }}
+        ListFooterComponent={
+            <View style={{ paddingBottom: 10 }}>
+            <View style={[MyScreenStyles.marketingContainer, { marginTop: 39 }]}>
+              <Text style={MyScreenStyles.notificationText}>마케팅 정보 수신</Text>
+              <Switch
+                value={marketingOptIn}
+                onValueChange={toggleMarketingOptIn}
+                trackColor={{ false: "#ddd", true: "#FFF1BB" }}
+              />
+            </View>
+            {/* fullWidthLine을 "마케팅 정보 수신"에서 19.5만큼 떨어뜨리기 위해 marginTop 추가 */}
+             <View style={[MyScreenStyles.fullWidthLine, { marginTop: 0 }]} />
+          
+            {/* 마케팅 정보 수신 동의 약관 */}
+            <TouchableOpacity
+              onPress={() => navigation.navigate("MarketingDetails")}
+              style={{ alignSelf: "flex-start", marginLeft: 19, marginTop: 11 }}
+            >
+              <Text style={{ fontSize: 11, color: "#A5A5A5", textDecorationLine: "underline" }}>
+                마케팅 정보 수신 동의 약관
+              </Text>
+            </TouchableOpacity>
+          </View>
+        }
       />
     </SafeAreaView>
   );
