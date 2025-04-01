@@ -287,6 +287,17 @@ const MyScreenStyles = StyleSheet.create({
     textDecorationLine: "underline", // 밑줄 추가
     fontSize: 14,
   },
+  notificationLabelContainer: {
+    flex: 1, // 텍스트가 여러 줄일 때 Switch와 겹치지 않도록 설정
+  },
+  marketingContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    marginTop: 39, // 🔥 리스트와 간격을 39만큼 추가
+  },
 });
 
 export default MyScreenStyles;
