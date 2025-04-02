@@ -1,12 +1,13 @@
 import React from "react";
-import { SafeAreaView, ScrollView, Text, StyleSheet } from "react-native";
+import { SafeAreaView, ScrollView, Text } from "react-native";
+import MyScreenStyles from "./MyScreenStyles"; // 수정된 스타일 가져오기
 
 const MarketingDetails = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <SafeAreaView style={MyScreenStyles.marketingDetailsContainer}>
+      <ScrollView contentContainerStyle={MyScreenStyles.marketingDetailsScrollContainer}>
         {/* 안내 문구 */}
-        <Text style={styles.infoText}>
+        <Text style={MyScreenStyles.marketingDetailsInfoText}>
           앙코르는 개인정보 보호법 제22조 제4항과 제39조의 3에 따라 {"\n"} 
           사용자의 광고성 정보 수신과 이에 따른 개인정보 처리에 대한 {"\n"} 
           동의를 받고 있습니다. 약관에 동의하지 않아도 앙코르의 {"\n"}
@@ -14,69 +15,37 @@ const MarketingDetails = () => {
         </Text>
 
         {/* 개인정보 수집 항목 */}
-        <Text style={styles.sectionTitle}>개인정보 수집 항목</Text>
-        <Text style={styles.listItem}>•  이름</Text>
-        <Text style={styles.listItem}>•  휴대폰 번호</Text>
-        <Text style={styles.listItem}>•  성별</Text>
-        <Text style={styles.listItem}>•  생년월일</Text>
+        <Text style={MyScreenStyles.marketingDetailsSectionTitle}>개인정보 수집 항목</Text>
+        <Text style={MyScreenStyles.marketingDetailsListItem}>•  이름</Text>
+        <Text style={MyScreenStyles.marketingDetailsListItem}>•  휴대폰 번호</Text>
+        <Text style={MyScreenStyles.marketingDetailsListItem}>•  성별</Text>
+        <Text style={MyScreenStyles.marketingDetailsListItem}>•  생년월일</Text>
 
         {/* 개인정보 수집 이용 목적 */}
-        <Text style={styles.sectionTitle}>개인정보 수집 이용 목적</Text>
-        <Text style={styles.listItem}>•  이벤트 운영 및 광고성 정보 전송</Text>
-        <Text style={styles.listItem}>•  서비스 관련 정보 전송</Text>
+        <Text style={MyScreenStyles.marketingDetailsSectionTitle}>개인정보 수집 이용 목적</Text>
+        <Text style={MyScreenStyles.marketingDetailsListItem}>•  이벤트 운영 및 광고성 정보 전송</Text>
+        <Text style={MyScreenStyles.marketingDetailsListItem}>•  서비스 관련 정보 전송</Text>
 
         {/* 보유 기간 */}
-        <Text style={styles.sectionTitle}>보유 기간</Text>
-        <Text style={styles.listItem}>•  동의 철회 혹은 회원 탈퇴 시까지</Text>
+        <Text style={MyScreenStyles.marketingDetailsSectionTitle}>보유 기간</Text>
+        <Text style={MyScreenStyles.marketingDetailsListItem}>•  동의 철회 혹은 회원 탈퇴 시까지</Text>
 
         {/* 동의 철회 방식 */}
-        <Text style={styles.sectionTitle}>동의 철회 방식</Text>
-        <Text style={styles.listItem}>•  알림/수신 설정 페이지에서 변경</Text>
+        <Text style={MyScreenStyles.marketingDetailsSectionTitle}>동의 철회 방식</Text>
+        <Text style={MyScreenStyles.marketingDetailsListItem}>•  알림/수신 설정 페이지에서 변경</Text>
 
         {/* 전송 방식 */}
-        <Text style={styles.sectionTitle}>전송 방식</Text>
-        <Text style={styles.listItem}>•  전화번호 문자메시지 등</Text>
+        <Text style={MyScreenStyles.marketingDetailsSectionTitle}>전송 방식</Text>
+        <Text style={MyScreenStyles.marketingDetailsListItem}>•  전화번호 문자메시지 등</Text>
 
         {/* 전송 내용 */}
-        <Text style={styles.sectionTitle}>전송 내용</Text>
-        <Text style={styles.listItem}>•  혜택 및 이벤트 정보, 신규 서비스 안내 등의 광고성 정보</Text>
+        <Text style={MyScreenStyles.marketingDetailsSectionTitle}>전송 내용</Text>
+        <Text style={MyScreenStyles.marketingDetailsListItem}>
+          •  혜택 및 이벤트 정보, 신규 서비스 안내 등의 광고성 정보
+        </Text>
       </ScrollView>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-  },
-  scrollContainer: {
-    paddingBottom: 30, // 스크롤 마지막 항목 여백 추가
-  },
-  infoText: {
-    fontSize: 14,       // 글자 크기
-    lineHeight: 24,     // 줄 간격
-    letterSpacing: -0.3,// 글자 간격
-    color: "#000000",
-    marginTop: 28,  
-    marginLeft: 21, 
-    marginRight: 19, 
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#000000",
-    marginTop: 24, 
-    marginLeft: 21, 
-    marginRight: 19, 
-  },
-  listItem: {
-    fontSize: 14,
-    color: "#000000",
-    marginTop: 11, 
-    marginLeft: 21, 
-    marginRight: 19, 
-  },
-});
 
 export default MarketingDetails;
