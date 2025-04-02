@@ -235,35 +235,23 @@ const MyScreenStyles = StyleSheet.create({
     height: 70,
     paddingVertical: 13,
     paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
+    borderBottomWidth: 0.75,
+    borderBottomColor: "#C1C1C1",
   },
   notificationText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#333",
+    lineHeight: 22, 
+    letterSpacing: -0.3,
+    color: "#171717",
   },
   notificationSubText: {
     fontSize: 14,
+    lineHeight: 20, 
+    letterSpacing: -0.3,
     color: "#666",
     marginTop: 2,
   },
-  
-
-
-  // // 마케팅 정보 수신 항목 스타일
-  // marketingItemContainer: {
-  //   marginTop: 30, // 기존 항목과 구분되는 간격
-  // },
-
-  // // 마케팅 항목 아래 선
-  // fullWidthLine: {
-  //   width: "100%", // 선이 가로로 꽉 차게
-  //   height: 1, // 선의 두께
-  //   backgroundColor: "#ddd", // 선 색상
-  //   marginTop: 11, // 11 만큼 간격 추가
-  // },
-
   marketingItemContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -275,8 +263,8 @@ const MyScreenStyles = StyleSheet.create({
   
   fullWidthLine: {
     width: "100%", // 선이 가로로 꽉 차게
-    height: 1, // 선의 두께
-    backgroundColor: "#ddd", // 선 색상
+    height: 0.75, // 선의 두께
+    backgroundColor: "#A5A5A5", // 선 색상
     marginTop: 11, // 11 만큼 간격 추가
   },
 
@@ -296,7 +284,40 @@ const MyScreenStyles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 15,
     paddingHorizontal: 20,
-    marginTop: 39, // 🔥 리스트와 간격을 39만큼 추가
+    marginTop: 39, // 리스트와 간격을 39만큼 추가
+  },
+
+  marketingDetailsContainer: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+  },
+  marketingDetailsScrollContainer: {
+    paddingBottom: 30, // 스크롤 마지막 항목 여백 추가
+  },
+  marketingDetailsInfoText: {
+    fontSize: 14,       // 글자 크기
+    lineHeight: 24,     // 줄 간격
+    letterSpacing: -0.3,// 글자 간격
+    color: "#000000",
+    marginTop: 28,  
+    marginLeft: 21, 
+    marginRight: 19, 
+  },
+  marketingDetailsSectionTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#000000",
+    letterSpacing: -0.3,
+    marginTop: 24, 
+    marginLeft: 21, 
+    marginRight: 19, 
+  },
+  marketingDetailsListItem: {
+    fontSize: 14,
+    color: "#000000",
+    marginTop: 11, 
+    marginLeft: 21, 
+    marginRight: 19, 
   },
 });
 
