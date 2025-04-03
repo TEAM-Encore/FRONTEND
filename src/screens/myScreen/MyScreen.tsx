@@ -15,7 +15,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {getMyInfo} from '@/api/users.api';
 
 type NavigationProp = {
-  navigate: (screen: 'ModifyProfileImg') => void;
+  navigate: (screen: 'ModifyProfileImg' | 'NotificationSettings') => void;
 };
 
 export default function MyScreen() {
@@ -177,9 +177,12 @@ export default function MyScreen() {
                 </Text>
               </TouchableOpacity>
 
-              <Text style={{...MyScreenStyles.infoSubTitle, marginTop: 8}}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('NotificationSettings')}>
+               <Text style={{...MyScreenStyles.infoSubTitle, marginTop: 8}}>
                 수신 설정
               </Text>
+              </TouchableOpacity>
 
               <View style={MyScreenStyles.line} />
 

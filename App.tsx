@@ -32,6 +32,8 @@ import {AddTicketProvider} from './src/state/AddTicketContext';
 import {OnboardingProvider} from './src/state/OnboardingContext';
 import MusicalDetailScreen from './src/screens/home/musical/MusicalDetailScreen';
 import ModifyProfileImg from './src/screens/myScreen/ModifyProfileImg';
+import NotificationSettings from './src/screens/myScreen/NotificationSettings';
+import MarketingDetails from './src/screens/myScreen/MarketingDetails';
 import {createPost, putPost} from './src/api/post.api';
 import {ensureAsyncStorageDir} from './src/util/ensureAsyncStorageDir';
 
@@ -476,6 +478,38 @@ export default function App() {
                     backgroundColor: '#FBFBFB',
                   },
                   title: '프로필 수정',
+                  headerTitleStyle: {...AppStyles.title},
+                  headerLeft: () => (
+                    <CustomBackButton navigation={navigation} />
+                  ),
+                })}
+              />
+            {/* 마이페이지: 수신 설정 페이지 */}
+            <Stack.Screen
+                name="NotificationSettings"
+                component={NotificationSettings}
+                options={({navigation}) => ({
+                  headerStyle: {
+                    height: 123,
+                    backgroundColor: '#FBFBFB',
+                  },
+                  title: '수신 설정',
+                  headerTitleStyle: {...AppStyles.title},
+                  headerLeft: () => (
+                    <CustomBackButton navigation={navigation} />
+                  ),
+                })}
+              />
+              {/* 마이페이지: 마케팅 정보 수신 페이지 */}
+              <Stack.Screen
+                name="MarketingDetails" 
+                component={MarketingDetails}
+                options={({navigation}) => ({
+                  headerStyle: {
+                    height: 123,
+                    backgroundColor: '#FBFBFB',
+                  },
+                  title: '마케팅 정보 수신',
                   headerTitleStyle: {...AppStyles.title},
                   headerLeft: () => (
                     <CustomBackButton navigation={navigation} />
