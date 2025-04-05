@@ -13,6 +13,7 @@ export type RootStackParamList = {
   PremiumWriteScreen: undefined;
   PremiumOthersScreen: undefined;
   PremiumMyScreen: {reviewId: number};
+  PremiumSearchDefaultScreen: undefined;
   PostScreen: {postId: number};
   ModifyScreen: {postId: number};
   SaveScreen: undefined;

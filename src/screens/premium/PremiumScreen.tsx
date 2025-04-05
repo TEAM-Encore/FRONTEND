@@ -25,7 +25,7 @@ import {getTicketReviewList} from '@/api/review.api';
 
 type RootStackParamList = {
   PremiumWriteScreen: undefined;
-  PremiumSearchDefaultS: undefined;
+  PremiumSearchDefaultScreen: undefined;
 };
 
 const data = [
@@ -140,7 +140,7 @@ export default function PremiumScreen() {
           <Text style={PremiumStyles.textTitle}>프리미엄</Text>
           <View style={PremiumStyles.containerRow}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('PremiumSearchDefaultS')}
+              onPress={() => navigation.navigate('PremiumSearchDefaultScreen')} // @@@@@@@@@@
               onLayout={handleLayout}>
               <IconSearch style={{marginRight: 20}} />
             </TouchableOpacity>
