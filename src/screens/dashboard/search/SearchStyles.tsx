@@ -147,6 +147,18 @@ const SearchStyles = StyleSheet.create({
     marginBottom: 23,
     marginHorizontal: 20,
   },
+
+  recentSearchItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 12,
+    borderBottomWidth: 1,
+    borderColor: '#ddd',
+  },
+  recentSearchText: {
+    fontSize: 16,
+  },
+  
 });
 
 export default SearchStyles;
