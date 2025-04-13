@@ -25,7 +25,7 @@ import IconNotification from '@/assets/icons/home/IconNotification';
 import IconLike from '@/assets/icons/home/IconLike';
 import IconComment from '@/assets/icons/home/IconComment';
 import ToolTipModal from '@/components/alertModal/ToolTipModal';
-import {getTicketBookList} from '@/api/ticketBook.api';
+import {getTicketBookList} from '@/api/ticketbook.api';
 import {getPopularPremiumReviews} from '@/api/premium.api';
 import {getFeaturedMusical, getUpcomingMusical} from '@/api/musical.api';
 
