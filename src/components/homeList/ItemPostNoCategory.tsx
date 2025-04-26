@@ -8,12 +8,12 @@ import {timeAgo} from '../../util/timeAgo';
 import ItemPostNoCategoryStyles from './ItemPostNoCategoryStyles';
 
 type NavigationProp = {
-  navigate: (screen: 'PostScreen') => void;
+  navigate: (screen: 'PostScreen', params: {postId: number}) => void;
 };
 
 type PostProps = {
   postList: {
-    id: any;
+    id: number;
     nickname: string;
     title: string;
     content: string;
@@ -25,12 +25,10 @@ type PostProps = {
   }[];
 };
 
-// 게시판에서 배우, 자유 탭에서 게시글 리스트 (카테고리 없는 버전)
 const ItemPostNoCategory: React.FC<PostProps> = ({postList}) => {
   const navigation = useNavigation<NavigationProp>();
   const [isLiked, setIsLiked] = useState(false);
 
-  // 일단 사용자 아이디 1로 고정 => 로그인 연동 후 수정 필요
   const user_id = 1;
 
   const handleLike = async (user_id: number, post_id: number) => {
@@ -45,7 +43,7 @@ const ItemPostNoCategory: React.FC<PostProps> = ({postList}) => {
   return (
     <FlatList
       data={postList}
-      keyExtractor={item => item.id}
+      keyExtractor={item => item.id.toString()}
       renderItem={({item, index}) => {
         const thumbnail = item.thumbnail;
 
@@ -53,8 +51,7 @@ const ItemPostNoCategory: React.FC<PostProps> = ({postList}) => {
           <>
             <TouchableOpacity
               style={ItemPostNoCategoryStyles.container}
-              onPress={
-                // () => navigation.navigate('PostScreen')
+              onPress={() =>
                 navigation.navigate('PostScreen', {
                   postId: item.id,
                 })
@@ -114,7 +111,6 @@ const ItemPostNoCategory: React.FC<PostProps> = ({postList}) => {
               </View>
             </TouchableOpacity>
 
-            {/* 마지막 아이템이 아닐 때만 라인 표시 */}
             <View style={ItemPostNoCategoryStyles.containerRow}></View>
             {index < postList.length - 1 ? (
               <View style={ItemPostNoCategoryStyles.line2} />
@@ -124,7 +120,6 @@ const ItemPostNoCategory: React.FC<PostProps> = ({postList}) => {
           </>
         );
       }}
-      // 검색 결과가 없을 때 표시할 컴포넌트
       ListEmptyComponent={
         postList.length === 0 ? (
           <View style={ItemPostNoCategoryStyles.container}>

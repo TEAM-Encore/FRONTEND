@@ -49,7 +49,12 @@ const MusicalSearchScreen: React.FC<SearchScreenProps> = ({postData, text}) => {
         <View style={HomeStyles.chip}>
           <Text style={HomeStyles.chipText}>NOW</Text>
         </View>
-        <Text style={HomeStyles.musicalSearchTitle}>{item.title}</Text>
+        <Text
+          style={HomeStyles.musicalSearchTitle}
+          numberOfLines={1}
+          ellipsizeMode="tail">
+          {item.title}
+        </Text>
         <Text style={HomeStyles.seriesSearchText}>
           {mapSeriesToText(item.series)}
         </Text>

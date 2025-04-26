@@ -23,6 +23,7 @@ import {getTicketBookList} from '@/api/ticketBookList.api';
 import Colors from '@/assets/colors/Colors';
 
 type RootStackParamList = {
+  HomeSearchDefaultScreen: undefined;
   AddTicketScreen: undefined;
   TicketDetailScreen: {ticket: TicketItem};
 };
@@ -230,7 +231,8 @@ export default function TicketBookScreen() {
         <View style={TicketBookStyles.containerIcons}>
           <Text style={TicketBookStyles.textTitle}>티켓북</Text>
           <View style={TicketBookStyles.containerRow}>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('HomeSearchDefaultScreen')}>
               <IconSearch style={{marginRight: 20}} />
             </TouchableOpacity>
             <IconNotification />

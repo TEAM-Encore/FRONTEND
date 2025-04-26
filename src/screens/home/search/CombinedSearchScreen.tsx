@@ -17,7 +17,7 @@ const CombinedSearchScreen: React.FC<SearchScreenProps> = ({
     <>
       <MusicalSearchScreen postData={postData} text={text} />
       <View style={{marginTop: 32}} />
-      <DashboardSearchScreen postData={postData} />
+      {/* <DashboardSearchScreen postData={postData} /> */}
       <PremiumSearchScreen postData={postData} text={text} />
     </>
   );

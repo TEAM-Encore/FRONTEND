@@ -8,6 +8,13 @@ export const getTicketReview = (review_id: number) => {
   return httpApi.get(`/api/v1/review/${review_id}`);
 };
 
+// 리뷰 연관 검색어 조회
+export const getReviewSearchSuggestions = (keyword: string) => {
+  return httpApi.get(`/api/v1/review/search-suggestions`, {
+    params: { keyword },
+  });
+};
+
 // 프리미엄 리뷰 리스트 조회
 export const getTicketReviewList = (
   size: number,
