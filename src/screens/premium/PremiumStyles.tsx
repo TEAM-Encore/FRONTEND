@@ -235,7 +235,7 @@ const PremiumStyles = StyleSheet.create({
     textAlign: 'center',
   },
   usePointsButton: {
-    backgroundColor: Colors.sub_05,
+    backgroundColor: Colors.gray_12,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 7.44,

@@ -9,21 +9,21 @@ const TagsStyles = StyleSheet.create({
   container: {
     width: cardSize.width,
     height: cardSize.height,
-    backgroundColor: Colors.sub_01,
+    backgroundColor: Colors.gray_03,
     borderRadius: 8,
     marginRight: 10.62,
     justifyContent: 'center',
     alignItems: 'center',
   },
   selectedContainer: {
-    backgroundColor: Colors.sub_05,
+    backgroundColor: Colors.gray_12,
   },
   text: {
     ...subhead02,
-    color: Colors.sub_05,
+    color: Colors.gray_12,
   },
   selectedText: {
-    color: Colors.sub_01,
+    color: Colors.gray_03,
   },
 });
 

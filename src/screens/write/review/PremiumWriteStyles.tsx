@@ -28,11 +28,6 @@ const PremiumWriteStyles = StyleSheet.create({
     flexDirection: 'row',
     overflow: 'hidden',
   },
-  list_yellow_icon: {
-    marginTop: 27,
-    marginLeft: -50,
-    resizeMode: 'cover',
-  },
   list_image: {
     marginHorizontal: 16,
     marginVertical: 14,
@@ -51,7 +46,7 @@ const PremiumWriteStyles = StyleSheet.create({
     ...typography.subhead03,
     zIndex: 1,
     marginVertical: 14,
-    width: 180,
+    width: 210,
   },
   icons: {
     flexDirection: 'column',

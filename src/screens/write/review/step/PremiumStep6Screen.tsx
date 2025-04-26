@@ -154,10 +154,10 @@ const PremiumStep6Screen: React.FC<PremiumProp> = ({
       saveData(6, {scores, title: searchText});
 
       const ticket_id = stepData['1']?.id;
-      // console.log('Ticket ID:', ticket_id);
+      console.log('Ticket ID:', ticket_id);
 
       const requestData = transformStepDataToRequest(stepData);
-      // console.log('Request Data:', JSON.stringify(requestData, null, 2));
+      console.log('Request Data:', JSON.stringify(requestData, null, 2));
 
       const postResponse = await postTicketReview(ticket_id, requestData);
 
@@ -297,7 +297,7 @@ const PremiumStep6Screen: React.FC<PremiumProp> = ({
             PremiumWriteStyles.next_button,
             {
               backgroundColor: isButtonDisabled
-                ? Colors.gray_05
+                ? Colors.gray_06
                 : Colors.sub_04,
             },
           ]}

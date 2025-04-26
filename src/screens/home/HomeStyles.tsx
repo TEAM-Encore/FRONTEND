@@ -338,6 +338,8 @@ const HomeStyles = StyleSheet.create({
     ...typography.subhead03,
     color: Colors.gray_12,
     marginBottom: 2,
+    width: 240,
+    overflow: 'hidden',
   },
   seriesSearchText: {
     ...typography.caption,
