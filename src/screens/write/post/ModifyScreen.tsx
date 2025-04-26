@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import {
   SafeAreaView,
   ScrollView,
@@ -108,9 +109,11 @@ const ModifyScreen: React.FC<ModifyScreenRouteProps> = ({
     }
   };
 
-  useEffect(() => {
-    fetchGetPost();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchGetPost();
+    }, []),
+  );
 
   // App.tsx로 props 전달
   useEffect(() => {
