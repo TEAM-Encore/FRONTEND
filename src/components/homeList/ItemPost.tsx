@@ -77,9 +77,11 @@ const ItemPost: React.FC<PostProps> = ({postList}) => {
             <>
               <TouchableOpacity
                 style={ItemPostStyles.container}
-                onPress={navigation.navigate('PostScreen', {
-                  postId: item.id,
-                })}>
+                onPress={() =>
+                  navigation.navigate('PostScreen', {
+                    postId: item.id,
+                  })
+                }>
                 {category && (
                   <View
                     style={[
