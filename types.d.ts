@@ -16,6 +16,7 @@ export type RootStackParamList = {
   PremiumSearchDefaultScreen: undefined;
   PostScreen: {postId: number};
   ModifyScreen: {postId: number};
+  // PostHashtagScreen: {hashTag: string};
   SaveScreen: undefined;
   DashboardSearchScreenList: {postData: any; text: string};
   DashboardSearchDefaultScreen: undefined;

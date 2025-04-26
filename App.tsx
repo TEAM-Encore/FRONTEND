@@ -15,6 +15,7 @@ import StopReviewModal from './src/components/alertModal/StopReviewModal';
 import WriteScreen from './src/screens/write/post/WriteScreen';
 import PostScreen from './src/screens/dashboard/post/PostScreen';
 import ModifyScreen from './src/screens/write/post/ModifyScreen';
+// import PostHashtagScreen from './src/screens/dashboard/post/hashtag/PostHashtagScreen';
 import SaveScreen from './src/screens/write/save/SaveScreen';
 import DashboardSearchScreenList from './src/screens/dashboard/search/DashboardSearchScreenList';
 import DashboardSearchDefaultScreen from './src/screens/search/DashboardSearchDefaultScreen';
@@ -389,7 +390,7 @@ export default function App() {
               <Stack.Screen
                 name="PostScreen"
                 component={PostScreen}
-                initialParams={{postId: 5}}
+                // initialParams={{postId: 0}}
                 options={{headerShown: false}}
               />
               {/* 게시글 수정 페이지 */}
@@ -419,6 +420,12 @@ export default function App() {
                   <ModifyScreen {...props} setModifyData={setModifyData} />
                 )}
               </Stack.Screen>
+              {/* 게시글 해시태그 검색 페이지 */}
+              {/* <Stack.Screen
+                name="PostHashtagScreen"
+                component={PostHashtagScreen}
+                options={{headerShown: false}}
+              /> */}
               {/* 게시글 임시 저장 목록 페이지 */}
               <Stack.Screen
                 name="SaveScreen"
@@ -484,8 +491,8 @@ export default function App() {
                   ),
                 })}
               />
-            {/* 마이페이지: 수신 설정 페이지 */}
-            <Stack.Screen
+              {/* 마이페이지: 수신 설정 페이지 */}
+              <Stack.Screen
                 name="NotificationSettings"
                 component={NotificationSettings}
                 options={({navigation}) => ({
@@ -502,7 +509,7 @@ export default function App() {
               />
               {/* 마이페이지: 마케팅 정보 수신 페이지 */}
               <Stack.Screen
-                name="MarketingDetails" 
+                name="MarketingDetails"
                 component={MarketingDetails}
                 options={({navigation}) => ({
                   headerStyle: {

@@ -59,7 +59,7 @@ export default function TicketBookScreen() {
       } else if (category == '최근 1년') {
         period = 'YEAR';
       }
-      const response = await getTicketBookList('NULL');
+      const response = await getTicketBookList(period); // API 호출 시 필터링된 기간 값을 전달
       setTicketList(response.data.data);
       // console.log(response.data.data);
     } catch (error) {

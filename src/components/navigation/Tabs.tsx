@@ -38,12 +38,12 @@ export default function Tabs({route}: {route: TabsRouteProp}) {
       icon: TabSvg.PremiumIcon,
       tabIcon: TabSvg.tabPremiumIcon,
     },
-    {
-      name: '게시판',
-      content: DashboardScreen,
-      icon: TabSvg.DashboardIcon,
-      tabIcon: TabSvg.tabDashboardIcon,
-    },
+    // {
+    //   name: '게시판',
+    //   content: DashboardScreen,
+    //   icon: TabSvg.DashboardIcon,
+    //   tabIcon: TabSvg.tabDashboardIcon,
+    // },
     {
       name: '티켓북',
       content: TicketBookScreen,

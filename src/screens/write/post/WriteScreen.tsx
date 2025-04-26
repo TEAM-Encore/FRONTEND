@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  Alert,
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
@@ -19,6 +20,7 @@ import {SelectImage} from '@/components/selectImage/SelectImage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CheckTempModal from '@/components/alertModal/CheckTempModal';
 import {useRoute, RouteProp} from '@react-navigation/native';
+import {getPost} from '@/api/post.api';
 
 interface PostData {
   title: string;
@@ -68,6 +70,8 @@ const WriteScreen: React.FC<WriteScreenProps> = ({setPostData}) => {
   const [selectedSubTitle, setSelectedSubtitle] = useState('');
   const [topButton, setTopButton] = useState('');
   const [bottomButton, setBottomButton] = useState('');
+  const [savedPosts, setSavedPosts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const dashboardList = [
@@ -77,6 +81,7 @@ const WriteScreen: React.FC<WriteScreenProps> = ({setPostData}) => {
     '배우 게시판',
     '자유 게시판',
   ];
+
   const pressDashboard = () => {
     setDashboardModalVisible(true);
     setModalTitle('게시판');
@@ -114,6 +119,7 @@ const WriteScreen: React.FC<WriteScreenProps> = ({setPostData}) => {
     PERFORMANCE_REVIEW: '공연 감상',
   };
 
+  // 임시저장 글 유무에 따라 띄우는 모달
   const openModal = (
     title: string,
     subTitle: string,
@@ -130,7 +136,7 @@ const WriteScreen: React.FC<WriteScreenProps> = ({setPostData}) => {
   // 임시저장 글 유무에 따라 띄우는 모달
   const handleJudgeTempList = async () => {
     const storedData = await AsyncStorage.getItem('temporaryPosts');
-    console.log('스토리지에 저장된 임시 저장 글: ', storedData);
+    // console.log('스토리지에 저장된 임시 저장 글: ', storedData);
     const parsedData = JSON.parse(storedData || '[]');
 
     if (parsedData.length > 0) {
@@ -138,6 +144,12 @@ const WriteScreen: React.FC<WriteScreenProps> = ({setPostData}) => {
     }
   };
 
+  // 임시 저장 글 불러오기
+  useEffect(() => {
+    handleJudgeTempList();
+  }, []);
+
+  // 게시판 선택에 따른 카테고리 변경
   useEffect(() => {
     if (post_type === '정보 게시판') {
       setCategoryDisabled(false);
@@ -151,10 +163,7 @@ const WriteScreen: React.FC<WriteScreenProps> = ({setPostData}) => {
     }
   }, [post_type]);
 
-  useEffect(() => {
-    handleJudgeTempList();
-  }, []);
-
+  // 카테고리 선택
   const pressCategory = () => {
     if (!categoryDisabled) {
       setCategoryModalVisible(true);
@@ -162,11 +171,13 @@ const WriteScreen: React.FC<WriteScreenProps> = ({setPostData}) => {
     }
   };
 
+  // 내용 변경 시 해시태그 추출
   const handleContentChange = (text: string) => {
     setContent(text);
     setHashTags(text.match(/#[^\s#]+/g) || []);
   };
 
+  // 이미지 선택
   const handleSelectImage = async () => {
     const imageUrl = await SelectImage(setPhotoCount);
     if (imageUrl) {
@@ -174,6 +185,7 @@ const WriteScreen: React.FC<WriteScreenProps> = ({setPostData}) => {
     }
   };
 
+  // 이미지 삭제
   const handleRemoveImage = (index: number) => {
     setImgUrls(prev => prev.filter((_, i) => i !== index));
     setPhotoCount(prev => prev - 1);
@@ -191,7 +203,92 @@ const WriteScreen: React.FC<WriteScreenProps> = ({setPostData}) => {
     });
   }, [title, content, post_type, category, imgUrls]);
 
-  // 상태 업데이트
+  // 임시 저장 글에서 넘어온 데이터 작성 페이지에 그대로 띄우기
+  useEffect(() => {
+    if (route.params?.postData) {
+      const postData = route.params?.postData;
+      const mappedCategory = categoryMapping[postData.category] || '';
+      const mappedPostType = postTypeMapping[postData.post_type] || '';
+
+      console.log('임시저장 글에서 넘어온 데이터: ', postData);
+
+      setTitle(postData.title);
+      setContent(postData.content);
+      setPostType(mappedPostType);
+      setCategory(mappedCategory);
+      setHashTags(postData.hashTags || []);
+      setImgUrls(postData.post_images || []);
+    }
+  }, [route.params?.postData]);
+
+  // 임시 저장 글 조회 후 가장 최신 글 판단
+  type Post = {
+    post_id: number;
+    modified_at: string;
+  };
+
+  const fetchSavedPosts = async (): Promise<any | null> => {
+    try {
+      const storedData = await AsyncStorage.getItem('temporaryPosts');
+      const parsedData = JSON.parse(storedData || '[]');
+
+      const now = new Date();
+      const twoWeeksInSeconds = 14 * 24 * 60 * 60;
+
+      const validPosts = parsedData.filter((post: Post) => {
+        const past = new Date(post.modified_at);
+        const diffInSeconds = Math.floor(
+          (now.getTime() - past.getTime()) / 1000,
+        );
+        return diffInSeconds < twoWeeksInSeconds;
+      });
+
+      if (validPosts.length === 0) {
+        setSavedPosts([]);
+        await AsyncStorage.setItem('temporaryPosts', JSON.stringify([]));
+        return;
+      }
+
+      // 최신 글을 불러오기 위해 수정일 기준으로 정렬
+      validPosts.sort(
+        (a: Post, b: Post) =>
+          new Date(b.modified_at).getTime() - new Date(a.modified_at).getTime(),
+      );
+      const latestPost = validPosts[0];
+      const response = await getPost(latestPost.post_id);
+      const latestPostData = response.data.data;
+
+      setSavedPosts([latestPostData]);
+      console.log('가장 최신 임시 저장 글: ', latestPostData);
+
+      return latestPostData;
+    } catch (error) {
+      console.error('Error fetching saved posts:', error);
+      Alert.alert(
+        '임시 저장 글을 불러오는 도중 문제가 발생했습니다. 다시 시도해주세요.',
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const bringTemporaryPost = async () => {
+    const latestPost = await fetchSavedPosts();
+    if (latestPost) {
+      // 이걸 그대로 postData에 써도 되고, useState 초기화해도 됨
+
+      const mappedCategory = categoryMapping[latestPost.category] || '';
+      const mappedPostType = postTypeMapping[latestPost.post_type] || '';
+
+      setTitle(latestPost.title || '');
+      setContent(latestPost.content || '');
+      setPostType(mappedPostType || '게시판 선택');
+      setCategory(mappedCategory || '카테고리 선택');
+      setHashTags(latestPost.hashTags || []);
+      setImgUrls(latestPost.imgUrls || []);
+    }
+  };
+
   useEffect(() => {
     if (route.params?.postData) {
       const postData = route.params?.postData;
@@ -355,7 +452,8 @@ const WriteScreen: React.FC<WriteScreenProps> = ({setPostData}) => {
         subTitle={selectedSubTitle}
         topButton={topButton}
         bottomButton={bottomButton}
-        topButtonAction={() => navigation.navigate('SaveScreen')}
+        topButtonAction={() => bringTemporaryPost()}
+        // topButtonAction={() => navigation.navigate('SaveScreen')}
       />
     </>
   );

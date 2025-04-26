@@ -187,6 +187,11 @@ const PostScreen: React.FC<PostScreenProps> = ({route}) => {
     }
   };
 
+  const handleHashtagPress = (tag: string) => {
+    console.log('클릭된 해시태그:', tag);
+    navigation.navigate('PostHashtagScreen', {hashTag: tag});
+  };
+
   return (
     <>
       <SafeAreaView style={PostStyles.container}>
@@ -268,11 +273,16 @@ const PostScreen: React.FC<PostScreenProps> = ({route}) => {
               {postData?.hashtags?.length !== 0 && (
                 <View style={PostStyles.line} />
               )}
-              <TouchableOpacity style={PostStyles.containerHashtag}>
-                <Text style={PostStyles.textHashtag}>
-                  {postData?.hashtags?.join(' ') || ''}
-                </Text>
-              </TouchableOpacity>
+              <View style={PostStyles.containerHashtagWrapper}>
+                {postData?.hashtags?.map((tag, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => handleHashtagPress(tag)} // 해시태그 클릭 시 동작
+                  >
+                    <Text style={PostStyles.textHashtag}>{tag}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
               {/* 좋아요 및 댓글 */}
               <View style={PostStyles.containerCommentLikeItems}>
                 <TouchableOpacity

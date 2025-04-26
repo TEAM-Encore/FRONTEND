@@ -74,9 +74,12 @@ const HomeStyles = StyleSheet.create({
     backgroundColor: Colors.gray_04,
     marginVertical: 26,
   },
-  containerHashtag: {
+  containerHashtagWrapper: {
     marginHorizontal: 24,
     marginBottom: 15,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 5,
   },
   textHashtag: {
     ...body01,
