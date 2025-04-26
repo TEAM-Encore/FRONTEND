@@ -38,8 +38,8 @@ const HomeSearchScreen: React.FC<SearchScreenProps> = ({route, navigation}) => {
         return <CombinedSearchScreen postData={postData} text={text} />;
       case '공연 정보':
         return <MusicalSearchScreen postData={postData} text={text} />;
-      case '게시판':
-        return <DashboardSearchScreen postData={postData} />;
+      // case '게시판':
+      //   return <DashboardSearchScreen postData={postData} />;
       case '프리미엄':
         return <PremiumSearchScreen postData={postData} text={text} />;
       default:
@@ -86,7 +86,8 @@ const HomeSearchScreen: React.FC<SearchScreenProps> = ({route, navigation}) => {
         ListEmptyComponent={() => (
           <View>
             <View style={DashboardStyles.tabContainer}>
-              {['통합', '공연 정보', '게시판', '프리미엄'].map((tab, index) => (
+              {/* {['통합', '공연 정보', '게시판', '프리미엄'].map((tab, index) => ( */}
+              {['통합', '공연 정보', '프리미엄'].map((tab, index) => (
                 <TouchableOpacity
                   key={index}
                   onPress={() => setSelectedTab(tab)}
@@ -103,9 +104,9 @@ const HomeSearchScreen: React.FC<SearchScreenProps> = ({route, navigation}) => {
                       ? '통합'
                       : tab === '공연 정보'
                       ? '공연 정보'
-                      : tab === '게시판'
-                      ? '게시판'
-                      : tab === '프리미엄'
+                      : // : tab === '게시판'
+                      // ? '게시판'
+                      tab === '프리미엄'
                       ? '프리미엄'
                       : null}
                   </Text>
