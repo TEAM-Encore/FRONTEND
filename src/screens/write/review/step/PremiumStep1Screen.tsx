@@ -16,7 +16,7 @@ import PremiumWriteStyles from '../PremiumWriteStyles';
 import {SvgXml} from 'react-native-svg';
 import {ReviewWriteIcon} from '@/assets/icons/premium/ReviewWriteIcon';
 import Colors from '@/assets/colors/Colors';
-import {getTicketBookList} from '@/api/ticketBook.api';
+import {getTicketBookList} from '@/api/ticketBookList.api';
 import {useFocusEffect} from '@react-navigation/native';
 
 type ReviewItems = {
@@ -58,7 +58,7 @@ const PremiumStep1Screen: React.FC<PremiumProp> = ({goToNext, saveData}) => {
 
   const renderItem: ListRenderItem<ReviewItems> = ({item}) => {
     const isSelected = selectedId === item.id;
-    const backgroundColor = isSelected ? Colors.gray_11 : Colors.sub_02;
+    const backgroundColor = isSelected ? Colors.gray_11 : Colors.gray_03;
     const titleColor = isSelected ? '#FBFBFB' : Colors.gray_12;
     const textColor = isSelected ? Colors.gray_06 : Colors.gray_09;
     const time_icon = isSelected
@@ -103,27 +103,35 @@ const PremiumStep1Screen: React.FC<PremiumProp> = ({goToNext, saveData}) => {
               />
               <View style={PremiumWriteStyles.icons}>
                 <Text
-                  style={[PremiumWriteStyles.list_title, {color: titleColor}]}>
+                  style={[PremiumWriteStyles.list_title, {color: titleColor}]}
+                  numberOfLines={1}
+                  ellipsizeMode="tail">
                   {item.musical_title}
                 </Text>
                 <View style={PremiumWriteStyles.icon_container}>
                   <SvgXml xml={time_icon} style={PremiumWriteStyles.icon} />
                   <Text
-                    style={[PremiumWriteStyles.list_text, {color: textColor}]}>
+                    style={[PremiumWriteStyles.list_text, {color: textColor}]}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
                     {item.location}
                   </Text>
                 </View>
                 <View style={PremiumWriteStyles.icon_container}>
                   <SvgXml xml={seat_icon} style={PremiumWriteStyles.icon} />
                   <Text
-                    style={[PremiumWriteStyles.list_text, {color: textColor}]}>
+                    style={[PremiumWriteStyles.list_text, {color: textColor}]}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
                     {item.seat}
                   </Text>
                 </View>
                 <View style={PremiumWriteStyles.icon_container}>
                   <SvgXml xml={person_icon} style={PremiumWriteStyles.icon} />
                   <Text
-                    style={[PremiumWriteStyles.list_text, {color: textColor}]}>
+                    style={[PremiumWriteStyles.list_text, {color: textColor}]}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
                     {item.actors}
                   </Text>
                 </View>
@@ -131,7 +139,6 @@ const PremiumStep1Screen: React.FC<PremiumProp> = ({goToNext, saveData}) => {
             </View>
           </View>
         </TouchableOpacity>
-        <SvgXml xml={icon} style={PremiumWriteStyles.list_yellow_icon} />
       </View>
     );
   };
@@ -169,7 +176,7 @@ const PremiumStep1Screen: React.FC<PremiumProp> = ({goToNext, saveData}) => {
           style={[
             PremiumWriteStyles.next_button,
             {
-              backgroundColor: selectedId ? Colors.sub_04 : Colors.gray_05,
+              backgroundColor: selectedId ? Colors.sub_04 : Colors.gray_06,
             },
           ]}
           onPress={() => {

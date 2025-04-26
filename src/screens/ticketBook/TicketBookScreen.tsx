@@ -19,7 +19,7 @@ import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
 import IconSearch from '@/assets/icons/dashboard/IconSearch';
 import IconNotification from '@/assets/icons/dashboard/IconNotification';
 import ModalCategory from '@/components/categoryModal/ModalCategory';
-import {getTicketBookList} from '@/api/ticketbook.api';
+import {getTicketBookList} from '@/api/ticketBookList.api';
 import Colors from '@/assets/colors/Colors';
 
 type RootStackParamList = {

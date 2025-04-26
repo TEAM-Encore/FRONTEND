@@ -107,6 +107,7 @@ export default function PremiumScreen() {
     } catch (error) {
       console.log('error: ', error);
       Alert.alert('프리미엄 리뷰 조회 중에 문제가 발생했습니다.');
+      console.error('프리미엄 리뷰 조회 오류: ', error);
     }
   };
 

@@ -25,7 +25,7 @@ import IconNotification from '@/assets/icons/home/IconNotification';
 import IconLike from '@/assets/icons/home/IconLike';
 import IconComment from '@/assets/icons/home/IconComment';
 import ToolTipModal from '@/components/alertModal/ToolTipModal';
-import {getTicketBookList} from '@/api/ticketbook.api';
+import {getTicketBookList} from '@/api/ticketBookList.api';
 import {getPopularPremiumReviews} from '@/api/premium.api';
 import {getFeaturedMusical, getUpcomingMusical} from '@/api/musical.api';
 
@@ -385,18 +385,27 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
                 resizeMode="cover"
               />
               <View style={HomeStyles.containerTicketText}>
-                <Text style={HomeStyles.textTicketTitle}>
+                <Text
+                  style={HomeStyles.textTicketTitle}
+                  numberOfLines={1}
+                  ellipsizeMode="tail">
                   {ticketList?.musical_title}
                 </Text>
                 <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
                   <SvgXml xml={HomeIcon.season} />
-                  <Text style={HomeStyles.textTicketDateActor}>
+                  <Text
+                    style={HomeStyles.textTicketDateActor}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
                     {ticketList?.series}
                   </Text>
                 </View>
                 <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
                   <SvgXml xml={HomeIcon.date} />
-                  <Text style={HomeStyles.textTicketDateActor}>
+                  <Text
+                    style={HomeStyles.textTicketDateActor}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
                     {ticketList?.viewed_date}
                   </Text>
                 </View>
@@ -411,7 +420,10 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
                 </View>
                 <View style={HomeStyles.containerRow}>
                   <SvgXml xml={HomeIcon.actor} />
-                  <Text style={HomeStyles.textTicketDateActor}>
+                  <Text
+                    style={HomeStyles.textTicketDateActor}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
                     {ticketList?.actors}
                   </Text>
                 </View>

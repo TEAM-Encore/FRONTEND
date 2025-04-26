@@ -58,10 +58,7 @@ const PremiumStep5Screen: React.FC<PremiumProp> = ({
     // console.log(selectedId);
   };
 
-  const isButtonDisabled =
-    !selectedOption ||
-    searchText.trim() === '' ||
-    searchText.trim().length < 20;
+  const isButtonDisabled = !selectedOption || searchText.trim() === '';
 
   return (
     <>
@@ -113,7 +110,7 @@ const PremiumStep5Screen: React.FC<PremiumProp> = ({
               style={PremiumWriteStyles.seat_input}
               value={searchText}
               onChangeText={setSearchText}
-              placeholder="선택한 이유를 작성해주세요. (최소 20자)"
+              placeholder="선택한 이유를 작성해주세요."
               multiline={true}
             />
           </View>

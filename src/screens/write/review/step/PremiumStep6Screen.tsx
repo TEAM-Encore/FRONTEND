@@ -109,8 +109,7 @@ const PremiumStep6Screen: React.FC<PremiumProp> = ({
     setModalVisible(true);
   };
 
-  const isButtonDisabled =
-    searchText.trim() === '' || searchText.trim().length < 20;
+  const isButtonDisabled = searchText.trim() === '';
 
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<NavigationProp>();
@@ -282,7 +281,7 @@ const PremiumStep6Screen: React.FC<PremiumProp> = ({
               style={PremiumWriteStyles.seat_input}
               value={searchText}
               onChangeText={setSearchText}
-              placeholder="선택한 이유를 작성해주세요. (최소 20자)"
+              placeholder="선택한 이유를 작성해주세요."
               multiline={true}
             />
           </View>
@@ -332,3 +331,131 @@ const PremiumStep6Screen: React.FC<PremiumProp> = ({
 };
 
 export default PremiumStep6Screen;
+
+// import React, {useState} from 'react';
+// import {View, Dimensions, Pressable} from 'react-native';
+// import Svg, {Polygon, Circle, Text as SvgText} from 'react-native-svg';
+// import {RootStackParamList} from 'types';
+// import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+
+// type PremiumProp = {
+//   goToNext: any;
+//   saveData: any;
+//   stepData: any;
+//   reviewId?: number;
+// };
+
+// type NavigationProp = NativeStackNavigationProp<
+//   RootStackParamList,
+//   'PremiumMyScreen'
+// >;
+
+// const PremiumStep6Screen: React.FC<PremiumProp> = ({
+//   goToNext,
+//   saveData,
+//   stepData,
+//   reviewId,
+// }) => {
+//   const screenWidth = Dimensions.get('window').width;
+//   const chartSize = screenWidth - 40;
+//   const center = chartSize / 2;
+//   const radius = chartSize / 2 - 40;
+//   const maxScore = 5;
+
+//   const categories = ['속도', '정확도', '안정성', '디자인', '기능성'];
+//   const angle = (2 * Math.PI) / categories.length;
+//   const [scores, setScores] = useState(Array(categories.length).fill(3)); // 초기 점수 3점
+
+//   const calculatePoints = customScores => {
+//     return customScores.map((score, index) => {
+//       const x = center + radius * (score / maxScore) * Math.sin(index * angle);
+//       const y = center - radius * (score / maxScore) * Math.cos(index * angle);
+//       return {x, y};
+//     });
+//   };
+
+//   const handleTouch = index => {
+//     setScores(prevScores =>
+//       prevScores.map((score, i) =>
+//         i === index ? (score < maxScore ? score + 1 : 1) : score,
+//       ),
+//     );
+//   };
+
+//   const points = calculatePoints(scores);
+//   const polygonPoints = points.map(({x, y}) => `${x},${y}`).join(' ');
+
+//   return (
+//     <View style={{alignItems: 'center', marginTop: 40}}>
+//       <Svg width={chartSize} height={chartSize}>
+//         {/* 배경 다각형들 */}
+//         {[...Array(maxScore)].map((_, i) => {
+//           const r = radius * ((i + 1) / maxScore);
+//           const bgPoints = calculatePoints(Array(categories.length).fill(i + 1))
+//             .map(({x, y}) => `${x},${y}`)
+//             .join(' ');
+//           return (
+//             <Polygon
+//               key={i}
+//               points={bgPoints}
+//               fill="none"
+//               stroke="#ccc"
+//               strokeWidth="1"
+//             />
+//           );
+//         })}
+
+//         {/* 사용자 점수 영역 */}
+//         <Polygon
+//           points={polygonPoints}
+//           fill="rgba(255, 215, 48, 0.4)"
+//           stroke="#FFD630"
+//           strokeWidth="2"
+//         />
+
+//         {/* 꼭짓점 터치 원 */}
+//         {points.map(({x, y}, index) => (
+//           <React.Fragment key={index}>
+//             {/* 시각적 점 */}
+//             <Circle cx={x} cy={y} r={5} fill="#FFD630" />
+
+//             {/* 터치 감지 원 (투명) */}
+//             <Pressable
+//               key={`touch-${index}`}
+//               onPress={() => handleTouch(index)}
+//               style={{
+//                 position: 'absolute',
+//                 top: y + 40 - 20,
+//                 left: x + (screenWidth - chartSize) / 2 - 20,
+//                 width: 40,
+//                 height: 40,
+//                 borderRadius: 20,
+//                 backgroundColor: 'transparent', // 디버깅 시 rgba 색상 써도 됨
+//               }}
+//             />
+//           </React.Fragment>
+//         ))}
+
+//         {/* 텍스트 라벨 */}
+//         {categories.map((label, index) => {
+//           const x = center + (radius + 20) * Math.sin(index * angle);
+//           const y = center - (radius + 20) * Math.cos(index * angle);
+
+//           return (
+//             <SvgText
+//               key={`label-${index}`}
+//               x={x}
+//               y={y}
+//               fontSize="12"
+//               fill="#333"
+//               textAnchor="middle">
+//               {label}
+//             </SvgText>
+//           );
+//         })}
+//       </Svg>
+//     </View>
+//   );
+// };
+
+// export default PremiumStep6Screen;
