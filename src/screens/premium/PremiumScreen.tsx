@@ -24,6 +24,7 @@ import {getPopularPremiumReviews} from '@/api/premium.api';
 import {getTicketReviewList} from '@/api/review.api';
 
 type RootStackParamList = {
+  HomeSearchDefaultScreen: undefined;
   PremiumWriteScreen: undefined;
   PremiumSearchDefaultS: undefined;
 };
@@ -141,7 +142,7 @@ export default function PremiumScreen() {
           <Text style={PremiumStyles.textTitle}>프리미엄</Text>
           <View style={PremiumStyles.containerRow}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('PremiumSearchDefaultS')}
+              onPress={() => navigation.navigate('HomeSearchDefaultScreen')}
               onLayout={handleLayout}>
               <IconSearch style={{marginRight: 20}} />
             </TouchableOpacity>
