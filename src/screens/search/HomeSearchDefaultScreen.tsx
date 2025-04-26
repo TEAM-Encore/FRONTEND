@@ -13,6 +13,7 @@ import SearchStyles from '@/screens/dashboard/search/SearchStyles';
 import {SearchIcon} from '@/assets/icons/search/SearchIcon';
 import {useNavigation} from '@react-navigation/native';
 import {GetPostList} from '@/api/post.api';
+import {getReviewSearchSuggestions} from '@/api/review.api'; // ⭐️ 추가
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DashboardSearchingScreen from './DashboardSearchingScreen';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -30,22 +31,16 @@ const HomeSearchDefaultScreen: React.FC<RootStackParamList> = () => {
   const [loading, setLoading] = useState(true);
   const [text, setText] = useState<string>('');
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]); // ⭐️ 연관 검색어 상태 추가
 
-  // AsyncStorage에서 검색 기록 불러오기
   const loadSearchHistory = async () => {
     try {
       const history = await AsyncStorage.getItem('recentSearches');
       if (history) {
-        console.log('[DEBUG] AsyncStorage: History loaded:', history);
         setRecentSearches(JSON.parse(history));
-      } else {
-        console.log('[DEBUG] AsyncStorage: No history found.');
       }
     } catch (error) {
-      console.error(
-        '[ERROR] AsyncStorage: Error loading search history:',
-        error,
-      );
+      console.error('AsyncStorage 에러:', error);
     } finally {
       setLoading(false);
     }
@@ -53,36 +48,28 @@ const HomeSearchDefaultScreen: React.FC<RootStackParamList> = () => {
 
   const saveSearchHistory = async (searchTerm: string) => {
     try {
-      console.log('[DEBUG] AsyncStorage: Saving search term:', searchTerm);
       let updatedSearches = [
         searchTerm,
         ...recentSearches.filter(term => term !== searchTerm),
       ];
-
-      // 최대 기록 개수를 초과하면 오래된 항목 제거
       if (updatedSearches.length > MAX_HISTORY) {
         updatedSearches = updatedSearches.slice(0, MAX_HISTORY);
       }
-
       setRecentSearches(updatedSearches);
       await AsyncStorage.setItem(
         'recentSearches',
         JSON.stringify(updatedSearches),
       );
-
-      console.log(
-        '[DEBUG] AsyncStorage: Search history saved:',
-        updatedSearches,
-      );
     } catch (error) {
-      console.error('Error saving search history:', error);
+      console.error('검색 기록 저장 실패:', error);
     }
   };
 
   const fetchSearchList = async (searchText: string) => {
     if (searchText.trim().length === 0) return;
     try {
-      // 일단 100으로 고정
+      setText(searchText); // ✅ 선택한 자동완성 검색어로 text 상태 업데이트
+  
       const response = await GetPostList(
         100,
         'createdat',
@@ -92,38 +79,12 @@ const HomeSearchDefaultScreen: React.FC<RootStackParamList> = () => {
         searchText,
       );
       const postData = response.data.data.content;
-
-      // 검색 기록 저장
       await saveSearchHistory(searchText);
-
       navigation.navigate('HomeSearchScreen', {postData, text: searchText});
     } catch (error) {
-      console.error('Error fetching post list:', error);
+      console.error('게시글 검색 실패:', error);
     } finally {
-      setText('');
-    }
-  };
-
-  const logAsyncStorage = async () => {
-    try {
-      const storedData = await AsyncStorage.getItem('recentSearches');
-      console.log(
-        'AsyncStorage 상태:',
-        storedData ? JSON.parse(storedData) : '없음',
-      );
-    } catch (error) {
-      console.error('Error logging AsyncStorage:', error);
-    }
-  };
-
-  const clearSearchHistory = async () => {
-    try {
-      await AsyncStorage.removeItem('recentSearches');
-      setRecentSearches([]);
-      console.log('AsyncStorage에서 recentSearches가 삭제되었습니다.');
-      logAsyncStorage();
-    } catch (error) {
-      console.error('Error clearing search history:', error);
+      setSuggestions([]); // ⭐️ 검색 후 연관 검색어 초기화
     }
   };
 
@@ -137,26 +98,51 @@ const HomeSearchDefaultScreen: React.FC<RootStackParamList> = () => {
         'recentSearches',
         JSON.stringify(updatedSearches),
       );
-      console.log(`${itemToDelete}가 삭제되었습니다.`);
     } catch (error) {
-      console.error('Error deleting item:', error);
+      console.error('검색어 삭제 실패:', error);
     }
   };
+
+  const clearSearchHistory = async () => {
+    try {
+      await AsyncStorage.removeItem('recentSearches');
+      setRecentSearches([]);
+    } catch (error) {
+      console.error('검색 기록 초기화 실패:', error);
+    }
+  };
+
+  // ⭐️ 연관 검색어 API 호출
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (text.trim().length === 0) {
+        setSuggestions([]);
+        return;
+      }
+      try {
+        const response = await getReviewSearchSuggestions(text);
+        setSuggestions(response.data.data);
+      } catch (error) {
+        console.error('연관 검색어 불러오기 실패:', error);
+      }
+    };
+
+    const debounceTimer = setTimeout(fetchSuggestions, 200); // debounce 효과
+
+    return () => clearTimeout(debounceTimer);
+  }, [text]);
 
   useEffect(() => {
     loadSearchHistory();
   }, []);
 
-  // 기본 화면
   const DefaultView = () => (
     <>
       {loading ? (
         <ActivityIndicator size="large" />
       ) : recentSearches.length === 0 ? (
-        // 데이터가 없을 때 표시할 UI
         <View style={SearchStyles.noHistoryContainer} />
       ) : (
-        // 데이터가 있을 때 표시할 UI
         <View style={SearchStyles.recentSearchContainer}>
           <View style={SearchStyles.recentSearchHeader}>
             <Text style={SearchStyles.recentSearchTitle}>최근 검색어</Text>
@@ -196,17 +182,36 @@ const HomeSearchDefaultScreen: React.FC<RootStackParamList> = () => {
     </>
   );
 
+  // ⭐️ 자동 완성 리스트 화면
+  const SuggestionView = () => (
+    <FlatList
+      data={suggestions}
+      keyExtractor={(item, index) => `${item}-${index}`}
+      renderItem={({item}) => (
+        <TouchableOpacity
+          style={SearchStyles.recentSearchItem}
+          onPress={() => fetchSearchList(item)}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <SvgXml xml={SearchIcon.searchIcon} style={SearchStyles.icon} />
+            <Text style={SearchStyles.recentSearchText}>{item}</Text>
+          </View>
+        </TouchableOpacity>
+      )}
+    />
+  );
+
   const renderComponent = () => {
     if (text.trim() === '') {
       return <DefaultView />;
     }
-    // 검색 중 화면
+    if (suggestions.length > 0) {
+      return <SuggestionView />; // ⭐️ 연관 검색어 있을 때 자동 완성 뷰 렌더링
+    }
     return <DashboardSearchingScreen text={text} setText={setText} />;
   };
 
   return (
     <SafeAreaView style={SearchStyles.container}>
-      {/* 검색바 */}
       <View style={SearchStyles.searchBarContainer}>
         <View style={SearchStyles.searchBar}>
           <TouchableOpacity onPress={() => fetchSearchList(text)}>
@@ -224,6 +229,7 @@ const HomeSearchDefaultScreen: React.FC<RootStackParamList> = () => {
               style={SearchStyles.clearButton}
               onPress={() => {
                 setText('');
+                setSuggestions([]); // ⭐️ 입력 초기화 시 자동 완성도 초기화
               }}>
               <SvgXml xml={SearchIcon.closeIcon} />
             </TouchableOpacity>
@@ -234,7 +240,7 @@ const HomeSearchDefaultScreen: React.FC<RootStackParamList> = () => {
         </TouchableOpacity>
       </View>
 
-      {/* 검색 바 하단 화면 */}
+      {/* 하단 화면 */}
       {renderComponent()}
     </SafeAreaView>
   );

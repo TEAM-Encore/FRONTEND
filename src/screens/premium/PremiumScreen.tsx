@@ -26,7 +26,7 @@ import {getTicketReviewList} from '@/api/review.api';
 type RootStackParamList = {
   HomeSearchDefaultScreen: undefined;
   PremiumWriteScreen: undefined;
-  PremiumSearchDefaultS: undefined;
+  PremiumSearchDefaultScreen: undefined;
 };
 
 const data = [
