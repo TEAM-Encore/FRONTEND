@@ -17,6 +17,7 @@ import {SvgXml} from 'react-native-svg';
 import {ReviewWriteIcon} from '@/assets/icons/premium/ReviewWriteIcon';
 import Colors from '@/assets/colors/Colors';
 import {ImageSourcePropType} from 'react-native';
+import {getTicketReviewImage} from '@/api/review.api';
 
 type PremiumProp = {
   goToNext: any;
@@ -76,9 +77,18 @@ const PremiumStep3Screen: React.FC<PremiumProp> = ({
     );
   };
 
-  const handleReload = () => {
+  const handleReload = async () => {
     setSelectedId(null);
     setSearchText('');
+
+    // try {
+    //   const response = await getTicketReviewImage(cycleId);
+    //   console.log('API 요청 결과값: ', response.data.data);
+    //   // setData(response.data.data);
+    // } catch (error) {
+    //   console.log(error);
+    //   Alert.alert('내역 조회 중 오류가 발생했습니다.');
+    // }
   };
 
   return (
@@ -135,7 +145,7 @@ const PremiumStep3Screen: React.FC<PremiumProp> = ({
             PremiumWriteStyles.next_button,
             {
               backgroundColor: isButtonDisabled
-                ? Colors.gray_05
+                ? Colors.gray_06
                 : Colors.sub_04,
             },
           ]}

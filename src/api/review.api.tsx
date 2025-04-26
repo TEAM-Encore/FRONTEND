@@ -34,3 +34,7 @@ export const getTicketReviewList = (
     params: requestParams,
   });
 };
+
+export const getTicketReviewImage = (cycle: number) => {
+  return httpApi.get(`/api/v1/review/view-image/${cycle}`);
+};
