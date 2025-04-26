@@ -15,7 +15,7 @@ import AddTicketStyles from './AddTicketStyles';
 import Colors from '@/assets/colors/Colors';
 import {useAddTicket} from '@/state/AddTicketContext';
 import {PostPresignedUrl} from '@/api/image.api';
-import {createTicket} from '@/api/ticketBook.api';
+import {createTicket} from '@/api/ticketBookList.api';
 
 import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
 import {useNavigation} from '@react-navigation/native';
