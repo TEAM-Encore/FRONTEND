@@ -43,7 +43,7 @@ const PremiumStyles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
   },
-  containerTages: {
+  containerTags: {
     marginTop: 26,
     marginBottom: 22.37,
   },
