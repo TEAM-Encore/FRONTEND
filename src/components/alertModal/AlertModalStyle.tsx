@@ -97,6 +97,32 @@ const AlertModalStyle = StyleSheet.create({
     color: Colors.gray_01,
     marginRight: 3.62,
   },
+  toastBarcontainer: {
+    position: 'absolute',
+    bottom: 35,
+    left: 20,
+    right: 20,
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  toastBarBox: {
+    display: 'flex',
+    backgroundColor: Colors.gray_12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 335,
+    height: 43,
+    justifyContent: 'space-between',
+  },
+  toastBarmessage: {
+    ...subhead02,
+    color: Colors.white,
+    fontSize: 14,
+    marginRight: 8,
+  },
 });
 
 export default AlertModalStyle;
