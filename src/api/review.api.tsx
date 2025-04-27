@@ -9,9 +9,9 @@ export const getTicketReview = (review_id: number) => {
 };
 
 // 리뷰 연관 검색어 조회
-export const getReviewSearchSuggestions = (search_word: string) => {
+export const getReviewSearchSuggestions = (keyword: string) => {
   return httpApi.get(`/api/v1/review/search-suggestions`, {
-    params: { search_word },
+    params: { keyword },
   });
 };
 
