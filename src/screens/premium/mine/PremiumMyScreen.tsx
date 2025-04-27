@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useRef} from 'react';
+import React, {useCallback, useState, useRef, useEffect} from 'react';
 import {
   SafeAreaView,
   FlatList,
@@ -13,17 +13,28 @@ import {useNavigation} from '@react-navigation/native';
 import PremiumStyles from '../PremiumStyles';
 import PremiumWriteStyles from '@/screens/write/review/PremiumWriteStyles';
 import Colors from '@/assets/colors/Colors';
-import {getTicketReview} from '@/api/review.api';
+import {getTicketReview, getTicketReviewListByUser} from '@/api/review.api';
 import {useFocusEffect} from '@react-navigation/native';
-import {SvgXml} from 'react-native-svg';
+import Svg, {
+  Polygon,
+  Circle,
+  Text as SvgText,
+  SvgXml,
+  Defs,
+  LinearGradient,
+  Stop,
+} from 'react-native-svg';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import {ReviewWriteIcon} from '@/assets/icons/premium/ReviewWriteIcon';
 import {PremiumIcon} from '@/assets/icons/premium/PremiumIcon';
 import ModalUserDelete from '@/components/modifyDeleteModal/ModalUserDelete';
+import ModalModifyDelete from '@/components/modifyDeleteModal/ModalModifyDelete';
 import ItemMyReview from '@/components/premium/ItemMyReview';
+import TagsInReview from '@/components/premium/TagsInReview';
 
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from 'types';
+import PointToastBar from '@/components/alertModal/PointToastBar';
 
 type PremiumMyScreenRouteProp = RouteProp<
   RootStackParamList,
@@ -35,6 +46,7 @@ type PremiumMyScreenProps = {
 };
 
 type ReviewData = {
+  user_id: number;
   review_id: number;
   title: string;
   elapsed_time: string;
@@ -45,11 +57,18 @@ type ReviewData = {
     viewed_date: string;
     seat: string;
     actors: string[];
+    ticket_title: string;
   };
+  tags: string[];
   review_data_res: {
     rating: {
       total_rating: number;
       rating_review: string;
+      actor_rating: number;
+      number_rating: number;
+      performance_rating: number;
+      revisit_rating: number;
+      story_rating: number;
     };
     view: {
       view_review: string;
@@ -59,6 +78,14 @@ type ReviewData = {
     };
     facility: {
       facility_review: string;
+    };
+  };
+  like_res: {
+    like_count_res: {
+      total_like_count: number;
+      follow_up_like_count: number;
+      full_of_tips_like_count: number;
+      thorough_analysis_like_count: number;
     };
   };
 };
@@ -73,18 +100,22 @@ type ModalPosition = {
 const PremiumMyScreen: React.FC<PremiumMyScreenProps> = ({route}) => {
   const {reviewId} = route.params;
 
-  console.log('전달 받은 리뷰 아이디:', reviewId);
+  // console.log('전달 받은 리뷰 아이디:', reviewId);
 
-  // const [reviewData, setReviewData] = useState<string[]>();
   const [reviewData, setReviewData] = useState<ReviewData[]>([]);
+  // const userId = useState();
+  const [otherReivewData, setOtherReviewData] = useState<ReviewData[]>([]);
 
   const fetchReviewData = async (reviewId: number) => {
     try {
       const response = await getTicketReview(reviewId);
       console.log('상세 리뷰 조회: ', response.data.data);
       setReviewData([response.data.data]);
+
+      // response에서 받아온 유저 아이디
+      const userId = response.data.data.user_id;
     } catch (error) {
-      Alert.alert('리뷰 작성 중에 문제가 발생했습니다.');
+      Alert.alert('리뷰 조회 중에 문제가 발생했습니다.');
     }
   };
 
@@ -109,7 +140,7 @@ const PremiumMyScreen: React.FC<PremiumMyScreenProps> = ({route}) => {
   const handleIconPress = () => {
     if (iconRef.current) {
       iconRef.current.measureInWindow((x, y, width, height) => {
-        console.log('Measured Position:', {x, y, width, height});
+        // console.log('Measured Position:', {x, y, width, height});
         setModalPosition({x, y, width, height});
         setModalVisible(true);
       });
@@ -118,17 +149,82 @@ const PremiumMyScreen: React.FC<PremiumMyScreenProps> = ({route}) => {
     }
   };
 
-  const tagMap: {[key: string]: string} = {
-    PERFECT_REVIEW: '#총평만점',
-    BEST_SOUND: '#음향최고',
-    BEST_FACILITIES: '#시설최고',
-    BEST_VIEW: '#시야최고',
-    REVOLVING_DOOR: '#회전문',
-    MUSEUM_EXPERT: '#뮤덕n년차',
+  const [selectedTag, setSelectedTag] = useState<string>('');
+
+  // 토스트바 관련 데이터
+  const [reviewModalVisible, setReviewModalVisible] = useState(true);
+  const [toastMessage, setToastMessage] = useState('포인트가 지급되었어요!');
+  const [showIcon, setShowIcon] = useState(true);
+
+  // 포인트 지급 후 확인 버튼 누를 시
+  const handleModalCancel = () => {
+    setReviewModalVisible(false);
   };
+
+  // 자신 프리미엄 후기 페이지에서 좋아요를 누를 시
+  const handleLikeIcon = () => {
+    setToastMessage('자신의 프리미엄 후기에는 추천할 수 없습니다.');
+    setShowIcon(false);
+    setReviewModalVisible(true);
+
+    setTimeout(() => {
+      setReviewModalVisible(false);
+    }, 2000);
+  };
+
+  // 별점 관련 데이터
+  const categories = [
+    '넘버',
+    '퍼포먼스',
+    '배우합',
+    '재관람 의사',
+    '스토리 구성',
+  ];
+  const breakLineCategories = ['스토리 구성']; // 줄바꿈하고 싶은 카테고리
+  const maxScore = 5;
+  const chartSize = 330;
+  const center = chartSize / 2;
+  const radius = center - 40;
+  const angle = (2 * Math.PI) / categories.length;
+
+  const [scores, setScores] = useState<number[]>([]);
+  const [ratingReview, setRatingReview] = useState<string>('');
+
+  // ★ 점수에 맞춰서 꼭짓점 좌표 계산
+  const calculatePoints = (scores: number[]) => {
+    return scores.map((score, index) => {
+      const x = center + radius * (score / maxScore) * Math.sin(index * angle);
+      const y = center - radius * (score / maxScore) * Math.cos(index * angle);
+      return {x, y};
+    });
+  };
+
+  // 리뷰 상세 내용 조회한 결과값 내 별점 데이터 가져오기
+  useEffect(() => {
+    if (reviewData.length > 0 && reviewData[0].review_data_res?.rating) {
+      const rating = reviewData[0].review_data_res.rating;
+      setScores([
+        rating.number_rating,
+        rating.performance_rating,
+        rating.actor_rating,
+        rating.revisit_rating,
+        rating.story_rating,
+      ]);
+      setRatingReview(rating.rating_review);
+    }
+  }, [reviewData]);
 
   return (
     <SafeAreaView style={PremiumStyles.container}>
+      {reviewModalVisible && (
+        <PointToastBar
+          visible={reviewModalVisible}
+          message={toastMessage}
+          showIcon={showIcon}
+          onClose={handleModalCancel}
+        />
+      )}
+
       <View style={PremiumStyles.field_container}>
         <FlatList
           data={reviewData}
@@ -150,6 +246,7 @@ const PremiumMyScreen: React.FC<PremiumMyScreenProps> = ({route}) => {
                     </View>
                   </TouchableOpacity>
                   {modalPosition && (
+                    // 프리미엄 후기 수정, 삭제 모달 연결 필요
                     <ModalUserDelete
                       modalVisible={modalVisible}
                       setModalVisible={setModalVisible}
@@ -171,7 +268,8 @@ const PremiumMyScreen: React.FC<PremiumMyScreenProps> = ({route}) => {
                     source={require('@/assets/images/board/commentFace.png')}
                   />
                   <View style={PremiumStyles.containerWriterText}>
-                    <Text style={PremiumStyles.textWriter}>뮤사랑</Text>
+                    {/* 작성자 닉네임 상태 관리 필요 => 추후 수정 필요 */}
+                    <Text style={PremiumStyles.textWriter}>{item.user_id}</Text>
                     <Text style={PremiumStyles.textDate}>
                       {item.elapsed_time} ・ {item.view_count}명 확인
                     </Text>
@@ -187,7 +285,7 @@ const PremiumMyScreen: React.FC<PremiumMyScreenProps> = ({route}) => {
                 <View
                   style={[
                     PremiumWriteStyles.list_yellow,
-                    {backgroundColor: Colors.sub_02},
+                    {backgroundColor: Colors.gray_03},
                   ]}>
                   <View style={{flexDirection: 'row'}}>
                     <Image
@@ -205,8 +303,8 @@ const PremiumMyScreen: React.FC<PremiumMyScreenProps> = ({route}) => {
                           PremiumWriteStyles.list_title,
                           {color: Colors.gray_12},
                         ]}>
-                        {item.ticket.ticket_id}
-                        {/* {item.ticket.actors.join(', ')}  */}
+                        {item.ticket.ticket_title}
+                        {item.ticket.actors.join(', ')}
                         {/* 배우 리스트 */}
                       </Text>
                       <View style={PremiumWriteStyles.icon_container}>
@@ -253,11 +351,11 @@ const PremiumMyScreen: React.FC<PremiumMyScreenProps> = ({route}) => {
                 </View>
                 <SvgXml
                   xml={ReviewWriteIcon.list_yellow}
-                  style={PremiumWriteStyles.list_yellow_icon}
+                  // style={PremiumWriteStyles.list_yellow_icon}
                 />
               </View>
 
-              {/* 별점 */}
+              {/* 별점 UI*/}
               <View
                 style={{...PremiumWriteStyles.total_container, marginTop: 22}}>
                 <SvgXml xml={ReviewWriteIcon.star} />
@@ -266,8 +364,124 @@ const PremiumMyScreen: React.FC<PremiumMyScreenProps> = ({route}) => {
                 </Text>
               </View>
 
-              <View style={PremiumStyles.containerPopularReviews}>
-                <SvgXml xml={PremiumIcon.star2} />
+              <View style={{alignItems: 'center', marginVertical: 20}}>
+                <Svg width={chartSize} height={chartSize}>
+                  {/* 배경 오각형 */}
+                  {[...Array(maxScore)].map((_, i) => (
+                    <Polygon
+                      key={i}
+                      points={calculatePoints(
+                        Array(categories.length).fill(i + 1),
+                      )
+                        .map(({x, y}) => `${x},${y}`)
+                        .join(' ')}
+                      fill="transparent"
+                      stroke={Colors.sub_03}
+                      strokeWidth={1}
+                    />
+                  ))}
+
+                  {/* 오각형 내부 그라이데이션 색상 부분 */}
+                  <Svg width={chartSize} height={chartSize}>
+                    <Defs>
+                      <LinearGradient
+                        id="polygonGradient"
+                        x1="50%"
+                        y1="0%"
+                        x2="50%"
+                        y2="100%"
+                        gradientUnits="userSpaceOnUse">
+                        <Stop
+                          offset="0%"
+                          stopColor="#FFDD56"
+                          stopOpacity={0.2}
+                        />
+                        <Stop
+                          offset="100%"
+                          stopColor="#FFD630"
+                          stopOpacity={1}
+                        />
+                      </LinearGradient>
+                    </Defs>
+
+                    <Polygon
+                      points={calculatePoints(scores)
+                        .map(({x, y}) => `${x},${y}`)
+                        .join(' ')}
+                      fill="url(#polygonGradient)"
+                      fillOpacity={0.3}
+                      stroke={Colors.sub_05}
+                      strokeWidth={0.75}
+                      strokeLinejoin="round"
+                    />
+                  </Svg>
+
+                  {/* 꼭짓점 표시 */}
+                  {calculatePoints(scores).map(({x, y}, index) => (
+                    <React.Fragment key={index}>
+                      {/* 꼭짓점 원 */}
+                      <Circle cx={x} cy={y} r={6} fill={Colors.sub_05} />
+
+                      {/* 꼭짓점 점수 숫자 표시 */}
+                      <SvgText
+                        x={x}
+                        y={y + 19}
+                        fill={Colors.gray_09}
+                        fontSize="14"
+                        fontWeight={400}
+                        fontFamily="Pretendard"
+                        textAnchor="middle">
+                        {scores[index]}
+                      </SvgText>
+                    </React.Fragment>
+                  ))}
+
+                  {/* 카테고리 이름 표시 */}
+                  {categories.map((category, index) => {
+                    const x = center + (radius + 25) * Math.sin(index * angle);
+                    const y = center - (radius + 20) * Math.cos(index * angle);
+
+                    const needBreak = breakLineCategories.includes(category); // 줄바꿈 여부
+
+                    return (
+                      <React.Fragment key={index}>
+                        {needBreak ? (
+                          // 줄바꿈 필요하면 split해서 각각 출력하는 카테고리
+                          category.split(' ').map((word, lineIndex) => (
+                            <SvgText
+                              key={`${index}-${lineIndex}`}
+                              x={x}
+                              y={y + lineIndex * 14}
+                              fill={Colors.gray_09}
+                              textAnchor="middle"
+                              fontFamily="Pretendard"
+                              fontSize="12"
+                              fontStyle="normal"
+                              fontWeight={700}
+                              letterSpacing=" -0.3">
+                              {word}
+                            </SvgText>
+                          ))
+                        ) : (
+                          // 한 줄로 출력하는 카테고리
+                          <SvgText
+                            key={index}
+                            x={x}
+                            y={y}
+                            fill={Colors.gray_09}
+                            textAnchor="middle"
+                            fontFamily="Pretendard"
+                            fontSize="12"
+                            fontStyle="normal"
+                            fontWeight={700}
+                            letterSpacing=" -0.3">
+                            {category}
+                          </SvgText>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+                </Svg>
               </View>
 
               {/* 시야 후기 */}
@@ -348,17 +562,10 @@ const PremiumMyScreen: React.FC<PremiumMyScreenProps> = ({route}) => {
                 {item.review_data_res.rating.rating_review}
               </Text>
 
-              <View style={PremiumStyles.line2} />
+              <View style={PremiumStyles.containerTags}>
+                <TagsInReview tags={item.tags} />
+              </View>
 
-              {/* 다른 리뷰 */}
-              <Text style={{...PremiumStyles.reviewSubTitle, marginBottom: 29}}>
-                뮤사랑님의 또 다른 리뷰
-              </Text>
-              <ItemMyReview postList={reviewData} />
-            </>
-          )}
-          ListFooterComponent={
-            <>
               <View
                 style={{
                   ...PremiumStyles.containerRow,
@@ -366,23 +573,44 @@ const PremiumMyScreen: React.FC<PremiumMyScreenProps> = ({route}) => {
                   alignItems: 'center',
                   marginHorizontal: 42.5,
                 }}>
-                <View style={PremiumStyles.responseContainer}>
-                  <SvgXml xml={PremiumIcon.thumbUpIcon} />
-                  <Text style={PremiumStyles.responseText}>후속추천</Text>
-                  <Text style={PremiumStyles.responseNumber}>8</Text>
-                </View>
-                <View
-                  style={{...PremiumStyles.responseContainer, marginLeft: 40}}>
-                  <SvgXml xml={PremiumIcon.tipIcon} />
-                  <Text style={PremiumStyles.responseText}>꿀팁가득</Text>
-                  <Text style={PremiumStyles.responseNumber}>10</Text>
-                </View>
-                <View
-                  style={{...PremiumStyles.responseContainer, marginLeft: 40}}>
-                  <SvgXml xml={PremiumIcon.analyzeIcon} />
-                  <Text style={PremiumStyles.responseText}>꼼꼼분석</Text>
-                  <Text style={PremiumStyles.responseNumber}>5</Text>
-                </View>
+                <TouchableOpacity onPress={handleLikeIcon}>
+                  <View style={PremiumStyles.responseContainer}>
+                    <SvgXml xml={PremiumIcon.thumbUpIcon} />
+                    <Text style={PremiumStyles.responseText}>후속추천</Text>
+                    <Text style={PremiumStyles.responseNumber}>
+                      {item.like_res.like_count_res.follow_up_like_count}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleLikeIcon}>
+                  <View
+                    style={{
+                      ...PremiumStyles.responseContainer,
+                      marginLeft: 40,
+                    }}>
+                    <SvgXml xml={PremiumIcon.tipIcon} />
+                    <Text style={PremiumStyles.responseText}>꿀팁가득</Text>
+                    <Text style={PremiumStyles.responseNumber}>
+                      {item.like_res.like_count_res.full_of_tips_like_count}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleLikeIcon}>
+                  <View
+                    style={{
+                      ...PremiumStyles.responseContainer,
+                      marginLeft: 40,
+                    }}>
+                    <SvgXml xml={PremiumIcon.analyzeIcon} />
+                    <Text style={PremiumStyles.responseText}>꼼꼼분석</Text>
+                    <Text style={PremiumStyles.responseNumber}>
+                      {
+                        item.like_res.like_count_res
+                          .thorough_analysis_like_count
+                      }
+                    </Text>
+                  </View>
+                </TouchableOpacity>
               </View>
               <View style={PremiumStyles.warningContainer}>
                 <Text style={PremiumStyles.warningText}>
@@ -393,7 +621,7 @@ const PremiumMyScreen: React.FC<PremiumMyScreenProps> = ({route}) => {
                 </Text>
               </View>
             </>
-          }
+          )}
         />
       </View>
     </SafeAreaView>
