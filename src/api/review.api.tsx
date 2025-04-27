@@ -11,7 +11,7 @@ export const getTicketReview = (review_id: number) => {
 // 리뷰 연관 검색어 조회
 export const getReviewSearchSuggestions = (keyword: string) => {
   return httpApi.get(`/api/v1/review/search-suggestions`, {
-    params: { keyword },
+    params: {keyword},
   });
 };
 
@@ -31,6 +31,20 @@ export const getTicketReviewList = (
     search_word,
   };
   return httpApi.get(`/api/v1/review/list`, {
+    params: requestParams,
+  });
+};
+
+// 현재 보고 있는 리뷰를 제외한 유저의 리뷰 리스트 조회
+export const getTicketReviewListByUser = (
+  user_id: number,
+  review_id?: number,
+) => {
+  const requestParams = {
+    user_id,
+    review_id,
+  };
+  return httpApi.get(`/api/v1/review/user-reviews`, {
     params: requestParams,
   });
 };
