@@ -20,6 +20,8 @@ const ItemReviewStyles = StyleSheet.create({
     ...subhead03,
     color: Colors.gray_12,
     marginBottom: 4,
+    width: 240,
+    overflow: 'hidden',
   },
   popularTextTitle: {
     ...subhead02,

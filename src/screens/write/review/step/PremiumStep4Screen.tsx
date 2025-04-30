@@ -127,7 +127,7 @@ const PremiumStep4Screen: React.FC<PremiumProp> = ({
             PremiumWriteStyles.next_button,
             {
               backgroundColor: isButtonDisabled
-                ? Colors.gray_05
+                ? Colors.gray_06
                 : Colors.sub_04,
             },
           ]}

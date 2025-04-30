@@ -79,8 +79,8 @@ const PremiumStep2Screen: React.FC<PremiumProp> = ({
 
   const renderItem: ListRenderItem<ReviewItems> = ({item}) => {
     const isSelected = selectedId.includes(item.id);
-    const backgroundColor = isSelected ? Colors.sub_05 : Colors.sub_01;
-    const textColor = isSelected ? Colors.sub_01 : Colors.sub_05;
+    const backgroundColor = isSelected ? Colors.gray_12 : Colors.gray_03;
+    const textColor = isSelected ? Colors.gray_03 : Colors.gray_12;
 
     const handleTagPress = (id: string) => {
       if (selectedId.includes(id)) {
@@ -158,7 +158,7 @@ const PremiumStep2Screen: React.FC<PremiumProp> = ({
             PremiumWriteStyles.next_button,
             {
               backgroundColor: isButtonDisabled
-                ? Colors.gray_05
+                ? Colors.gray_06
                 : Colors.sub_04,
             },
           ]}

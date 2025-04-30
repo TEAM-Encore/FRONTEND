@@ -84,13 +84,27 @@ export default function PremiumScreen() {
 
   const handleLayout = (event: any) => {
     const {x, y, width, height} = event.nativeEvent.layout;
-    setReviewModalPosition({top: height * 2.3, right: width});
+    setReviewModalPosition({top: height * 2.5, right: width});
   };
 
   const handleModalCancel = () => {
     setReviewModalVisible(false);
   };
   const [data, setData] = useState();
+  // const [selectedFilter, setSelectedFilter] = useState();
+
+  // console.log('선택된 필터링: ', selectedFilter);
+
+  // const tagMap: {[key: string]: string} = {
+  //   PERFECT_REVIEW: '#총평만점',
+  //   BEST_SOUND: '#음향최고',
+  //   BEST_FACILITIES: '#시설최고',
+  //   BEST_VIEW: '#시야최고',
+  //   REVOLVING_DOOR: '#회전문',
+  //   MUSEUM_EXPERT: '#뮤덕n년차',
+  // };
+
+  // const mappedTagFilter = tagMap[selectedTag] || '';
 
   const fetchReviewSearch = async () => {
     try {
@@ -148,6 +162,18 @@ export default function PremiumScreen() {
             </TouchableOpacity>
             <IconNotification />
           </View>
+          {reviewModalVisible && (
+            <ToolTipModal
+              visible={reviewModalVisible}
+              position={reviewModalPosition}
+              text={[
+                {text: '원하는 후기를', isBold: false},
+                {text: '빠르게', isBold: true},
+                {text: '찾아보세요!', isBold: false},
+              ]}
+              onCancel={handleModalCancel}
+            />
+          )}
         </View>
       </View>
       <FlatList
@@ -162,19 +188,6 @@ export default function PremiumScreen() {
         ListHeaderComponent={
           <>
             <View style={PremiumStyles.containerHeader}>
-              {reviewModalVisible && (
-                <ToolTipModal
-                  visible={reviewModalVisible}
-                  position={reviewModalPosition}
-                  text={[
-                    {text: '원하는 후기를', isBold: false},
-                    {text: '빠르게', isBold: true},
-                    {text: '찾아보세요!', isBold: false},
-                  ]}
-                  onCancel={handleModalCancel}
-                />
-              )}
-
               <Text style={PremiumStyles.textPopularReviewsTilte}>
                 오늘의 인기 리뷰
               </Text>
@@ -182,7 +195,7 @@ export default function PremiumScreen() {
                 <PopularReviews popularReviews={popularPremiumReviews} />
               </View>
 
-              <View style={PremiumStyles.containerTages}>
+              <View style={PremiumStyles.containerTags}>
                 <Tags onTagSelect={handleTagSelect} />
               </View>
             </View>
