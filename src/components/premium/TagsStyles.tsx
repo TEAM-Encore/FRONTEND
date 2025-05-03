@@ -25,6 +25,23 @@ const TagsStyles = StyleSheet.create({
   selectedText: {
     color: Colors.gray_03,
   },
+  tagsContainer: {
+    flexDirection: 'row',
+    marginBottom: 65,
+  },
+  tags: {
+    width: cardSize.width,
+    height: cardSize.height,
+    backgroundColor: Colors.gray_12,
+    borderRadius: 8,
+    marginRight: 10.62,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tagsText: {
+    ...subhead02,
+    color: Colors.sub_01,
+  },
 });
 
 export default TagsStyles;
