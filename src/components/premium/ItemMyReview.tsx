@@ -11,20 +11,22 @@ type NavigationProp = {
 
 type PostProps = {
   postList: {
-    id: any;
-    nickname: string;
-    title: string;
-    like_count: number;
-    view_count: number;
-    created_at: string;
-    star: number;
     elapsed_time: string;
-    review_data_res: {
-      rating: {total_rating: number};
+    like_count: number;
+    review_id: number;
+    nickname: string;
+    rating: {
+      actor_rating: number;
+      number_rating: number;
+      performance_rating: number;
+      rating_review: string;
+      revisit_rating: number;
+      story_rating: number;
+      total_rating: number;
     };
-    like_res: {
-      like_count_res: {total_like_count: number};
-    };
+    title: string;
+    user_id: number;
+    view_count: number;
   }[];
 };
 
@@ -57,7 +59,7 @@ const ItemMyReview: React.FC<PostProps> = ({postList}) => {
 
                   <View style={ItemReviewStyles.containerRow}>
                     <Text style={ItemReviewStyles.textWriterDate}>
-                      뮤사랑 ·
+                      {item.nickname} ·
                     </Text>
                     <Text style={ItemReviewStyles.textWriterDate}>
                       {item.elapsed_time}
