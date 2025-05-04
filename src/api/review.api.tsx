@@ -52,3 +52,7 @@ export const getTicketReviewListByUser = (
 export const getTicketReviewImage = (cycle: number) => {
   return httpApi.get(`/api/v1/review/view-image/${cycle}`);
 };
+
+export const deleteTicketReview = (review_id: number) => {
+  return httpApi.delete(`/api/v1/review/${review_id}`);
+}

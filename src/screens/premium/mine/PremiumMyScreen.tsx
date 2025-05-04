@@ -247,10 +247,13 @@ const PremiumMyScreen: React.FC<PremiumMyScreenProps> = ({route}) => {
                   </TouchableOpacity>
                   {modalPosition && (
                     // 프리미엄 후기 수정, 삭제 모달 연결 필요
-                    <ModalUserDelete
+                    <ModalModifyDelete
                       modalVisible={modalVisible}
                       setModalVisible={setModalVisible}
                       position={modalPosition}
+                      postId={reviewId}
+                      commentId={null}
+                      onNavigation={navigation}
                     />
                   )}
                 </View>
