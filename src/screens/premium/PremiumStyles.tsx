@@ -248,6 +248,12 @@ const PremiumStyles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
   },
+  noReviewText: {
+    ...typography.subheadLong02,
+    textAlign: 'center',
+    marginTop: 20,
+    marginBottom: 20,
+  },
 });
 
 export default PremiumStyles;

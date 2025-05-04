@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
@@ -29,45 +30,6 @@ type RootStackParamList = {
   PremiumSearchDefaultScreen: undefined;
 };
 
-const data = [
-  {
-    id: 1,
-    nickname: '뮤지컬럽',
-    title: '뮤지컬 고인물의 시카고 후기4',
-    like_count: 7,
-    view_count: 9,
-    created_at: '2024-12-23',
-    star: 4.7,
-  },
-  {
-    id: 2,
-    nickname: '뮤지컬럽',
-    title: '뮤지컬 고인물의 시카고 후기3',
-    like_count: 14,
-    view_count: 20,
-    created_at: '2024-11-01',
-    star: 4.2,
-  },
-  {
-    id: 3,
-    nickname: '뮤지컬럽',
-    title: '뮤지컬 고인물의 시카고 후기2',
-    like_count: 9,
-    view_count: 31,
-    created_at: '2024-03-01',
-    star: 3.9,
-  },
-  {
-    id: 4,
-    nickname: '뮤지컬럽',
-    title: '뮤지컬 고인물의 시카고 후기1',
-    like_count: 22,
-    view_count: 40,
-    created_at: '2022-03-01',
-    star: 4.2,
-  },
-];
-
 export default function PremiumScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [reviewModalPosition, setReviewModalPosition] = useState({
@@ -76,11 +38,12 @@ export default function PremiumScreen() {
   });
   const [reviewModalVisible, setReviewModalVisible] = useState(true);
   const [popularPremiumReviews, setPopularPremiumReviews] = useState([]);
-  const [reviews, setReviews] = useState<any[]>([]);
-  const [cursor, setCursor] = useState<number | null>(null);
-  const [isFetching, setIsFetching] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [selectedTag, setSelectedTag] = useState<string>('');
+  const [reviewData, setReviewData] = useState<any[]>([]); // 전체 리뷰 리스트
+  const [cursor, setCursor] = useState<number | undefined>(undefined); // 마지막 id
+  const [hasMore, setHasMore] = useState(true); // 더 불러올 데이터가 있는지 확인
+  const [isLoading, setIsLoading] = useState(true); // 초기 로딩
+  const [isFetching, setIsFetching] = useState(false); // 중복 요청 방지
+  const [tag, setTag] = useState<string | undefined>(undefined);
 
   const handleLayout = (event: any) => {
     const {x, y, width, height} = event.nativeEvent.layout;
@@ -90,46 +53,40 @@ export default function PremiumScreen() {
   const handleModalCancel = () => {
     setReviewModalVisible(false);
   };
-  const [data, setData] = useState();
-  // const [selectedFilter, setSelectedFilter] = useState();
 
-  // console.log('선택된 필터링: ', selectedFilter);
-
-  // const tagMap: {[key: string]: string} = {
-  //   PERFECT_REVIEW: '#총평만점',
-  //   BEST_SOUND: '#음향최고',
-  //   BEST_FACILITIES: '#시설최고',
-  //   BEST_VIEW: '#시야최고',
-  //   REVOLVING_DOOR: '#회전문',
-  //   MUSEUM_EXPERT: '#뮤덕n년차',
-  // };
-
-  // const mappedTagFilter = tagMap[selectedTag] || '';
-
-  const fetchReviewSearch = async () => {
+  // 무한 스크롤 적용 필요
+  const fetchReviewList = async () => {
     try {
       const response = await getTicketReviewList(
         100,
         'createdat',
         undefined,
-        undefined,
+        tag,
         undefined,
       );
       const reviewData = response.data.data.content;
 
       console.log('프리미엄 리뷰 조회 결과: ', reviewData);
-      setData(response.data.data.content);
-    } catch (error) {
+
+      if (reviewData.length === 0) {
+        setReviewData([]);
+      } else {
+        setReviewData(reviewData);
+      }
+    } catch (error: any) {
       console.log('error: ', error);
-      Alert.alert('프리미엄 리뷰 조회 중에 문제가 발생했습니다.');
-      console.error('프리미엄 리뷰 조회 오류: ', error);
+      if (error.response?.status === 404) {
+        setReviewData([]); // 데이터 없다고 간주
+      } else {
+        Alert.alert('프리미엄 리뷰 조회 중에 문제가 발생했습니다.');
+      }
     }
   };
 
   useFocusEffect(
     useCallback(() => {
-      fetchReviewSearch();
-    }, []),
+      fetchReviewList();
+    }, [tag]),
   );
 
   useEffect(() => {
@@ -145,8 +102,24 @@ export default function PremiumScreen() {
     fetchPopularPremiumReviewList();
   }, []);
 
+  const tagLabelToKey: {[key: string]: string} = {
+    총평만점: 'PERFECT_REVIEW',
+    음향최고: 'BEST_SOUND',
+    시설최고: 'BEST_FACILITIES',
+    시야최고: 'BEST_VIEW',
+    회전문: 'REVOLVING_DOOR',
+    뮤덕n년차: 'MUSEUM_EXPERT',
+  };
+
   const handleTagSelect = (tag: string) => {
-    setSelectedTag(tag);
+    setTag(tag);
+    if (tag === '전체보기') {
+      setTag(undefined);
+    } else {
+      const mappedTag = tagLabelToKey[tag];
+      setTag(mappedTag);
+    }
+    fetchReviewList(true); // 태그 바뀌면 새로 불러오기
   };
 
   return (
@@ -177,11 +150,11 @@ export default function PremiumScreen() {
         </View>
       </View>
       <FlatList
-        data={data}
+        data={reviewData}
         keyExtractor={(item, index) => item.id || index.toString()}
         onEndReached={() => {
           if (!isFetching && hasMore) {
-            setCursor(reviews[reviews.length - 1]?.id || null);
+            setCursor(reviewData[reviewData.length - 1]?.id || null);
           }
         }}
         onEndReachedThreshold={0.5}
@@ -194,14 +167,23 @@ export default function PremiumScreen() {
               <View style={PremiumStyles.containerPopularReviews}>
                 <PopularReviews popularReviews={popularPremiumReviews} />
               </View>
-
               <View style={PremiumStyles.containerTags}>
                 <Tags onTagSelect={handleTagSelect} />
               </View>
+              {reviewData.length === 0 && (
+                <View>
+                  <Text style={PremiumStyles.noReviewText}>
+                    등록된 리뷰가 없습니다.
+                  </Text>
+                </View>
+              )}
             </View>
           </>
         }
-        renderItem={({item}) => <ItemReview postList={[item]} />}
+        renderItem={({item}) => <ItemReview item={item} />}
+        ListFooterComponent={
+          isFetching && hasMore ? <ActivityIndicator size="small" /> : null
+        }
       />
 
       {/* 글쓰기 버튼 */}
