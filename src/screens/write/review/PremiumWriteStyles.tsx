@@ -174,7 +174,8 @@ const PremiumWriteStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    alignSelf: 'flex-end',
+    alignSelf: 'center',
+    marginTop: 20,
   },
   total_score: {
     ...typography.subhead02,

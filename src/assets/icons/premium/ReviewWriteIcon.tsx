@@ -275,4 +275,22 @@ export const ReviewWriteIcon = {
 </defs>
 </svg>
 `,
+  helpCircle: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_794_43580)">
+<path d="M7.00008 12.8337C10.2217 12.8337 12.8334 10.222 12.8334 7.00033C12.8334 3.77866 10.2217 1.16699 7.00008 1.16699C3.77842 1.16699 1.16675 3.77866 1.16675 7.00033C1.16675 10.222 3.77842 12.8337 7.00008 12.8337Z" stroke="#A5A5A5" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M5.30249 5.24936C5.43963 4.8595 5.71033 4.53075 6.06663 4.32135C6.42293 4.11195 6.84185 4.0354 7.24918 4.10527C7.65651 4.17514 8.02597 4.38691 8.29212 4.70308C8.55827 5.01925 8.70394 5.41941 8.70332 5.83269C8.70332 6.99936 6.95332 7.58269 6.95332 7.58269" stroke="#A5A5A5" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M7 9.91699H7.00583" stroke="#A5A5A5" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_794_43580">
+<rect width="14" height="14" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+`,
+ closeButton: `<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M18.5 6L6.5 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M6.5 6L18.5 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`
 };
