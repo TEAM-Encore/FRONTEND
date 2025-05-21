@@ -1,4 +1,11 @@
 {
-  "name": "ITDA_Project",
-  "displayName": "ITDA_Project"
+  "expo": {
+    "name": "ITDA_Project",
+    "android": {
+      "package": "com.yurang.lab.itda_project"
+    },
+    "ios": {
+      "bundleIdentifier": "com.yurang.lab.itda-project"
+    }
+  }
 }
