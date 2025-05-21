@@ -2,10 +2,10 @@
   "expo": {
     "name": "ITDA_Project",
     "android": {
-      "package": "com.yurang.lab.itda_project"
+      "package": "com.ITDA.encore"
     },
     "ios": {
-      "bundleIdentifier": "com.yurang.lab.itda-project"
+      "bundleIdentifier": "com.ITDA.encore"
     },
     "plugins": [
       [
