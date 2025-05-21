@@ -6,7 +6,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {Pressable} from 'react-native';
 
 type Props = React.PropsWithChildren<{
   isOpen: boolean;
@@ -62,15 +61,17 @@ function Modal({isOpen, close, onExit, children}: Props) {
   const handleBackdropPress = () => close();
 
   return (
-    <Backdrop onPress={handleBackdropPress} style={backdropAnimatedStyles}>
-      <Body style={bodyAnimatedStyles}>{children}</Body>
+    <Backdrop onTouchEnd={handleBackdropPress} style={backdropAnimatedStyles}>
+      <Body onTouchEnd={e => e.stopPropagation()} style={bodyAnimatedStyles}>
+        {children}
+      </Body>
     </Backdrop>
   );
 }
 
 export default Modal;
 
-const Backdrop = styled(Animated.createAnimatedComponent(Pressable))`
+const Backdrop = styled(Animated.View)`
   position: absolute;
   top: 0;
   right: 0;
