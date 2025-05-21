@@ -10,7 +10,7 @@ import Animated, {
 type Props = React.PropsWithChildren<{
   isOpen: boolean;
   close: () => void;
-  onExit: () => void;
+  unmount: () => void;
 }>;
 
 const BACKDROP_OPACITY_FROM = 0;
@@ -21,7 +21,7 @@ const BODY_OPACITY_TO = 1;
 const BODY_Y_FROM = 50;
 const BODY_Y_TO = 0;
 
-function Modal({isOpen, close, onExit, children}: Props) {
+function Modal({isOpen, close, unmount, children}: Props) {
   const opacity = useSharedValue(BODY_OPACITY_FROM);
   const y = useSharedValue(BODY_Y_FROM);
 
@@ -32,7 +32,7 @@ function Modal({isOpen, close, onExit, children}: Props) {
   };
   const exit = () => {
     if (!mountedRef.current) return;
-    onExit();
+    unmount();
   };
 
   const backdropAnimatedStyles = useAnimatedStyle(() => ({

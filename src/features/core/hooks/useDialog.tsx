@@ -5,7 +5,7 @@ import React from 'react';
 function useDialog() {
   const showDialog = (config: DialogConfig) => {
     overlay.open(({isOpen, close, unmount}) => (
-      <Dialog {...config} isOpen={isOpen} close={close} onExit={unmount} />
+      <Dialog {...config} isOpen={isOpen} close={close} unmount={unmount} />
     ));
   };
 

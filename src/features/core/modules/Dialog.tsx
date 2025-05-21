@@ -15,13 +15,13 @@ export interface DialogConfig {
 interface Props extends DialogConfig {
   isOpen: boolean;
   close: () => void;
-  onExit: () => void;
+  unmount: () => void;
 }
 
 function Dialog({
   isOpen,
   close,
-  onExit,
+  unmount,
   title,
   desc,
   cancelLabel,
@@ -40,7 +40,7 @@ function Dialog({
   };
 
   return (
-    <Modal isOpen={isOpen} close={close} onExit={onExit}>
+    <Modal isOpen={isOpen} close={close} unmount={unmount}>
       <Root>
         <Title>{title}</Title>
         {desc && <Desc>{desc}</Desc>}

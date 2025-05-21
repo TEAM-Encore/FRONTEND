@@ -8,7 +8,7 @@ function useLoading() {
   const showLoading = () => {
     if (idRef.current) return;
 
-    overlay.open(({isOpen, close, unmount, overlayId}) => {
+    overlay.open(({isOpen, unmount, overlayId}) => {
       idRef.current = overlayId;
       return <LoadingOverlay isOpen={isOpen} unmount={unmount} />;
     });

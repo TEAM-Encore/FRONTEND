@@ -8,7 +8,7 @@ function useToast() {
       <Toast
         isOpen={isOpen}
         close={close}
-        onExit={unmount}
+        unmount={unmount}
         message={message}
         onPress={onPress}
       />

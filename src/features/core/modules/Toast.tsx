@@ -12,7 +12,7 @@ import styled from 'styled-components/native';
 interface Props {
   isOpen: boolean;
   close: () => void;
-  onExit: () => void;
+  unmount: () => void;
   message: string;
   onPress?: () => void;
 }
@@ -23,7 +23,7 @@ const Y_TO = 0;
 const TOP_OFFSET = 20;
 const DURATION_MS = 1000 * 3;
 
-function Toast({isOpen, close, onExit, message, onPress}: Props) {
+function Toast({isOpen, close, unmount, message, onPress}: Props) {
   const {top} = useSafeAreaInsets();
   const mountedRef = useRef(false);
 
@@ -32,7 +32,7 @@ function Toast({isOpen, close, onExit, message, onPress}: Props) {
   };
   const exit = () => {
     if (!mountedRef.current) return;
-    onExit();
+    unmount();
   };
 
   useEffect(() => {
