@@ -234,8 +234,8 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={appTheme}>
-        <OverlayProvider>
-          <SafeAreaProvider>
+        <SafeAreaProvider>
+          <OverlayProvider>
             <OnboardingProvider>
               <AddTicketProvider>
                 <NavigationContainer independent={true}>
@@ -549,8 +549,8 @@ export default function App() {
                 </NavigationContainer>
               </AddTicketProvider>
             </OnboardingProvider>
-          </SafeAreaProvider>
-        </OverlayProvider>
+          </OverlayProvider>
+        </SafeAreaProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
