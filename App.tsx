@@ -5,6 +5,9 @@ import {SvgXml} from 'react-native-svg';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import appTheme from './src/common/theme';
+import {QueryClientProvider} from '@tanstack/react-query';
+import queryClient from './src/common/queryClient';
 
 import {RootStackParamList} from './types';
 import Tabs from './src/components/navigation/Tabs';
@@ -37,6 +40,7 @@ import NotificationSettings from './src/screens/myScreen/NotificationSettings';
 import MarketingDetails from './src/screens/myScreen/MarketingDetails';
 import {createPost, putPost} from './src/api/post.api';
 import {ensureAsyncStorageDir} from './src/util/ensureAsyncStorageDir';
+import {ThemeProvider} from 'styled-components';
 
 interface PostData {
   title: string;
@@ -227,311 +231,319 @@ export default function App() {
   };
 
   return (
-    <SafeAreaProvider>
-      <OnboardingProvider>
-        <AddTicketProvider>
-          <NavigationContainer independent={true}>
-            <Stack.Navigator initialRouteName="LoginScreen">
-              {/* 로그인 페이지 */}
-              <Stack.Screen
-                name="LoginScreen"
-                component={LoginScreen}
-                options={{
-                  headerShown: false,
-                  cardStyle: {backgroundColor: '#FBFBFB'},
-                }}
-              />
-              <Stack.Screen
-                name="SignUpScreen"
-                component={SignUpScreen}
-                options={{
-                  headerShown: false,
-                  cardStyle: {backgroundColor: '#FBFBFB'},
-                }}
-              />
-              <Stack.Screen
-                name="OnboardingScreen"
-                component={OnboardingScreen}
-                options={{
-                  headerShown: false,
-                  cardStyle: {backgroundColor: '#FBFBFB'},
-                }}
-              />
-              {/* 프로필 카드 페이지 */}
-              <Stack.Screen
-                name="ProfileCardScreen"
-                component={ProfileCardScreen}
-                options={{
-                  headerShown: false,
-                  cardStyle: {backgroundColor: '#FBFBFB'},
-                }}
-              />
-              {/* 전체 탭 네비게이션 */}
-              <Stack.Screen name="Tabs" options={{headerShown: false}}>
-                {props => <Tabs {...props} postData={postData} />}
-              </Stack.Screen>
-              {/* 홈 배너 페이지 */}
-              <Stack.Screen
-                name="HomeBannerScreen"
-                component={HomeBannerScreen}
-                options={{
-                  headerShown: false,
-                  cardStyle: {backgroundColor: '#FBFBFB'},
-                }}
-              />
-
-              {/* 홈 검색 페이지 */}
-              <Stack.Screen
-                name="HomeSearchScreen"
-                component={HomeSearchScreen}
-                options={{
-                  headerShown: false,
-                  cardStyle: {backgroundColor: '#FBFBFB'},
-                }}
-              />
-              <Stack.Screen
-                name="HomeSearchDefaultScreen"
-                component={HomeSearchDefaultScreen}
-                options={{
-                  headerShown: false,
-                  cardStyle: {backgroundColor: '#FBFBFB'},
-                }}
-              />
-              <Stack.Screen
-                name="MusicalDetailScreen"
-                component={MusicalDetailScreen}
-                options={({navigation}) => ({
-                  headerStyle: {
-                    height: 123,
-                    backgroundColor: '#FBFBFB',
-                  },
-                  title: '뮤지컬 공연 정보',
-                  headerTitleStyle: {...AppStyles.title},
-                  headerLeft: () => (
-                    <CustomBackButton navigation={navigation} />
-                  ),
-                })}
-              />
-              {/* 프리미엄 후기 작성 페이지*/}
-              <Stack.Screen
-                name="PremiumWriteScreen"
-                options={({navigation}) => ({
-                  headerStyle: {
-                    height: 123,
-                    backgroundColor: '#FBFBFB',
-                  },
-                  title: '프리미엄 리뷰 작성',
-                  headerTitleStyle: {...AppStyles.title},
-                  headerLeft: () => (
-                    <CustomPreviousButton
-                      goToPrevious={() => {
-                        const premiumWriteScreenInstance = navigation
-                          .getState()
-                          .routes.find(
-                            route => route.name === 'PremiumWriteScreen',
-                          );
-                        if (premiumWriteScreenInstance?.params?.goToPrevious) {
-                          premiumWriteScreenInstance.params.goToPrevious();
-                        } else {
-                          navigation.goBack();
-                        }
-                      }}
-                    />
-                  ),
-                  headerRight: () => (
-                    <CustomCloseButton setModalVisible={setModalVisible} />
-                  ),
-                })}>
-                {props => (
-                  <PremiumWriteScreen
-                    {...props}
-                    goToPrevious={props.route.params?.goToPrevious}
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={appTheme}>
+        <SafeAreaProvider>
+          <OnboardingProvider>
+            <AddTicketProvider>
+              <NavigationContainer independent={true}>
+                <Stack.Navigator initialRouteName="LoginScreen">
+                  {/* 로그인 페이지 */}
+                  <Stack.Screen
+                    name="LoginScreen"
+                    component={LoginScreen}
+                    options={{
+                      headerShown: false,
+                      cardStyle: {backgroundColor: '#FBFBFB'},
+                    }}
                   />
-                )}
-              </Stack.Screen>
-              {/* 다른 사람 프리미엄 리뷰 상세 페이지*/}
-              <Stack.Screen
-                name="PremiumOthersScreen"
-                component={PremiumOthersScreen}
-                options={{headerShown: false}}
-              />
-              {/* 자신이 작성한 프리미엄 리뷰 상세 페이지 */}
-              <Stack.Screen
-                name="PremiumMyScreen"
-                component={PremiumMyScreen}
-                options={{headerShown: false}}
-              />
-              {/* 게시판 작성 페이지*/}
-              <Stack.Screen
-                name="WriteScreen"
-                options={({navigation}) => ({
-                  headerStyle: {
-                    height: 123,
-                    backgroundColor: '#FBFBFB',
-                  },
-                  title: '글 작성하기',
-                  headerTitleStyle: {...AppStyles.title},
-                  headerLeft: () => (
-                    <CustomBackButton navigation={navigation} />
-                  ),
-                  headerRight: () => (
-                    <TouchableOpacity
-                      onPress={() => handleRegister(navigation)}
-                      style={AppStyles.register_button}>
-                      <View style={AppStyles.register_container}>
-                        <Text style={AppStyles.register_text}>등록</Text>
-                      </View>
-                    </TouchableOpacity>
-                  ),
-                })}>
-                {props => <WriteScreen {...props} setPostData={setPostData} />}
-              </Stack.Screen>
-              {/* 게시글 상세 페이지 */}
-              <Stack.Screen
-                name="PostScreen"
-                component={PostScreen}
-                // initialParams={{postId: 0}}
-                options={{headerShown: false}}
-              />
-              {/* 게시글 수정 페이지 */}
-              <Stack.Screen
-                name="ModifyScreen"
-                options={({navigation}) => ({
-                  headerStyle: {
-                    height: 123,
-                    backgroundColor: '#FBFBFB',
-                  },
-                  title: '글 수정하기',
-                  headerTitleStyle: {...AppStyles.title},
-                  headerLeft: () => (
-                    <CustomBackButton navigation={navigation} />
-                  ),
-                  headerRight: () => (
-                    <TouchableOpacity
-                      onPress={() => fetchPutPost(navigation)}
-                      style={AppStyles.register_button}>
-                      <View style={AppStyles.register_container}>
-                        <Text style={AppStyles.register_text}>수정</Text>
-                      </View>
-                    </TouchableOpacity>
-                  ),
-                })}>
-                {props => (
-                  <ModifyScreen {...props} setModifyData={setModifyData} />
-                )}
-              </Stack.Screen>
-              {/* 게시글 해시태그 검색 페이지 */}
-              {/* <Stack.Screen
+                  <Stack.Screen
+                    name="SignUpScreen"
+                    component={SignUpScreen}
+                    options={{
+                      headerShown: false,
+                      cardStyle: {backgroundColor: '#FBFBFB'},
+                    }}
+                  />
+                  <Stack.Screen
+                    name="OnboardingScreen"
+                    component={OnboardingScreen}
+                    options={{
+                      headerShown: false,
+                      cardStyle: {backgroundColor: '#FBFBFB'},
+                    }}
+                  />
+                  {/* 프로필 카드 페이지 */}
+                  <Stack.Screen
+                    name="ProfileCardScreen"
+                    component={ProfileCardScreen}
+                    options={{
+                      headerShown: false,
+                      cardStyle: {backgroundColor: '#FBFBFB'},
+                    }}
+                  />
+                  {/* 전체 탭 네비게이션 */}
+                  <Stack.Screen name="Tabs" options={{headerShown: false}}>
+                    {props => <Tabs {...props} postData={postData} />}
+                  </Stack.Screen>
+                  {/* 홈 배너 페이지 */}
+                  <Stack.Screen
+                    name="HomeBannerScreen"
+                    component={HomeBannerScreen}
+                    options={{
+                      headerShown: false,
+                      cardStyle: {backgroundColor: '#FBFBFB'},
+                    }}
+                  />
+
+                  {/* 홈 검색 페이지 */}
+                  <Stack.Screen
+                    name="HomeSearchScreen"
+                    component={HomeSearchScreen}
+                    options={{
+                      headerShown: false,
+                      cardStyle: {backgroundColor: '#FBFBFB'},
+                    }}
+                  />
+                  <Stack.Screen
+                    name="HomeSearchDefaultScreen"
+                    component={HomeSearchDefaultScreen}
+                    options={{
+                      headerShown: false,
+                      cardStyle: {backgroundColor: '#FBFBFB'},
+                    }}
+                  />
+                  <Stack.Screen
+                    name="MusicalDetailScreen"
+                    component={MusicalDetailScreen}
+                    options={({navigation}) => ({
+                      headerStyle: {
+                        height: 123,
+                        backgroundColor: '#FBFBFB',
+                      },
+                      title: '뮤지컬 공연 정보',
+                      headerTitleStyle: {...AppStyles.title},
+                      headerLeft: () => (
+                        <CustomBackButton navigation={navigation} />
+                      ),
+                    })}
+                  />
+                  {/* 프리미엄 후기 작성 페이지*/}
+                  <Stack.Screen
+                    name="PremiumWriteScreen"
+                    options={({navigation}) => ({
+                      headerStyle: {
+                        height: 123,
+                        backgroundColor: '#FBFBFB',
+                      },
+                      title: '프리미엄 리뷰 작성',
+                      headerTitleStyle: {...AppStyles.title},
+                      headerLeft: () => (
+                        <CustomPreviousButton
+                          goToPrevious={() => {
+                            const premiumWriteScreenInstance = navigation
+                              .getState()
+                              .routes.find(
+                                route => route.name === 'PremiumWriteScreen',
+                              );
+                            if (
+                              premiumWriteScreenInstance?.params?.goToPrevious
+                            ) {
+                              premiumWriteScreenInstance.params.goToPrevious();
+                            } else {
+                              navigation.goBack();
+                            }
+                          }}
+                        />
+                      ),
+                      headerRight: () => (
+                        <CustomCloseButton setModalVisible={setModalVisible} />
+                      ),
+                    })}>
+                    {props => (
+                      <PremiumWriteScreen
+                        {...props}
+                        goToPrevious={props.route.params?.goToPrevious}
+                      />
+                    )}
+                  </Stack.Screen>
+                  {/* 다른 사람 프리미엄 리뷰 상세 페이지*/}
+                  <Stack.Screen
+                    name="PremiumOthersScreen"
+                    component={PremiumOthersScreen}
+                    options={{headerShown: false}}
+                  />
+                  {/* 자신이 작성한 프리미엄 리뷰 상세 페이지 */}
+                  <Stack.Screen
+                    name="PremiumMyScreen"
+                    component={PremiumMyScreen}
+                    options={{headerShown: false}}
+                  />
+                  {/* 게시판 작성 페이지*/}
+                  <Stack.Screen
+                    name="WriteScreen"
+                    options={({navigation}) => ({
+                      headerStyle: {
+                        height: 123,
+                        backgroundColor: '#FBFBFB',
+                      },
+                      title: '글 작성하기',
+                      headerTitleStyle: {...AppStyles.title},
+                      headerLeft: () => (
+                        <CustomBackButton navigation={navigation} />
+                      ),
+                      headerRight: () => (
+                        <TouchableOpacity
+                          onPress={() => handleRegister(navigation)}
+                          style={AppStyles.register_button}>
+                          <View style={AppStyles.register_container}>
+                            <Text style={AppStyles.register_text}>등록</Text>
+                          </View>
+                        </TouchableOpacity>
+                      ),
+                    })}>
+                    {props => (
+                      <WriteScreen {...props} setPostData={setPostData} />
+                    )}
+                  </Stack.Screen>
+                  {/* 게시글 상세 페이지 */}
+                  <Stack.Screen
+                    name="PostScreen"
+                    component={PostScreen}
+                    // initialParams={{postId: 0}}
+                    options={{headerShown: false}}
+                  />
+                  {/* 게시글 수정 페이지 */}
+                  <Stack.Screen
+                    name="ModifyScreen"
+                    options={({navigation}) => ({
+                      headerStyle: {
+                        height: 123,
+                        backgroundColor: '#FBFBFB',
+                      },
+                      title: '글 수정하기',
+                      headerTitleStyle: {...AppStyles.title},
+                      headerLeft: () => (
+                        <CustomBackButton navigation={navigation} />
+                      ),
+                      headerRight: () => (
+                        <TouchableOpacity
+                          onPress={() => fetchPutPost(navigation)}
+                          style={AppStyles.register_button}>
+                          <View style={AppStyles.register_container}>
+                            <Text style={AppStyles.register_text}>수정</Text>
+                          </View>
+                        </TouchableOpacity>
+                      ),
+                    })}>
+                    {props => (
+                      <ModifyScreen {...props} setModifyData={setModifyData} />
+                    )}
+                  </Stack.Screen>
+                  {/* 게시글 해시태그 검색 페이지 */}
+                  {/* <Stack.Screen
                 name="PostHashtagScreen"
                 component={PostHashtagScreen}
                 options={{headerShown: false}}
               /> */}
-              {/* 게시글 임시 저장 목록 페이지 */}
-              <Stack.Screen
-                name="SaveScreen"
-                component={SaveScreen}
-                options={({navigation}) => ({
-                  headerStyle: {
-                    height: 123,
-                    backgroundColor: '#FBFBFB',
-                  },
-                  title: '임시저장 목록',
-                  headerTitleStyle: {...AppStyles.title},
-                  headerLeft: () => (
-                    <CustomBackButton navigation={navigation} />
-                  ),
-                })}
-              />
-              {/* 게시판 검색 페이지 */}
-              <Stack.Screen
-                name="DashboardSearchScreenList"
-                component={DashboardSearchScreenList}
-                options={{
-                  headerShown: false,
-                  cardStyle: {backgroundColor: '#FBFBFB'},
-                }}
-              />
-              <Stack.Screen
-                name="DashboardSearchDefaultScreen"
-                component={DashboardSearchDefaultScreen}
-                options={{
-                  headerShown: false,
-                  cardStyle: {backgroundColor: '#FBFBFB'},
-                }}
-              />
-              <Stack.Screen
-                name="AddTicketScreen"
-                component={AddTicketScreen}
-                options={{
-                  headerShown: false,
-                  cardStyle: {backgroundColor: '#FBFBFB'},
-                }}
-              />
-              <Stack.Screen
-                name="TicketDetailScreen"
-                component={TicketDetailScreen}
-                options={{
-                  headerShown: false,
-                  cardStyle: {backgroundColor: '#FBFBFB'},
-                }}
-              />
-              {/* 마이페이지: 프로필 수정 페이지 */}
-              <Stack.Screen
-                name="ModifyProfileImg"
-                component={ModifyProfileImg}
-                options={({navigation}) => ({
-                  headerStyle: {
-                    height: 123,
-                    backgroundColor: '#FBFBFB',
-                  },
-                  title: '프로필 수정',
-                  headerTitleStyle: {...AppStyles.title},
-                  headerLeft: () => (
-                    <CustomBackButton navigation={navigation} />
-                  ),
-                })}
-              />
-              {/* 마이페이지: 수신 설정 페이지 */}
-              <Stack.Screen
-                name="NotificationSettings"
-                component={NotificationSettings}
-                options={({navigation}) => ({
-                  headerStyle: {
-                    height: 123,
-                    backgroundColor: '#FBFBFB',
-                  },
-                  title: '수신 설정',
-                  headerTitleStyle: {...AppStyles.title},
-                  headerLeft: () => (
-                    <CustomBackButton navigation={navigation} />
-                  ),
-                })}
-              />
-              {/* 마이페이지: 마케팅 정보 수신 페이지 */}
-              <Stack.Screen
-                name="MarketingDetails"
-                component={MarketingDetails}
-                options={({navigation}) => ({
-                  headerStyle: {
-                    height: 123,
-                    backgroundColor: '#FBFBFB',
-                  },
-                  title: '마케팅 정보 수신',
-                  headerTitleStyle: {...AppStyles.title},
-                  headerLeft: () => (
-                    <CustomBackButton navigation={navigation} />
-                  ),
-                })}
-              />
-            </Stack.Navigator>
-            {/* 프리미엄 리뷰 그만둘 시 뜨는 모달 */}
-            <StopReviewModal
-              modalVisible={modalVisible}
-              setModalVisible={setModalVisible}
-            />
-          </NavigationContainer>
-        </AddTicketProvider>
-      </OnboardingProvider>
-    </SafeAreaProvider>
+                  {/* 게시글 임시 저장 목록 페이지 */}
+                  <Stack.Screen
+                    name="SaveScreen"
+                    component={SaveScreen}
+                    options={({navigation}) => ({
+                      headerStyle: {
+                        height: 123,
+                        backgroundColor: '#FBFBFB',
+                      },
+                      title: '임시저장 목록',
+                      headerTitleStyle: {...AppStyles.title},
+                      headerLeft: () => (
+                        <CustomBackButton navigation={navigation} />
+                      ),
+                    })}
+                  />
+                  {/* 게시판 검색 페이지 */}
+                  <Stack.Screen
+                    name="DashboardSearchScreenList"
+                    component={DashboardSearchScreenList}
+                    options={{
+                      headerShown: false,
+                      cardStyle: {backgroundColor: '#FBFBFB'},
+                    }}
+                  />
+                  <Stack.Screen
+                    name="DashboardSearchDefaultScreen"
+                    component={DashboardSearchDefaultScreen}
+                    options={{
+                      headerShown: false,
+                      cardStyle: {backgroundColor: '#FBFBFB'},
+                    }}
+                  />
+                  <Stack.Screen
+                    name="AddTicketScreen"
+                    component={AddTicketScreen}
+                    options={{
+                      headerShown: false,
+                      cardStyle: {backgroundColor: '#FBFBFB'},
+                    }}
+                  />
+                  <Stack.Screen
+                    name="TicketDetailScreen"
+                    component={TicketDetailScreen}
+                    options={{
+                      headerShown: false,
+                      cardStyle: {backgroundColor: '#FBFBFB'},
+                    }}
+                  />
+                  {/* 마이페이지: 프로필 수정 페이지 */}
+                  <Stack.Screen
+                    name="ModifyProfileImg"
+                    component={ModifyProfileImg}
+                    options={({navigation}) => ({
+                      headerStyle: {
+                        height: 123,
+                        backgroundColor: '#FBFBFB',
+                      },
+                      title: '프로필 수정',
+                      headerTitleStyle: {...AppStyles.title},
+                      headerLeft: () => (
+                        <CustomBackButton navigation={navigation} />
+                      ),
+                    })}
+                  />
+                  {/* 마이페이지: 수신 설정 페이지 */}
+                  <Stack.Screen
+                    name="NotificationSettings"
+                    component={NotificationSettings}
+                    options={({navigation}) => ({
+                      headerStyle: {
+                        height: 123,
+                        backgroundColor: '#FBFBFB',
+                      },
+                      title: '수신 설정',
+                      headerTitleStyle: {...AppStyles.title},
+                      headerLeft: () => (
+                        <CustomBackButton navigation={navigation} />
+                      ),
+                    })}
+                  />
+                  {/* 마이페이지: 마케팅 정보 수신 페이지 */}
+                  <Stack.Screen
+                    name="MarketingDetails"
+                    component={MarketingDetails}
+                    options={({navigation}) => ({
+                      headerStyle: {
+                        height: 123,
+                        backgroundColor: '#FBFBFB',
+                      },
+                      title: '마케팅 정보 수신',
+                      headerTitleStyle: {...AppStyles.title},
+                      headerLeft: () => (
+                        <CustomBackButton navigation={navigation} />
+                      ),
+                    })}
+                  />
+                </Stack.Navigator>
+                {/* 프리미엄 리뷰 그만둘 시 뜨는 모달 */}
+                <StopReviewModal
+                  modalVisible={modalVisible}
+                  setModalVisible={setModalVisible}
+                />
+              </NavigationContainer>
+            </AddTicketProvider>
+          </OnboardingProvider>
+        </SafeAreaProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }

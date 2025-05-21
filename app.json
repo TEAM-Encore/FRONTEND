@@ -1,4 +1,29 @@
 {
-  "name": "ITDA_Project",
-  "displayName": "ITDA_Project"
+  "expo": {
+    "name": "ITDA_Project",
+    "android": {
+      "package": "com.ITDA.encore"
+    },
+    "ios": {
+      "bundleIdentifier": "com.ITDA.encore"
+    },
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Pretendard-Black.otf",
+            "./assets/fonts/Pretendard-Bold.otf",
+            "./assets/fonts/Pretendard-ExtraBold.otf",
+            "./assets/fonts/Pretendard-ExtraLight.otf",
+            "./assets/fonts/Pretendard-Light.otf",
+            "./assets/fonts/Pretendard-Medium.otf",
+            "./assets/fonts/Pretendard-Regular.otf",
+            "./assets/fonts/Pretendard-SemiBold.otf",
+            "./assets/fonts/Pretendard-Thin.otf"
+          ]
+        }
+      ]
+    ]
+  }
 }

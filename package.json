@@ -3,10 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "prebuild": "expo prebuild --clean",
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "lint": "eslint .",
-    "start": "react-native start",
     "test": "jest"
   },
   "dependencies": {
@@ -16,9 +17,12 @@
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
     "@react-navigation/stack": "^6.4.1",
+    "@tanstack/react-query": "^5.76.1",
     "@types/react-native-snap-carousel": "^3.8.11",
     "axios": "^1.7.7",
+    "expo": "~52.0.0",
     "expo-app-loading": "^2.1.1",
+    "expo-dev-client": "~5.0.20",
     "expo-font": "^13.0.1",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
@@ -40,6 +44,7 @@
     "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "^3.5.2",
     "react-native-vector-icons": "^10.2.0",
+    "styled-components": "^6.1.18",
     "zustand": "^5.0.1"
   },
   "devDependencies": {
@@ -53,6 +58,7 @@
     "@react-native/eslint-config": "0.76.1",
     "@react-native/metro-config": "0.76.1",
     "@react-native/typescript-config": "0.76.1",
+    "@tanstack/eslint-plugin-query": "^5.74.7",
     "@tsconfig/react-native": "^3.0.5",
     "@types/jest": "^29.5.14",
     "@types/lodash": "^4.17.13",
