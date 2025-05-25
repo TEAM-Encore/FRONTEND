@@ -14,6 +14,7 @@ interface ISystemColor {
   sub_01: string;
 
   wireframe_950: string;
+  wireframe_900: string;
   wireframe_800: string;
   wireframe_700: string;
   wireframe_500: string;
@@ -61,6 +62,7 @@ const appTheme: IAppTheme = {
     sub_01: '#FFF8DB',
 
     wireframe_950: '#262626',
+    wireframe_900: '#3d3d3d',
     wireframe_800: '#454545',
     wireframe_700: '#4F4F4F',
     wireframe_500: '#6D6D6D',
