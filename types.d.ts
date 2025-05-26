@@ -3,10 +3,7 @@ export type RootStackParamList = {
     frequency: string;
     checkedOptions: string[];
   };
-  LoginScreen: undefined;
-  SignUpScreen: undefined;
-  OnboardingScreen: undefined;
-  ProfileCardScreen: undefined;
+
   WriteScreen: {
     setPostData: React.Dispatch<React.SetStateAction<PostData | null>>;
   };
@@ -20,12 +17,8 @@ export type RootStackParamList = {
   SaveScreen: undefined;
   DashboardSearchScreenList: {postData: any; text: string};
   DashboardSearchDefaultScreen: undefined;
-  HomeSearchScreen: {postData: any; text: string};
-  HomeSearchDefaultScreen: undefined;
-  HomeBannerScreen: {bannerId: number};
-  AddTicketScreen: undefined;
+
   TicketDetailScreen: undefined;
-  MusicalDetailScreen: {data: any};
   ModifyProfileImg: undefined;
 };
 
