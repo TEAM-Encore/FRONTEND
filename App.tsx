@@ -6,17 +6,20 @@ import {AddTicketProvider} from './src/state/AddTicketContext';
 import {OnboardingProvider} from './src/state/OnboardingContext';
 import {ThemeProvider} from 'styled-components';
 import Navigator from './src/app/Navigator';
+import {OverlayProvider} from 'overlay-kit'
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={appTheme}>
         <SafeAreaProvider>
-          <OnboardingProvider>
-            <AddTicketProvider>
-              <Navigator />
-            </AddTicketProvider>
-          </OnboardingProvider>
+          <OverlayProvider>
+            <OnboardingProvider>
+              <AddTicketProvider>
+                <Navigator />
+              </AddTicketProvider>
+            </OnboardingProvider>
+          </OverlayProvider>
         </SafeAreaProvider>
       </ThemeProvider>
     </QueryClientProvider>
