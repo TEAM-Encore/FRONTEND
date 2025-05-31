@@ -1,7 +1,6 @@
-import HomeStyles from '@/app/home/HomeScreen/style';
 import useAppNavigation from '@/app/useAppNavigation';
 import React from 'react';
-import {Image, TouchableOpacity} from 'react-native';
+import {Image} from 'react-native';
 import styled from 'styled-components/native';
 
 type Props = {

@@ -13,15 +13,15 @@ import {useTheme} from 'styled-components';
 const carouselTicketList = [
   {
     id: 1,
-    image: require('@/assets/images/home/ImageCarousel.png'),
+    image: require('@/assets/images/home/ImageCarouselColor.png'),
   },
   {
     id: 2,
-    image: require('@/assets/images/home/ImageCarouselColor2.png'),
+    image: require('@/assets/images/home/ImageCarousel.png'),
   },
   {
     id: 3,
-    image: require('@/assets/images/home/ImageCarouselColor.png'),
+    image: require('@/assets/images/home/ImageCarouselColor2.png'),
   },
 ];
 
@@ -47,6 +47,7 @@ function HomeCarousel() {
   return (
     <View style={HomeStyles.containerHeader}>
       <Carousel
+        defaultIndex={1}
         data={carouselTicketList}
         renderItem={renderItem}
         width={width}
