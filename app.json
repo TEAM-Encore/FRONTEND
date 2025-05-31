@@ -5,7 +5,12 @@
       "package": "com.ITDA.encore"
     },
     "ios": {
-      "bundleIdentifier": "com.ITDA.encore"
+      "bundleIdentifier": "com.ITDA.encore",
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      }
     },
     "plugins": [
       [
