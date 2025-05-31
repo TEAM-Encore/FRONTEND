@@ -1,45 +1,44 @@
 import * as React from 'react';
-import AppStyles from './AppStyles';
-import {View, Text, TouchableOpacity} from 'react-native';
+import AppStyles from '../../AppStyles';
+import {View, Text, TouchableOpacity, Alert.Alert} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import appTheme from './src/common/theme';
+import appTheme from '@/common/theme';
 import {QueryClientProvider} from '@tanstack/react-query';
-import queryClient from './src/common/queryClient';
+import queryClient from '@/common/queryClient';
 
-import {RootStackParamList} from './types';
-import Tabs from './src/components/navigation/Tabs';
-import PremiumWriteScreen from './src/screens/write/review/PremiumWriteScreen';
-import PremiumOthersScreen from './src/screens/premium/others/PremiumOthersScreen';
-import PremiumMyScreen from './src/screens/premium/mine/PremiumMyScreen';
-import StopReviewModal from './src/components/alertModal/StopReviewModal';
-import WriteScreen from './src/screens/write/post/WriteScreen';
-import PostScreen from './src/screens/dashboard/post/PostScreen';
-import ModifyScreen from './src/screens/write/post/ModifyScreen';
+import {RootStackParamList} from 'types';
+import PremiumWriteScreen from '@/app/premium/PremiumWriteScreen';
+import PremiumOthersScreen from '@/app/premium/PremiumOthersScreen';
+import PremiumMyScreen from '@/app/premium/PremiumMyScreen';
+import StopReviewModal from '@/components/alertModal/StopReviewModal';
+import WriteScreen from './write/post/WriteScreen';
+import PostScreen from './dashboard/post/PostScreen';
+import ModifyScreen from './write/post/ModifyScreen';
 // import PostHashtagScreen from './src/screens/dashboard/post/hashtag/PostHashtagScreen';
-import SaveScreen from './src/screens/write/save/SaveScreen';
-import DashboardSearchScreenList from './src/screens/dashboard/search/DashboardSearchScreenList';
-import DashboardSearchDefaultScreen from './src/screens/search/DashboardSearchDefaultScreen';
-import HomeSearchScreen from './src/screens/home/search/HomeSearchScreen';
-import HomeSearchDefaultScreen from './src/screens/search/HomeSearchDefaultScreen';
-import HomeBannerScreen from './src/screens/home/HomeBannerScreen';
-import AddTicketScreen from './src/screens/ticketBook/AddTicketScreen';
-import TicketDetailScreen from './src/screens/ticketBook/TicketDetailScreen';
-import LoginScreen from './src/screens/login/LoginScreen';
-import SignUpScreen from './src/screens/onboarding/SignUpScreen';
-import OnboardingScreen from './src/screens/onboarding/OnboardingScreen';
-import ProfileCardScreen from './src/screens/onboarding/ProfileCardScreen';
+import SaveScreen from './write/save/SaveScreen';
+import DashboardSearchScreenList from './dashboard/search/DashboardSearchScreenList';
+import DashboardSearchDefaultScreen from './search/DashboardSearchDefaultScreen';
+import HomeSearchScreen from '@/app/home/HomeSearchScreen';
+import HomeSearchDefaultScreen from '@/app/home/HomeSearchDefaultScreen';
+import HomeBannerScreen from '@/app/home/HomeBannerScreen';
+import AddTicketScreen from '@/app/ticketBook/AddTicketScreen';
+import TicketDetailScreen from '@/app/ticketBook/TicketDetailScreen';
+import LoginScreen from '@/app/auth/LoginScreen';
+import SignUpScreen from '@/app/auth/SignUpScreen';
+import OnboardingScreen from '@/app/auth/OnboardingScreen';
+import ProfileCardScreen from '@/app/auth/ProfileCardScreen';
 
-import {AddTicketProvider} from './src/state/AddTicketContext';
-import {OnboardingProvider} from './src/state/OnboardingContext';
-import MusicalDetailScreen from './src/screens/home/musical/MusicalDetailScreen';
-import ModifyProfileImg from './src/screens/myScreen/ModifyProfileImg';
-import NotificationSettings from './src/screens/myScreen/NotificationSettings';
-import MarketingDetails from './src/screens/myScreen/MarketingDetails';
-import {createPost, putPost} from './src/api/post.api';
-import {ensureAsyncStorageDir} from './src/util/ensureAsyncStorageDir';
+import { AddTicketProvider } from '@/state/AddTicketContext';
+import {OnboardingProvider} from '@/state/OnboardingContext';
+import MusicalDetailScreen from '@/app/musical/MusicalDetailScreen';
+import ModifyProfileImg from './myScreen/ModifyProfileImg';
+import NotificationSettings from './myScreen/NotificationSettings';
+import MarketingDetails from './myScreen/MarketingDetails';
+import {createPost, putPost} from '@/api/post.api';
+import { ensureAsyncStorageDir } from '@/util/ensureAsyncStorageDir';
 import {ThemeProvider} from 'styled-components';
 
 interface PostData {
@@ -169,20 +168,20 @@ export default function App() {
           const postId = response.data.data.post_id;
 
           console.log('글이 성공적으로 등록되었습니다!');
-          alert('글이 성공적으로 등록되었습니다.');
+          Alert.alert('글이 성공적으로 등록되었습니다.');
 
           setTimeout(() => {
             navigation.navigate('PostScreen', {postId});
           }, 0);
         } else {
-          alert('게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.');
+          Alert.alert('게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.');
         }
       } catch (error) {
-        alert('게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.');
+        Alert.alert('게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.');
       }
     } else {
       console.error('postData가 비어 있습니다.');
-      alert('등록할 데이터가 없습니다.');
+      Alert.alert('등록할 데이터가 없습니다.');
     }
   };
 
@@ -216,7 +215,7 @@ export default function App() {
         });
         if (response.status === 201 || response.status === 200) {
           console.log('글이 성공적으로 수정되었습니다!');
-          alert('글이 성공적으로 수정되었습니다.');
+          Alert.alert('글이 성공적으로 수정되었습니다.');
 
           setTimeout(() => {
             navigation.goBack();

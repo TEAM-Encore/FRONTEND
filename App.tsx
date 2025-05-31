@@ -1,3 +1,4 @@
+import React from 'react';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import appTheme from './src/common/theme';
 import {QueryClientProvider} from '@tanstack/react-query';
