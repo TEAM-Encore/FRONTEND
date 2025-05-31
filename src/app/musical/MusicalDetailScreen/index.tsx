@@ -14,9 +14,20 @@ import {HomeIcon} from '@/assets/icons/home/HomeIcon';
 import ModalCategory from '@/components/categoryModal/ModalCategory';
 import {getDetailedMusical} from '@/api/musical.api';
 import MusicalDetailStyles from './style';
+import MusicalDetailInfo from '../MusicalDetailInfo';
+import MusicalDetailReview from '../MusicalDetailReview';
 
-const MusicalDetailScreen: React.FC = () => {
-  const data = {};
+type MusicalDetailScreenRouteProp = RouteProp<
+  RootStackParamList,
+  'MusicalDetailScreen'
+>;
+
+type MusicalDetailProps = {
+  route: MusicalDetailScreenRouteProp;
+};
+
+const MusicalDetailScreen: React.FC<MusicalDetailProps> = ({route}) => {
+  const {data} = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [series, setSeries] = useState('3연') || '3연';
@@ -37,6 +48,7 @@ const MusicalDetailScreen: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       fetchDetailedMusical();
+      // console.log('뮤지컬 detailInfo: ', detailInfo);
     }, []),
   );
 

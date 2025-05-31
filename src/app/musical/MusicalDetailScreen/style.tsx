@@ -40,7 +40,7 @@ const MusicalDetailStyles = StyleSheet.create({
     paddingBottom: 16,
   },
   buttonContainer: {
-    backgroundColor: Colors.sub_05,
+    backgroundColor: Colors.gray_12,
     width: 65.25,
     height: 32.62,
     borderRadius: 7.44,
@@ -96,10 +96,9 @@ const MusicalDetailStyles = StyleSheet.create({
   infoTitle: {
     ...typography.subhead04,
     marginTop: 33,
-    marginBottom: 20,
   },
   summaryContainer: {
-    backgroundColor: Colors.sub_01,
+    backgroundColor: Colors.gray_03,
     width: 335,
     height: 160,
     borderRadius: 12,
@@ -144,16 +143,27 @@ const MusicalDetailStyles = StyleSheet.create({
     ...typography.subhead02,
     marginBottom: 8,
   },
+  totalContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
   actorContainer: {
     width: 71.23,
     height: 71.23,
+    borderRadius: 7.35,
+    marginBottom: 4,
   },
   actorTextContainer: {
-    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
   },
   actorText: {
     ...typography.caption,
     color: Colors.gray_09,
+  },
+  urlContainer: {
+    alignItems: 'center',
+    marginTop: 20,
   },
   reviewsContainer: {
     backgroundColor: Colors.sub_01,

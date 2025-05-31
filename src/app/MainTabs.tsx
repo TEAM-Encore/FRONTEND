@@ -42,14 +42,14 @@ function MainTabs() {
 
     {
       name: 'TicketBookScreen',
-      label: '티켓 북',
+      label: '티켓북',
       component: TicketBookScreen,
       icon: TabSvg.TicketBookIcon,
       tabIcon: TabSvg.tabTicketBookIcon,
     },
     {
       name: 'MyScreen',
-      label: '마이 페이지',
+      label: '마이',
       component: MyScreen,
       icon: TabSvg.MyPageIcon,
       tabIcon: TabSvg.tabMyPageIcon,

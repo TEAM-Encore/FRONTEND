@@ -1,15 +1,25 @@
 import React, {useCallback, useState} from 'react';
-import {View, Text, Image, Alert, FlatList} from 'react-native';
+import {View, Text, Image, Alert, FlatList, StyleSheet} from 'react-native';
 import {getMusicalReviews} from '@/api/musical.api';
 import {useFocusEffect} from '@react-navigation/native';
 import ItemReview from '@/components/premium/ItemReview';
 import MusicalDetailStyles from '../MusicalDetailScreen/style';
+import Colors from '@/assets/colors/Colors';
+import {typography} from '@/styles/typography';
 
-type MMusicalDetailReviewProps = {
+type MusicalDetailReviewProps = {
   data: any;
 };
 
-const MusicalDetailReview: React.FC<MMusicalDetailReviewProps> = ({data}) => {
+const MusicalDetailReview: React.FC<MusicalDetailReviewProps> = ({data}) => {
+  const categories = [
+    {label: '넘버', key: 'average_number_rating'},
+    {label: '스토리 구성', key: 'average_story_rating'},
+    {label: '재관람 의사', key: 'average_revisit_rating'},
+    {label: '배우합', key: 'average_actor_rating'},
+    {label: '퍼포먼스', key: 'average_performance_rating'},
+  ];
+
   const [reviewInfo, setReviewInfo] = useState();
 
   const fetchMusicalReviews = async () => {
@@ -23,6 +33,8 @@ const MusicalDetailReview: React.FC<MMusicalDetailReviewProps> = ({data}) => {
     }
   };
 
+  console.log('뮤지컬 리뷰 정보: ', reviewInfo);
+
   useFocusEffect(
     useCallback(() => {
       fetchMusicalReviews();
@@ -31,54 +43,47 @@ const MusicalDetailReview: React.FC<MMusicalDetailReviewProps> = ({data}) => {
 
   return (
     <View style={MusicalDetailStyles.infoContainer}>
-      <View>
-        <Text style={MusicalDetailStyles.infoTitle}>
-          앙코르 평점 {data.average_total_rating}
-        </Text>
-        <View style={MusicalDetailStyles.reviewsContainer}>
-          <View style={MusicalDetailStyles.reviews}>
-            <View style={MusicalDetailStyles.review_container}>
-              <Text style={MusicalDetailStyles.reviewText}>넘버</Text>
-              <Image
-                source={require('@/assets/images/home/bar.png')}
-                style={MusicalDetailStyles.reviewImage}
-              />
-            </View>
-            <View
-              style={{...MusicalDetailStyles.review_container, marginTop: 7}}>
-              <Text style={MusicalDetailStyles.reviewText}>스토리</Text>
-              <Image
-                source={require('@/assets/images/home/bar.png')}
-                style={MusicalDetailStyles.reviewImage}
-              />
-            </View>
-            <View
-              style={{...MusicalDetailStyles.review_container, marginTop: 7}}>
-              <Text style={MusicalDetailStyles.reviewText}>재관람 의사</Text>
-              <Image
-                source={require('@/assets/images/home/bar.png')}
-                style={MusicalDetailStyles.reviewImage}
-              />
-            </View>
-            <View
-              style={{...MusicalDetailStyles.review_container, marginTop: 7}}>
-              <Text style={MusicalDetailStyles.reviewText}>배우합</Text>
-              <Image
-                source={require('@/assets/images/home/bar.png')}
-                style={MusicalDetailStyles.reviewImage}
-              />
-            </View>
-            <View
-              style={{...MusicalDetailStyles.review_container, marginTop: 7}}>
-              <Text style={MusicalDetailStyles.reviewText}>퍼포먼스</Text>
-              <Image
-                source={require('@/assets/images/home/bar.png')}
-                style={MusicalDetailStyles.reviewImage}
-              />
-            </View>
+      {reviewInfo && (
+        <View>
+          <Text style={MusicalDetailStyles.infoTitle}>
+            앙코르 평점 {reviewInfo.average_total_rating}
+          </Text>
+
+          <View style={styles.select_star_category}>
+            {categories.map((category, index) => {
+              const filled = reviewInfo[category.key];
+              const total = 5;
+              return (
+                <View key={index} style={styles.categoryView}>
+                  <View style={styles.indexView}>
+                    <Text style={styles.categoryText}>{category.label}</Text>
+                  </View>
+
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      width: 174,
+                      height: 11,
+                      borderRadius: 3,
+                      overflow: 'hidden',
+                    }}>
+                    {[...Array(total)].map((_, i) => (
+                      <View
+                        key={i}
+                        style={[
+                          styles.bar,
+                          i < filled && styles.filledBar,
+                          i !== total - 1 && styles.barWithBorder,
+                        ]}
+                      />
+                    ))}
+                  </View>
+                </View>
+              );
+            })}
           </View>
         </View>
-      </View>
+      )}
 
       <View style={MusicalDetailStyles.containerTitle}>
         <Text style={MusicalDetailStyles.infoTitle}>프리미엄 리뷰</Text>
@@ -94,5 +99,44 @@ const MusicalDetailReview: React.FC<MMusicalDetailReviewProps> = ({data}) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  categoryView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  indexView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  categoryText: {
+    color: Colors.gray_12,
+  },
+  select_star_category: {
+    backgroundColor: Colors.gray_03,
+    width: 335,
+    height: 146,
+    ...typography.caption,
+    color: Colors.gray_12,
+    marginTop: 22,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  bar: {
+    flex: 1,
+    backgroundColor: Colors.gray_06,
+  },
+  filledBar: {
+    backgroundColor: Colors.sub_04,
+  },
+  barWithBorder: {
+    borderRightWidth: 1,
+    borderColor: Colors.gray_07,
+  },
+});
 
 export default MusicalDetailReview;
