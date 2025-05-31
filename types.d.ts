@@ -7,6 +7,17 @@ export type RootStackParamList = {
   WriteScreen: {
     setPostData: React.Dispatch<React.SetStateAction<PostData | null>>;
   };
+  HomeSearchDefaultScreen: undefined;
+  MusicalDetailScreen: {
+    data: {
+      id: number;
+      title: string;
+      start_date: string;
+      end_date: string;
+      image_url: string;
+      location: string;
+    };
+  };
   PremiumWriteScreen: undefined;
   PremiumOthersScreen: undefined;
   PremiumMyScreen: {reviewId: number};
