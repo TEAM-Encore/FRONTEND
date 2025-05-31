@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, Image, ActivityIndicator} from 'react-native';
 import {HomeIcon} from '@/assets/icons/home/HomeIcon';
 import {SvgXml} from 'react-native-svg';
@@ -8,8 +8,51 @@ type MusicalDetailInfoProps = {
   data: any;
 };
 
+type Actor = {
+  role_name: string;
+  actor_name: string;
+  actor_image_url: string;
+  is_main_actor: boolean;
+};
+
+type GroupedActor = {
+  role_name: string;
+  actors: {
+    actor_name: string;
+    actor_image_url: string;
+  }[];
+};
+
 const MusicalDetailInfo: React.FC<MusicalDetailInfoProps> = ({data}) => {
-  console.log('공연 정보: ', data);
+  const [groupedActors, setGroupedActors] = useState<GroupedActor[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (data?.actors) {
+      const result = data.actors.reduce((acc, actor) => {
+        const {role_name, actor_name, actor_image_url} = actor;
+        const existingRole = acc.find(item => item.role_name === role_name);
+
+        if (existingRole) {
+          existingRole.actors.push({actor_name, actor_image_url});
+        } else {
+          acc.push({
+            role_name,
+            actors: [{actor_name, actor_image_url}],
+          });
+        }
+
+        return acc;
+      }, [] as GroupedActor[]);
+
+      setGroupedActors(result);
+      setLoading(false);
+    }
+  }, [data]);
+
+  if (loading) {
+    return <ActivityIndicator size="large" />;
+  }
 
   if (!data) {
     return (
@@ -83,34 +126,41 @@ const MusicalDetailInfo: React.FC<MusicalDetailInfoProps> = ({data}) => {
       </View>
 
       <Text style={MusicalDetailStyles.infoTitle}>주요 출연진</Text>
-      <Text style={MusicalDetailStyles.subTitle}>시나로 역</Text>
-      <View style={MusicalDetailStyles.actorTextContainer}>
-        <Image
-          source={require('@/assets/images/home/actor1.png')}
-          style={MusicalDetailStyles.actorContainer}
-        />
-        <Text style={MusicalDetailStyles.actorText}>전동석</Text>
-      </View>
 
-      <Text style={{...MusicalDetailStyles.subTitle, marginTop: 20}}>
-        록산 역
-      </Text>
-      <View style={MusicalDetailStyles.actorTextContainer}>
-        <Image
-          source={require('@/assets/images/home/actor1.png')}
-          style={MusicalDetailStyles.actorContainer}
-        />
-        <Text style={MusicalDetailStyles.actorText}>전동석</Text>
+      <View>
+        {groupedActors.map((group, index) => (
+          <View key={index} style={{marginTop: 20}}>
+            <Text style={MusicalDetailStyles.subTitle}>
+              {group.role_name} 역
+            </Text>
+
+            <View style={MusicalDetailStyles.totalContainer}>
+              {group.actors.map((actor, idx) => (
+                <View key={idx} style={MusicalDetailStyles.actorTextContainer}>
+                  <Image
+                    source={{uri: actor.actor_image_url}}
+                    style={MusicalDetailStyles.actorContainer}
+                  />
+                  <Text style={MusicalDetailStyles.actorText}>
+                    {actor.actor_name}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        ))}
       </View>
 
       <Text style={MusicalDetailStyles.infoTitle}>예매 바로가기</Text>
 
-      <View style={MusicalDetailStyles.actorTextContainer}>
-        <Image
-          source={require('@/assets/images/home/interpark.png')}
-          style={MusicalDetailStyles.actorContainer}
-        />
-        <Text style={MusicalDetailStyles.actorText}>인터파크</Text>
+      <View style={MusicalDetailStyles.totalContainer}>
+        <View style={MusicalDetailStyles.urlContainer}>
+          <Image
+            source={require('@/assets/images/home/interpark.png')}
+            style={MusicalDetailStyles.actorContainer}
+          />
+          <Text style={MusicalDetailStyles.actorText}>인터파크</Text>
+        </View>
       </View>
     </View>
   );
