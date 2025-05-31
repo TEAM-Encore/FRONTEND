@@ -1,4 +1,5 @@
 import httpApi, {IResponse} from './http.api';
+import {IReviewRating} from './premium.api';
 
 export type ITicketBook = {
   id: number;
@@ -11,6 +12,7 @@ export type ITicketBook = {
   actors: string[];
   has_review: boolean;
   ticket_image_url: string;
+  rating?: IReviewRating;
 };
 
 export const getTicketBookList = async (dateRange: string) => {

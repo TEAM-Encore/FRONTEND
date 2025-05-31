@@ -7,9 +7,11 @@ import DateUtil from '@/util/DateUtil';
 import React, {useEffect, useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {SvgXml} from 'react-native-svg';
-import styled from 'styled-components/native';
+import styled, {useTheme} from 'styled-components/native';
 
 function LatestMusical() {
+  const theme = useTheme();
+
   const {ticketBookList} = useTicketBookList();
   const [isVisibleTooltip, setVisibleTooltip] = useState(false);
 
@@ -102,14 +104,24 @@ function LatestMusical() {
           <SvgXml xml={HomeIcon.line} style={{alignSelf: 'center'}} />
 
           <TicketTail>
-            {latest.has_review ? (
+            {latest.has_review && latest.rating ? (
               <>
                 <View style={{flexDirection: 'row'}}>
                   {Array.from({length: 5}).map((_, index) => (
-                    <SvgXml key={index} xml={HomeIcon.fullStar} />
+                    <SvgXml
+                      key={index}
+                      color={theme.gray.gray_12}
+                      xml={
+                        latest.rating!.total_rating >= index
+                          ? HomeIcon.fullStar
+                          : HomeIcon.star
+                      }
+                    />
                   ))}
                 </View>
-                <Text style={HomeStyles.textReview}>총평 0</Text>
+                <Text style={HomeStyles.textReview}>
+                  총평 {latest.rating.total_rating}
+                </Text>
               </>
             ) : (
               <>

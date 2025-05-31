@@ -19,18 +19,20 @@ export type IPremiumReview = {
       thorough_analysis_like_count: number;
     };
   };
-  rating: {
-    number_rating: number;
-    story_rating: number;
-    revisit_rating: number;
-    actor_rating: number;
-    performance_rating: number;
-    total_rating: number;
-    rating_review: string;
-  };
+  rating: IReviewRating;
   location: string;
   seat: string;
   actors: string; // 단일 배우 이름. 여러 명일 경우 string[] 고려
+};
+
+export type IReviewRating = {
+  number_rating: number;
+  story_rating: number;
+  revisit_rating: number;
+  actor_rating: number;
+  performance_rating: number;
+  total_rating: number;
+  rating_review: string;
 };
 
 export const getPopularPremiumReviews = async () => {
