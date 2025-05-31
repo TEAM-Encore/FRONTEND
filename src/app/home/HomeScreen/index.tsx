@@ -24,6 +24,7 @@ import {getPopularPremiumReviews} from '@/api/premium.api';
 import {getFeaturedMusical, getUpcomingMusical} from '@/api/musical.api';
 import useAppNavigation from '@/app/useAppNavigation';
 import HomeStyles from './style';
+import HomeCarousel from '@/features/home/modules/HomeCarousel';
 
 type HomeScreenProps = {};
 
@@ -51,13 +52,8 @@ type PopularReviewItem = {
   MusicalDetailScreen: {data: any};
 };
 
-const CARD_WIDTH = 290;
-const PADDING = 6;
-
 const HomeScreen: React.FC<HomeScreenProps> = () => {
-  const [currentIndex, setCurrentIndex] = useState(1);
   const [eventCurrentIndex, setEventCurrentIndex] = useState(1);
-  const bannerRef = useRef<FlatList<any>>(null);
   const eventBannerRef = useRef<FlatList<any>>(null);
   const flatListRef = useRef<FlatList<any>>(null);
   const screenWidth = Dimensions.get('window').width;
@@ -73,63 +69,6 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   >([]);
   const [bestMusicalInfo, setBestMusicalInfo] = useState();
   const [releaseMusicalInfo, setReleaseMusicalInfo] = useState();
-
-  const carouselTicketList = useMemo(
-    () => [
-      {
-        id: 1,
-        image: require('@/assets/images/home/ImageCarouselColor.png'),
-      },
-      {
-        id: 2,
-        image: require('@/assets/images/home/ImageCarousel.png'),
-      },
-      {
-        id: 3,
-        image: require('@/assets/images/home/ImageCarouselColor2.png'),
-      },
-    ],
-    [],
-  );
-
-  const circularCarouselTicketList = useMemo(
-    () => [
-      carouselTicketList[carouselTicketList.length - 1],
-      ...carouselTicketList,
-      carouselTicketList[0],
-    ],
-    [carouselTicketList],
-  );
-
-  const handleMomentumScrollEnd = (
-    event: NativeSyntheticEvent<NativeScrollEvent>,
-  ) => {
-    const contentOffsetX = event.nativeEvent.contentOffset.x;
-    const newIndex = Math.round(contentOffsetX / (CARD_WIDTH + PADDING * 2));
-
-    if (newIndex === 0) {
-      setCurrentIndex(carouselTicketList.length - 1);
-      bannerRef.current?.scrollToIndex({
-        index: circularCarouselTicketList.length - 2,
-        animated: false,
-      });
-    } else if (newIndex === circularCarouselTicketList.length - 1) {
-      setCurrentIndex(0);
-      bannerRef.current?.scrollToIndex({index: 1, animated: false});
-    } else {
-      setCurrentIndex(newIndex - 1);
-    }
-  };
-
-  const Ticket = ({image, bannerId}: {image: any; bannerId: number}) => (
-    <TouchableOpacity
-      style={HomeStyles.containerCarouselTicket}
-      onPress={() =>
-        navigation.navigate('HomeBannerScreen', {bannerId: bannerId})
-      }>
-      <Image style={{width: 290, height: 170}} source={image} />
-    </TouchableOpacity>
-  );
 
   const fetchBestMusicals = async () => {
     try {
@@ -157,30 +96,6 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
       fetchReleaseMusicals();
     }, []),
   );
-
-  // const notReleaseMusicals = [
-  //   {
-  //     id: '1',
-  //     image: require('@/assets/images/home/Musical4.jpeg'),
-  //     title: '엘리자벳',
-  //     date: '24.06.21~24.07.21',
-  //     location: '샤롯데시어터',
-  //   },
-  //   {
-  //     id: '2',
-  //     image: require('@/assets/images/home/Musical5.jpeg'),
-  //     title: '미오 프라텔로',
-  //     date: '24.06.21~24.07.21',
-  //     location: '샤롯데시어터',
-  //   },
-  //   {
-  //     id: '3',
-  //     image: require('@/assets/images/home/Musical6.jpeg'),
-  //     title: '비더슈탄트',
-  //     date: '24.06.21~24.07.21',
-  //     location: '샤롯데시어터',
-  //   },
-  // ];
 
   // 날짜 형식 변환 함수
   function formatDateRange(startDate: Date, endDate: Date) {
@@ -305,44 +220,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
       </View>
 
       <ScrollView>
-        <View style={HomeStyles.containerHeader}>
-          <FlatList
-            ref={bannerRef}
-            data={circularCarouselTicketList}
-            renderItem={({item}) => (
-              <Ticket image={item.image || null} bannerId={item.id} />
-            )}
-            keyExtractor={item => item.id.toString()}
-            initialScrollIndex={2}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            snapToAlignment="center"
-            snapToInterval={CARD_WIDTH + PADDING * 2}
-            decelerationRate="fast"
-            onMomentumScrollEnd={handleMomentumScrollEnd}
-            scrollEventThrottle={64}
-            getItemLayout={(data, index) => ({
-              length: CARD_WIDTH + PADDING * 2,
-              offset:
-                (CARD_WIDTH + PADDING * 2) * index -
-                (screenWidth - (CARD_WIDTH + PADDING * 2)) / 2,
-              index,
-            })}
-          />
-        </View>
-        <View style={HomeStyles.containerPagination}>
-          {carouselTicketList.map((_, index) => (
-            <View
-              key={index}
-              style={[
-                HomeStyles.paginationDot,
-                index === currentIndex
-                  ? HomeStyles.activeDot
-                  : HomeStyles.inactiveDot,
-              ]}
-            />
-          ))}
-        </View>
+        <HomeCarousel />
 
         <View
           style={[HomeStyles.containerTitle, {marginTop: 36}]}
