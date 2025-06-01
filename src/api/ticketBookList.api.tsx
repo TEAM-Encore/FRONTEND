@@ -1,6 +1,8 @@
 import httpApi from './http.api';
 
-export const getTicketBookList = (dateRange: string) => {
+export type ITicketBookListFilter = 'NULL' | 'WEEK' | 'MONTH' | 'YEAR';
+
+export const getTicketBookList = (dateRange: ITicketBookListFilter) => {
   return httpApi.get(`/api/v1/ticket/list`, {
     params: {dateRange},
   });
