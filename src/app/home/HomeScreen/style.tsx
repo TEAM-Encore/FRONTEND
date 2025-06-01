@@ -107,7 +107,7 @@ const HomeStyles = StyleSheet.create({
   },
   containerTicketText: {
     paddingHorizontal: 16,
-    paddingVertical: 17,
+    paddingVertical: 20,
   },
   textTicketTitle: {
     ...subhead03,

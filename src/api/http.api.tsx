@@ -10,3 +10,16 @@ const httpApi = axios.create({
 });
 
 export default httpApi;
+
+export type IResponse<T> = {
+  time_stamp: string;
+  message: 'SUCCESS';
+  code: 200;
+  data: T;
+};
+
+export type IErrorResponse = {
+  time_stamp: string;
+  message: string;
+  code: number;
+};

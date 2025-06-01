@@ -1,11 +1,31 @@
-import httpApi from './http.api';
+import httpApi, {IResponse} from './http.api';
+import {IReviewRating} from './premium.api';
+
+export type ITicketBook = {
+  id: number;
+  user_id: number;
+  musical_title: string;
+  series: string;
+  viewed_date: string; // ISO 형식의 날짜 문자열
+  location: string;
+  seat: string;
+  actors: string[];
+  has_review: boolean;
+  ticket_image_url: string;
+  rating?: IReviewRating;
+};
 
 export type ITicketBookListFilter = 'NULL' | 'WEEK' | 'MONTH' | 'YEAR';
 
-export const getTicketBookList = (dateRange: ITicketBookListFilter) => {
-  return httpApi.get(`/api/v1/ticket/list`, {
-    params: {dateRange},
-  });
+export const getTicketBookList = async (dateRange: ITicketBookListFilter) => {
+  const {data} = await httpApi.get<IResponse<ITicketBook[]>>(
+    `/api/v1/ticket/list`,
+    {
+      params: {dateRange},
+    },
+  );
+
+  return data.data;
 };
 
 export const createTicket = (
