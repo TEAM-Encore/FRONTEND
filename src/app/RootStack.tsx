@@ -11,6 +11,7 @@ import TicketDetailScreen from './ticketBook/TicketDetailScreen';
 import PremiumOthersScreen from './premium/PremiumOthersScreen';
 import PremiumWriteScreen from './premium/PremiumWriteScreen';
 import PremiumMyScreen from './premium/PremiumMyScreen';
+import {IMusical} from '@/api/musical.api';
 
 export type RootStackParamList = {
   AuthStack: undefined;
@@ -21,7 +22,7 @@ export type RootStackParamList = {
   HomeSearchScreen: undefined;
   HomeSearchResultScreen: {postData: any; text: string};
 
-  MusicalDetailScreen: {data: any};
+  MusicalDetailScreen: {data: IMusical};
 
   PremiumWriteScreen: undefined;
   PremiumOthersScreen: undefined;

@@ -13,19 +13,23 @@ function FeaturedMusicals() {
   const {featuredMusicals} = useFeaturedMusicals();
 
   const renderItem: ListRenderItem<IMusical> = useCallback(({item}) => {
+    const handlePress = () => {
+      navigate('MusicalDetailScreen', {data: item});
+    };
+
     return (
       <View
         style={{
           flexDirection: 'column',
           width: 125,
         }}>
-        <TouchableOpacity
-          onPress={() => navigate('MusicalDetailScreen', {data: item})}>
+        <TouchableOpacity onPress={handlePress}>
           <Image
             style={HomeStyles.imageMusical}
             source={{uri: item.image_url}}
           />
         </TouchableOpacity>
+
         <Text
           style={HomeStyles.textMusicalTitle}
           numberOfLines={1}

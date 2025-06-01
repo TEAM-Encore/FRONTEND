@@ -1,22 +1,42 @@
 import HomeStyles from '@/app/home/HomeScreen/style';
 import React, {useCallback} from 'react';
-import {FlatList, Image, ListRenderItem, Text, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  ListRenderItem,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import styled from 'styled-components/native';
 import useUpcomingMusicals from '../../hooks/useUpcomingMusicals';
 import {IMusical} from '@/api/musical.api';
 import DateUtil from '@/util/DateUtil';
+import useAppNavigation from '@/app/useAppNavigation';
 
 function UpcomingMusicals() {
+  const {navigate} = useAppNavigation();
+
   const {upcomingMusicals} = useUpcomingMusicals();
 
   const renderItem: ListRenderItem<IMusical> = useCallback(({item}) => {
+    const handlePress = () => {
+      navigate('MusicalDetailScreen', {data: item});
+    };
+
     return (
       <View
         style={{
           flexDirection: 'column',
           width: 125,
         }}>
-        <Image style={HomeStyles.imageMusical} source={{uri: item.image_url}} />
+        <TouchableOpacity onPress={handlePress}>
+          <Image
+            style={HomeStyles.imageMusical}
+            source={{uri: item.image_url}}
+          />
+        </TouchableOpacity>
+
         <Text
           style={HomeStyles.textMusicalTitle}
           numberOfLines={1}
