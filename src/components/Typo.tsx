@@ -4,7 +4,7 @@ const BaseText = styled.Text.attrs({
   lineBreakStrategyIOS: 'hangul-word',
   textBreakStrategy: 'balanced',
 })`
-  color: ${props => props.theme.system.black};
+  color: ${props => props.theme.gray.gray_12};
 `;
 
 // --- Title & Display ---

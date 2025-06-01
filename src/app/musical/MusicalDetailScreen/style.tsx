@@ -11,7 +11,6 @@ const MusicalDetailStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 40,
-    position: 'relative',
   },
   image: {
     width: 168,
@@ -21,7 +20,7 @@ const MusicalDetailStyles = StyleSheet.create({
   chipContainer: {
     position: 'absolute',
     top: 8,
-    left: 210,
+    right: 8,
     zIndex: 1,
     backgroundColor: Colors.sub_02,
     width: 53,
