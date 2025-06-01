@@ -1,12 +1,15 @@
 import HomeStyles from '@/app/home/HomeScreen/style';
 import IconLike from '@/assets/icons/home/IconLike';
 import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity} from 'react-native';
 import styled from 'styled-components/native';
 import usePopularPremiumReviews from '../../hooks/usePopularPremiumReviews';
 import Typo from '@/components/Typo';
+import useAppNavigation from '@/app/useAppNavigation';
 
 function HomePremiumReviews() {
+  const {navigate} = useAppNavigation();
+
   const {popularPremiumReviews} = usePopularPremiumReviews();
 
   const reviews = popularPremiumReviews.slice(0, 3);
@@ -16,7 +19,7 @@ function HomePremiumReviews() {
       <Header>
         <Text style={HomeStyles.textTitle}>프리미엄 리뷰</Text>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigate('PremiumScreen')}>
           <Text style={HomeStyles.textWriteReview}>전체보기 {'>'}</Text>
         </TouchableOpacity>
       </Header>
