@@ -32,6 +32,7 @@
     "react-native": "^0.76.1",
     "react-native-asset": "^2.1.1",
     "react-native-calendars": "^1.1307.0",
+    "react-native-date-picker": "^5.0.12",
     "react-native-fonts": "^0.0.0",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.22.0",
@@ -46,6 +47,7 @@
     "react-native-svg": "^15.8.0",
     "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "^3.5.2",
+    "react-native-uuid": "^2.0.3",
     "react-native-vector-icons": "^10.2.0",
     "styled-components": "^6.1.18",
     "zustand": "^5.0.1"

@@ -8560,6 +8560,11 @@ react-native-calendars@^1.1307.0:
   optionalDependencies:
     moment "^2.29.4"
 
+react-native-date-picker@^5.0.12:
+  version "5.0.12"
+  resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-5.0.12.tgz#12540b6a58500811ee7e4fc0244e3accc7cca9c1"
+  integrity sha512-R/mUnCKhcuxbhKPFwYdBQCxQt9HHLqpM4ruRUqlcBjiUZ3N2wdnwOMyc888Ps8qp8e7v29PrDHtUlG8LPuFn9w==
+
 react-native-fonts@^0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/react-native-fonts/-/react-native-fonts-0.0.0.tgz#11637d37075755238c0d7215d316a9209464e0b9"
@@ -8690,6 +8695,11 @@ react-native-tab-view@^3.5.2:
   integrity sha512-nE5WqjbeEPsWQx4mtz81QGVvgHRhujTNIIZiMCx3Bj6CBFDafbk7XZp9ocmtzXUQaZ4bhtVS43R4FIiR4LboJw==
   dependencies:
     use-latest-callback "^0.1.5"
+
+react-native-uuid@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-uuid/-/react-native-uuid-2.0.3.tgz#f85f8a8d68e52e3f1c18ba0f02ec7776f9d4a0da"
+  integrity sha512-f/YfIS2f5UB+gut7t/9BKGSCYbRA9/74A5R1MDp+FLYsuS+OSWoiM/D8Jko6OJB6Jcu3v6ONuddvZKHdIGpeiw==
 
 react-native-vector-icons@^10.2.0:
   version "10.2.0"
