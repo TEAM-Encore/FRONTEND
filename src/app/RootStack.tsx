@@ -29,7 +29,7 @@ export type RootStackParamList = {
   PremiumMyScreen: {reviewId: number};
 
   AddTicketScreen: undefined;
-  TicketDetailScreen: undefined;
+  TicketDetailScreen: {id: number};
 
   //   WriteScreen: {
   //     setPostData: React.Dispatch<React.SetStateAction<PostData | null>>;

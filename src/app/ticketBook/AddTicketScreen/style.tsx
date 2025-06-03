@@ -11,7 +11,6 @@ const AddTicketStyles = StyleSheet.create({
   },
   textProgress: {
     ...body01,
-    marginTop: 29,
     color: Colors.gray_07,
   },
   textTitle: {
@@ -19,7 +18,6 @@ const AddTicketStyles = StyleSheet.create({
     fontFamily: 'Pretendard-SemiBold',
     paddingTop: 8,
     color: Colors.gray_12,
-    marginBottom: 33,
   },
 
   // step 페이지에서만 사용
@@ -89,18 +87,15 @@ const AddTicketStyles = StyleSheet.create({
   textSubTitle: {
     ...subhead02,
     color: Colors.gray_10,
-    marginBottom: 12,
   },
   containerTime: {
-    width: 83,
-    height: 37,
+    alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.gray_03,
     padding: 10,
     borderRadius: 4,
-    marginBottom: 32,
   },
   textCategory: {
     ...body01,
@@ -113,7 +108,6 @@ const AddTicketStyles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: Colors.gray_03,
     padding: 10,
-    marginBottom: 32,
   },
   textInputSeat: {
     ...body01,
@@ -123,6 +117,7 @@ const AddTicketStyles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: Colors.gray_03,
     paddingHorizontal: 10,
+    textAlign: 'center',
   },
   textSeat: {
     ...body01,
@@ -165,7 +160,6 @@ const AddTicketStyles = StyleSheet.create({
     ...body01,
     color: Colors.gray_08,
     marginTop: 8,
-    marginBottom: 44,
   },
   containerDashed: {
     width: '100%',
@@ -189,14 +183,12 @@ const AddTicketStyles = StyleSheet.create({
     alignItems: 'center',
   },
   textAddImage: {
-    ...body01,
-    color: Colors.gray_08,
-    marginLeft: 4,
+    ...subhead02,
+    color: Colors.gray_05,
   },
   textCheckBox: {
     ...caption,
     color: Colors.gray_08,
-    marginLeft: 6,
   },
   imageTicket: {
     width: '100%',

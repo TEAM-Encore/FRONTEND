@@ -17,6 +17,16 @@ export type ITicketBook = {
 
 export type ITicketBookListFilter = 'NULL' | 'WEEK' | 'MONTH' | 'YEAR';
 
+export type CreateTicketParams = {
+  musical_id: number;
+  user_id: number;
+  viewed_date: string;
+  show_time: string;
+  seat: string;
+  actor_ids: number[];
+  ticket_image_url: string;
+};
+
 export const getTicketBookList = async (dateRange: ITicketBookListFilter) => {
   const {data} = await httpApi.get<IResponse<ITicketBook[]>>(
     `/api/v1/ticket/list`,
@@ -28,23 +38,13 @@ export const getTicketBookList = async (dateRange: ITicketBookListFilter) => {
   return data.data;
 };
 
-export const createTicket = (
-  musical_id: number,
-  user_id: number,
-  viewed_date: string,
-  show_time: string,
-  seat: string,
-  actors: {id: number; name: string; actor_image_url: string}[],
-  ticket_image_url: string,
-) => {
-  const requestBody = {
-    musical_id,
-    user_id,
-    viewed_date,
-    show_time,
-    seat,
-    actors,
-    ticket_image_url,
-  };
-  return httpApi.post(`/api/v1/ticket`, requestBody);
+export const createTicket = async (params: CreateTicketParams) => {
+  const {...body} = params;
+
+  const {data} = await httpApi.post<IResponse<ITicketBook>>(
+    `/api/v1/ticket`,
+    body,
+  );
+
+  return data.data;
 };

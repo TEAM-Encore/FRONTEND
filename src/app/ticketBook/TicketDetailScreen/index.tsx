@@ -14,10 +14,12 @@ import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
 import TicketDetailStyles from './style';
 import HomeStyles from '@/app/home/HomeScreen/style';
+import useAppRoute from '@/app/useAppRoute';
+import useAppNavigation from '@/app/useAppNavigation';
 
-export default function TicketDetailScreen({route}: {route: any}) {
-  const {ticket} = route.params;
-  const navigation = useNavigation();
+export default function TicketDetailScreen() {
+  const {id} = useAppRoute('TicketDetailScreen').params;
+  const navigation = useAppNavigation();
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -41,7 +43,7 @@ export default function TicketDetailScreen({route}: {route: any}) {
           </TouchableOpacity>
         </View>
 
-        <View style={TicketDetailStyles.containerTicketDetail}>
+        {/* <View style={TicketDetailStyles.containerTicketDetail}>
           <View style={TicketDetailStyles.containerTicket}>
             <Image style={TicketDetailStyles.containerTicketImage} />
             <View style={HomeStyles.containerTicketText}>
@@ -114,7 +116,7 @@ export default function TicketDetailScreen({route}: {route: any}) {
               style={TicketDetailStyles.iconArrowRight}
             />
           </View>
-        </View>
+        </View> */}
       </ScrollView>
     </SafeAreaView>
   );
