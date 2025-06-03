@@ -42,8 +42,10 @@ function Dialog({
   return (
     <Modal isOpen={isOpen} close={close} unmount={unmount}>
       <Root>
-        <Title>{title}</Title>
-        {desc && <Desc>{desc}</Desc>}
+        <Head>
+          <Title>{title}</Title>
+          {desc && <Desc>{desc}</Desc>}
+        </Head>
 
         <Body>
           <ConfirmBtn onPress={handleConfirm}>
@@ -68,6 +70,10 @@ const Root = styled.View`
   gap: 13px;
   border-radius: 8px;
   background-color: ${p => p.theme.system.white};
+`;
+
+const Head = styled.View`
+  gap: 6px;
 `;
 
 const Title = styled(Typo.Subhead03)`
