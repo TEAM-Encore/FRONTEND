@@ -16,6 +16,7 @@ import useCreateTicket from '@/features/ticket_book/hooks/useCreateTicket';
 import useAddTicketStore from '@/features/ticket_book/stores/useAddTicketStore';
 import {useShallow} from 'zustand/react/shallow';
 import uploadImageByPresignedUrl from '@/util/uploadImageByPresignedUrl';
+import {formatSeats} from '@/features/ticket_book/utils/seats';
 
 export default function AddTicketScreen() {
   const {goBack, replace} = useAppNavigation();
@@ -66,7 +67,7 @@ export default function AddTicketScreen() {
         musical_id: musical.id,
         viewed_date: viewedDate,
         show_time: showTime,
-        seat: seats.join(' '),
+        seat: formatSeats(seats),
         actor_ids: actors.map(a => a.id),
         ticket_image_url: ticketUrl,
       },

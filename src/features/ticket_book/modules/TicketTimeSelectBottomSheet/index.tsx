@@ -16,7 +16,7 @@ type Props = {
   onConfirm: (date: Date) => void;
 };
 
-function AddTicketTimeSelectBottomSheet({
+function TicketTimeSelectBottomSheet({
   isOpen,
   close,
   unmount,
@@ -61,7 +61,7 @@ function AddTicketTimeSelectBottomSheet({
   );
 }
 
-export default AddTicketTimeSelectBottomSheet;
+export default TicketTimeSelectBottomSheet;
 
 const Root = styled.View`
   border-top-left-radius: 25px;

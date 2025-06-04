@@ -30,7 +30,7 @@ const initialState: State = {
   musical: null,
   viewedDate: '',
   showTime: '',
-  seats: Array.from({length: 4}, () => ''),
+  seats: Array.from({length: 3}, () => ''),
   actors: [],
   ticketImageUrl: '',
 };

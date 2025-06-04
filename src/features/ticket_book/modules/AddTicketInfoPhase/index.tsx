@@ -12,10 +12,10 @@ import AddTicketStyles from '@/app/ticketBook/AddTicketScreen/style';
 import styled from 'styled-components/native';
 import Typo from '@/components/Typo';
 import {overlay} from 'overlay-kit';
-import AddTicketTimeSelectBottomSheet from '../AddTicketTimeSelectBottomSheet';
 import TimeUtil from '@/util/TimeUtil';
 import useAddTicketStore from '../../stores/useAddTicketStore';
 import {useShallow} from 'zustand/react/shallow';
+import TicketTimeSelectBottomSheet from '../TicketTimeSelectBottomSheet';
 
 type Props = {
   onConfirm: () => void;
@@ -31,11 +31,11 @@ export default function AddTicketInfoPhase({onConfirm}: Props) {
       s.setSeats,
     ]),
   );
-  const disabled = !musical || !time || !seats.length;
+  const disabled = !musical || !time || seats.some(s => !s);
 
   const handlePressTime = () => {
     overlay.open(props => (
-      <AddTicketTimeSelectBottomSheet
+      <TicketTimeSelectBottomSheet
         {...props}
         initial={TimeUtil.toDay(time).toDate()}
         onConfirm={date => setTime(TimeUtil.format(date))}
@@ -95,7 +95,8 @@ export default function AddTicketInfoPhase({onConfirm}: Props) {
                 }}
                 value={seats[0]}
               />
-              <Text style={AddTicketStyles.textSeat}>층</Text>
+              <Text style={AddTicketStyles.textSeat}>구역</Text>
+
               <TextInput
                 style={AddTicketStyles.textInputSeat}
                 onChangeText={text => {
@@ -103,21 +104,14 @@ export default function AddTicketInfoPhase({onConfirm}: Props) {
                 }}
                 value={seats[1]}
               />
-              <Text style={AddTicketStyles.textSeat}>구역</Text>
+              <Text style={AddTicketStyles.textSeat}>열</Text>
+
               <TextInput
                 style={AddTicketStyles.textInputSeat}
                 onChangeText={text => {
                   handleSeatChange(2, text);
                 }}
                 value={seats[2]}
-              />
-              <Text style={AddTicketStyles.textSeat}>열</Text>
-              <TextInput
-                style={AddTicketStyles.textInputSeat}
-                onChangeText={text => {
-                  handleSeatChange(3, text);
-                }}
-                value={seats[3]}
               />
               <Text style={AddTicketStyles.textSeat}>번</Text>
             </View>
