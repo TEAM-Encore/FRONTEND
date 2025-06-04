@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   Image,
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
-import debounce from 'lodash.debounce';
+import _ from 'lodash';
 import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
 import AddTicketStyles from '@/app/ticketBook/AddTicketScreen/style';
 import styled from 'styled-components/native';
@@ -27,18 +27,21 @@ export default function AddTicketActorsPhase({onConfirm}: Props) {
   const removeActor = useAddTicketStore(s => s.removeActor);
 
   const [input, setInput] = useState('');
-  const {result, refetch, isLoading} = useActorSearch(input);
+  const {result, refetch} = useActorSearch(input);
   const isVisibleSearchResult = result.length > 0 && !!input;
   const isVisibleSelectedActors = !isVisibleSearchResult && actors.length > 0;
 
-  const executeSearch = debounce(() => {
-    if (!input) return;
-    refetch();
-  }, 300);
+  const executeSearch = useCallback(
+    _.debounce((input: string) => {
+      if (!input.trim()) return;
+      refetch();
+    }, 300),
+    [],
+  );
 
   const handleInputChange = (text: string) => {
     setInput(text);
-    executeSearch();
+    executeSearch(text);
   };
 
   const selectActor = (actor: IActorSearch) => {
