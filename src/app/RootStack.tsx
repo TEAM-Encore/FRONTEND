@@ -81,7 +81,7 @@ function RootStack() {
         name="EditTicketScreen"
         component={EditTicketScreen}
         options={{
-          // gestureEnabled: false,
+          gestureEnabled: false,
           cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
         }}
       />
