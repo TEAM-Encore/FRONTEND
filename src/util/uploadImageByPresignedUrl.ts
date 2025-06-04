@@ -1,5 +1,4 @@
 import {PostPresignedUrl} from '@/api/image.api';
-import axios from 'axios';
 import generateId from './generateId';
 
 async function getPresignedUrl(name: string) {
@@ -39,10 +38,12 @@ export default async function uploadImageByPresignedUrl(params: Params) {
     ]);
     if (!presignedUrl || !blob) return;
 
-    await axios.put(presignedUrl, blob, {
+    await fetch(presignedUrl, {
+      method: 'PUT',
       headers: {
         'Content-Type': type,
       },
+      body: blob,
     });
 
     const uploadedUrl = presignedUrl.split('?')[0];
