@@ -1,17 +1,12 @@
-import HomeStyles from '@/app/home/HomeScreen/style';
-import {HomeIcon} from '@/assets/icons/home/HomeIcon';
 import ToolTipModal from '@/components/alertModal/ToolTipModal';
 import Typo from '@/components/Typo';
 import useTicketBookList from '@/features/ticket_book/hooks/useTicketBookList';
-import DateUtil from '@/util/DateUtil';
+import TicketBookItem from '@/features/ticket_book/modules/TicketBookItem';
 import React, {useEffect, useState} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
-import {SvgXml} from 'react-native-svg';
-import styled, {useTheme} from 'styled-components/native';
+import {TouchableOpacity} from 'react-native';
+import styled from 'styled-components/native';
 
 function LatestMusical() {
-  const theme = useTheme();
-
   const {ticketBookList} = useTicketBookList();
   const [isVisibleTooltip, setVisibleTooltip] = useState(false);
 
@@ -52,92 +47,7 @@ function LatestMusical() {
         />
       )}
 
-      <View style={{alignItems: 'center'}}>
-        <TicketSection>
-          <TicketBody>
-            <View style={HomeStyles.containerTicketText}>
-              <Text
-                style={HomeStyles.textTicketTitle}
-                numberOfLines={1}
-                ellipsizeMode="tail">
-                {latest.musical_title}
-              </Text>
-              <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
-                <SvgXml xml={HomeIcon.season} />
-                <Text
-                  style={HomeStyles.textTicketDateActor}
-                  numberOfLines={1}
-                  ellipsizeMode="tail">
-                  {latest.series}
-                </Text>
-              </View>
-              <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
-                <SvgXml xml={HomeIcon.date} />
-                <Text
-                  style={HomeStyles.textTicketDateActor}
-                  numberOfLines={1}
-                  ellipsizeMode="tail">
-                  {DateUtil.formatDot(latest.viewed_date)}
-                </Text>
-              </View>
-              <View style={[HomeStyles.containerRow, {marginBottom: 4}]}>
-                <SvgXml xml={HomeIcon.place} />
-                <Text
-                  style={HomeStyles.textTicketDateActor}
-                  numberOfLines={1}
-                  ellipsizeMode="tail">
-                  {latest.location} {latest.seat}
-                </Text>
-              </View>
-              <View style={HomeStyles.containerRow}>
-                <SvgXml xml={HomeIcon.actor} />
-                <Text
-                  style={HomeStyles.textTicketDateActor}
-                  numberOfLines={1}
-                  ellipsizeMode="tail">
-                  {latest.actors}
-                </Text>
-              </View>
-            </View>
-          </TicketBody>
-
-          <SvgXml xml={HomeIcon.line} style={{alignSelf: 'center'}} />
-
-          <TicketTail>
-            {latest.has_review && latest.rating ? (
-              <>
-                <View style={{flexDirection: 'row'}}>
-                  {Array.from({length: 5}).map((_, index) => (
-                    <SvgXml
-                      key={index}
-                      color={theme.gray.gray_12}
-                      xml={
-                        latest.rating!.total_rating >= index
-                          ? HomeIcon.fullStar
-                          : HomeIcon.star
-                      }
-                    />
-                  ))}
-                </View>
-                <Text style={HomeStyles.textReview}>
-                  총평 {latest.rating.total_rating}
-                </Text>
-              </>
-            ) : (
-              <>
-                <View style={{flexDirection: 'row'}}>
-                  {Array.from({length: 5}).map((_, index) => (
-                    <SvgXml key={index} xml={HomeIcon.star} />
-                  ))}
-                </View>
-                <Text style={HomeStyles.textReview}>
-                  아직 남겨주신{'\n'}리뷰가 없어요
-                </Text>
-              </>
-            )}
-          </TicketTail>
-        </TicketSection>
-      </View>
+      <TicketBookItem ticket={latest} />
     </Root>
   );
 }
@@ -157,23 +67,4 @@ const Header = styled.View`
 
 const WriteReview = styled(Typo.Body01)`
   color: ${p => p.theme.gray.gray_08};
-`;
-
-const TicketSection = styled.View`
-  flex-direction: row;
-`;
-
-const TicketBody = styled.View`
-  flex: 1;
-  border-radius: 8px;
-  background-color: ${p => p.theme.gray.gray_03};
-`;
-
-const TicketTail = styled.View`
-  width: 84px;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  border-radius: 8px;
-  background-color: ${p => p.theme.system.sub_03};
 `;
