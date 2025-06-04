@@ -43,7 +43,7 @@ export default function AddTicketScreen() {
   const createTicket = useCreateTicket();
 
   useEffect(() => {
-    clear();
+    return () => clear();
   }, []);
 
   const handleBack = () => {
