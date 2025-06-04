@@ -7,12 +7,15 @@ import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import TicketBookStyles from '@/app/ticketBook/TicketBookScreen/style';
 import {overlay} from 'overlay-kit';
 import TicketBookFilterBottomSheet from '../TicketBookFilterBottomSheet';
-import {ITicketBookListFilter} from '@/api/ticketBookList.api';
+import {ITicketBook, ITicketBookListFilter} from '@/api/ticketBookList.api';
 import {TICKET_BOOK_FILTER_LIST} from '../../common/constants';
+import useTicketBookList from '../../hooks/useTicketBookList';
+import {useRefresh} from '@react-native-community/hooks';
 
 function TicketBookList() {
   const [filter, setFilter] = useState<ITicketBookListFilter>('NULL');
-  const tickets = Array.from({length: 10});
+  const {ticketBookList, refetch} = useTicketBookList(filter);
+  const {isRefreshing, onRefresh} = useRefresh(refetch);
 
   const handleFilterPress = () => {
     overlay.open(props => (
@@ -27,8 +30,8 @@ function TicketBookList() {
   const getFilterLabel = (value: ITicketBookListFilter) =>
     TICKET_BOOK_FILTER_LIST.find(i => i.value === value)?.label ?? '기간 설정';
 
-  const renderItem: ListRenderItem<any> = useCallback(
-    ({item}) => <TicketBookItem title="위키드" />,
+  const renderItem: ListRenderItem<ITicketBook> = useCallback(
+    ({item}) => <TicketBookItem ticket={item} />,
     [],
   );
 
@@ -44,10 +47,13 @@ function TicketBookList() {
       </Header>
 
       <FlatList
-        data={tickets}
+        data={ticketBookList}
         renderItem={renderItem}
+        refreshing={isRefreshing}
+        onRefresh={onRefresh}
         ItemSeparatorComponent={() => <Gap />}
         contentContainerStyle={{padding: 20}}
+        keyExtractor={item => item.id.toString()}
       />
     </Root>
   );
