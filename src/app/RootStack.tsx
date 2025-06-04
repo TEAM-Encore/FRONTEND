@@ -1,4 +1,7 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  CardStyleInterpolators,
+  createStackNavigator,
+} from '@react-navigation/stack';
 import React from 'react';
 import AuthStack from './auth/AuthStack';
 import MainTabs from './MainTabs';
@@ -12,6 +15,7 @@ import PremiumOthersScreen from './premium/PremiumOthersScreen';
 import PremiumWriteScreen from './premium/PremiumWriteScreen';
 import PremiumMyScreen from './premium/PremiumMyScreen';
 import {IMusical} from '@/api/musical.api';
+import EditTicketScreen from './ticketBook/EditTicketScreen';
 
 export type RootStackParamList = {
   AuthStack: undefined;
@@ -30,6 +34,7 @@ export type RootStackParamList = {
 
   AddTicketScreen: undefined;
   TicketDetailScreen: {id: number};
+  EditTicketScreen: {id: number};
 
   //   WriteScreen: {
   //     setPostData: React.Dispatch<React.SetStateAction<PostData | null>>;
@@ -69,8 +74,17 @@ function RootStack() {
         component={PremiumOthersScreen}
       />
       <Stack.Screen name="PremiumWriteScreen" component={PremiumWriteScreen} />
+
       <Stack.Screen name="AddTicketScreen" component={AddTicketScreen} />
       <Stack.Screen name="TicketDetailScreen" component={TicketDetailScreen} />
+      <Stack.Screen
+        name="EditTicketScreen"
+        component={EditTicketScreen}
+        options={{
+          // gestureEnabled: false,
+          cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
+        }}
+      />
     </Stack.Navigator>
   );
 }

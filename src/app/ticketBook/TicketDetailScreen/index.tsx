@@ -1,49 +1,22 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
-import {SvgXml} from 'react-native-svg';
-import {useNavigation} from '@react-navigation/native';
-import {HomeIcon} from '@/assets/icons/home/HomeIcon';
-import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
-import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
+import {SafeAreaView, ScrollView} from 'react-native';
 import TicketDetailStyles from './style';
-import HomeStyles from '@/app/home/HomeScreen/style';
 import useAppRoute from '@/app/useAppRoute';
-import useAppNavigation from '@/app/useAppNavigation';
+import TicketBookDetails from '@/features/ticket_book/modules/TicketBookDetails';
+import TicketBookDetailsHeader from '@/features/ticket_book/modules/TicketBookDetailsHeader';
 
 export default function TicketDetailScreen() {
   const {id} = useAppRoute('TicketDetailScreen').params;
-  const navigation = useAppNavigation();
-
-  const handleGoBack = () => {
-    navigation.goBack();
-  };
 
   return (
     <SafeAreaView style={TicketDetailStyles.container}>
-      <ScrollView>
-        <View style={TicketDetailStyles.containerHeader}>
-          <TouchableOpacity
-            style={TicketDetailStyles.iconGoBack}
-            onPress={() => handleGoBack()}>
-            <SvgXml style={{margin: 7.75}} xml={PostIcon.arrowLeft} />
-          </TouchableOpacity>
-          <Text style={TicketDetailStyles.textTitle}>티켓 내역</Text>
-          <TouchableOpacity style={{position: 'absolute', right: 65}}>
-            <SvgXml xml={TicketBookIcon.edit} />
-          </TouchableOpacity>
-          <TouchableOpacity style={{position: 'absolute', right: 25}}>
-            <SvgXml xml={TicketBookIcon.delete} />
-          </TouchableOpacity>
-        </View>
+      <TicketBookDetailsHeader ticketId={id} />
 
-        {/* <View style={TicketDetailStyles.containerTicketDetail}>
+      <ScrollView contentContainerStyle={{padding: 20}}>
+        <TicketBookDetails ticketId={id} />
+      </ScrollView>
+
+      {/* <View style={TicketDetailStyles.containerTicketDetail}>
           <View style={TicketDetailStyles.containerTicket}>
             <Image style={TicketDetailStyles.containerTicketImage} />
             <View style={HomeStyles.containerTicketText}>
@@ -117,7 +90,6 @@ export default function TicketDetailScreen() {
             />
           </View>
         </View> */}
-      </ScrollView>
     </SafeAreaView>
   );
 }
