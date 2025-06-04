@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import debounce from 'lodash.debounce';
+import _ from 'lodash';
 import {SvgXml} from 'react-native-svg';
 import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
 import AddTicketStyles from '@/app/ticketBook/AddTicketScreen/style';
@@ -24,16 +24,19 @@ export default function AddTicketMusicalPhase({onSelect}: Props) {
   const setMusical = useAddTicketStore(s => s.setMusical);
 
   const [musicalTitle, setMusicalTitle] = useState(musical?.title ?? '');
-  const {result, isLoading, refetch} = useMusicalSearch(musicalTitle.trim());
+  const {result, refetch} = useMusicalSearch(musicalTitle.trim());
 
-  const executeSearch = debounce(() => {
-    if (!musicalTitle.trim()) return;
-    refetch();
-  }, 300);
+  const debouncedSearch = useCallback(
+    _.debounce((title: string) => {
+      if (!title.trim()) return;
+      refetch();
+    }, 300),
+    [],
+  );
 
   const handleInputChange = (text: string) => {
     setMusicalTitle(text);
-    executeSearch();
+    debouncedSearch(text);
   };
 
   const selectMusical = (musical: IMusicalSearch) => {
