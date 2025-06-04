@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {TouchableOpacity, View, Text} from 'react-native';
+import {Text} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import HomeBannerStyles from '@/app/home/HomeBannerScreen/styles';
@@ -18,8 +18,12 @@ import {useShallow} from 'zustand/react/shallow';
 import uploadImageByPresignedUrl from '@/util/uploadImageByPresignedUrl';
 import {formatSeats} from '@/features/ticket_book/utils/seats';
 
+import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
+import useDialog from '@/features/core/hooks/useDialog';
+
 export default function AddTicketScreen() {
   const {goBack, replace} = useAppNavigation();
+  const {showDialog} = useDialog();
 
   const [musical, viewedDate, showTime, seats, actors, ticketImageUrl] =
     useAddTicketStore(
@@ -50,6 +54,15 @@ export default function AddTicketScreen() {
     if (currentPhase !== 'musical') return prevPhase();
 
     goBack();
+  };
+
+  const handleClose = () => {
+    showDialog({
+      title: '내역 추가를 그만할까요?',
+      desc: '중간에 나갈 시 작성한 내용은 삭제됩니다.',
+      confirmLabel: '그만하기',
+      onConfirm: goBack,
+    });
   };
 
   const handleConfirm = async () => {
@@ -86,15 +99,19 @@ export default function AddTicketScreen() {
 
   return (
     <Screen>
-      <View style={HomeBannerStyles.containerHeader}>
-        <TouchableOpacity
-          style={HomeBannerStyles.iconGoBack}
-          onPress={handleBack}>
-          <SvgXml style={{margin: 7.75}} xml={PostIcon.arrowLeft} />
-        </TouchableOpacity>
+      <Header>
+        <MenuBtn onPress={handleBack}>
+          <SvgXml xml={PostIcon.arrowLeft} />
+        </MenuBtn>
 
-        <Text style={HomeBannerStyles.textTitle}>내역 추가하기</Text>
-      </View>
+        <TitleContainer>
+          <Text style={HomeBannerStyles.textTitle}>내역 추가하기</Text>
+        </TitleContainer>
+
+        <MenuBtn onPress={handleClose}>
+          <SvgXml xml={TicketBookIcon.close} />
+        </MenuBtn>
+      </Header>
 
       <Show name="musical">
         <AddTicketMusicalPhase onSelect={handleConfirm} />
@@ -122,3 +139,24 @@ export default function AddTicketScreen() {
 const Screen = styled(SafeAreaView)`
   flex: 1;
 `;
+
+const Header = styled.View`
+  height: 62px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 20px;
+`;
+
+const TitleContainer = styled.View`
+  z-index: -10;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  justify-content: center;
+  align-items: center;
+`;
+
+const MenuBtn = styled.TouchableOpacity.attrs({hitSlop: 12})``;
