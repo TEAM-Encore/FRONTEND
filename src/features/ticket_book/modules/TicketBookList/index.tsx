@@ -1,5 +1,10 @@
 import React, {useCallback, useState} from 'react';
-import {FlatList, ListRenderItem, Text} from 'react-native';
+import {
+  FlatList,
+  ListRenderItem,
+  Text,
+  useWindowDimensions,
+} from 'react-native';
 import TicketBookItem from '../TicketBookItem';
 import styled from 'styled-components/native';
 import {SvgXml} from 'react-native-svg';
@@ -11,8 +16,10 @@ import {ITicketBook, ITicketBookListFilter} from '@/api/ticketBookList.api';
 import {TICKET_BOOK_FILTER_LIST} from '../../common/constants';
 import useTicketBookList from '../../hooks/useTicketBookList';
 import {useRefresh} from '@react-native-community/hooks';
+import Typo from '@/components/Typo';
 
 function TicketBookList() {
+  const {height} = useWindowDimensions();
   const [filter, setFilter] = useState<ITicketBookListFilter>('NULL');
   const {ticketBookList, refetch} = useTicketBookList(filter);
   const {isRefreshing, onRefresh} = useRefresh(refetch);
@@ -52,6 +59,11 @@ function TicketBookList() {
         refreshing={isRefreshing}
         onRefresh={onRefresh}
         ItemSeparatorComponent={() => <Gap />}
+        ListEmptyComponent={() => (
+          <PlaceholderSection style={{height: height / 2}}>
+            <Placeholder>작성된 티켓이 없어요.</Placeholder>
+          </PlaceholderSection>
+        )}
         contentContainerStyle={{padding: 20}}
         keyExtractor={item => item.id.toString()}
       />
@@ -79,4 +91,14 @@ const FilterBtn = styled.TouchableOpacity`
 
 const Gap = styled.View`
   height: 21px;
+`;
+
+const PlaceholderSection = styled.View`
+  justify-content: center;
+  align-items: center;
+`;
+
+const Placeholder = styled(Typo.Subhead03)`
+  text-align: center;
+  color: ${p => p.theme.gray.gray_06};
 `;
