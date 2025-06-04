@@ -55,11 +55,16 @@ export default function AddTicketScreen() {
   const handleConfirm = async () => {
     if (currentPhase !== 'image') return nextPhase();
 
-    const ticketUrl = await uploadImageByPresignedUrl({
-      uri: ticketImageUrl,
-    });
+    let ticketUrl = '';
 
-    if (!musical || !ticketUrl) return;
+    if (ticketImageUrl) {
+      const uploadedUrl = await uploadImageByPresignedUrl({
+        uri: ticketImageUrl,
+      });
+      if (uploadedUrl) ticketUrl = uploadedUrl;
+    }
+
+    if (!musical) return;
 
     createTicket(
       {

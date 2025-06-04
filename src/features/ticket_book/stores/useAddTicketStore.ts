@@ -11,7 +11,7 @@ type State = {
   showTime: string;
   seats: string[];
   actors: IActorSearch[];
-  ticketImageUrl: string;
+  ticketImageUrl: string | null;
 };
 
 type Actions = {
@@ -22,6 +22,7 @@ type Actions = {
   addActor: (actor: IActorSearch) => void;
   removeActor: (actor: IActorSearch) => void;
   setTicketImageUrl: (url: string) => void;
+  clearTicketImageUrl: () => void;
 
   clear: () => void;
 };
@@ -32,7 +33,7 @@ const initialState: State = {
   showTime: '',
   seats: Array.from({length: 3}, () => ''),
   actors: [],
-  ticketImageUrl: '',
+  ticketImageUrl: null,
 };
 
 const useAddTicketStore = create<State & Actions>()((set, get) => ({
@@ -54,6 +55,7 @@ const useAddTicketStore = create<State & Actions>()((set, get) => ({
       actors: state.actors.filter(a => a.id !== actor.id),
     })),
   setTicketImageUrl: url => set(state => ({...state, ticketImageUrl: url})),
+  clearTicketImageUrl: () => set(state => ({...state, ticketImageUrl: null})),
 
   clear: () => set(initialState),
 }));

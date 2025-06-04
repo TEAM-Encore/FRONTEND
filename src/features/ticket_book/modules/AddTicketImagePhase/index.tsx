@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, ScrollView, Image} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
@@ -6,7 +6,6 @@ import AddTicketStyles from '@/app/ticketBook/AddTicketScreen/style';
 import styled, {useTheme} from 'styled-components/native';
 import Typo from '@/components/Typo';
 import useDialog from '@/features/core/hooks/useDialog';
-import useAppNavigation from '@/app/useAppNavigation';
 import useAddTicketStore from '../../stores/useAddTicketStore';
 import useImagePicker from '@/features/core/hooks/useImagePicker';
 
@@ -16,19 +15,22 @@ type Props = {
 
 export default function AddTicketImagePhase({onConfirm}: Props) {
   const theme = useTheme();
-  const {goBack} = useAppNavigation();
   const {showDialog} = useDialog();
 
   const {launchLibrary} = useImagePicker();
+  const [isNull, setNull] = useState(false);
   const imageUrl = useAddTicketStore(s => s.ticketImageUrl);
   const setImageUrl = useAddTicketStore(s => s.setTicketImageUrl);
-  const disabled = !imageUrl;
+  const clearImageUrl = useAddTicketStore(s => s.clearTicketImageUrl);
+  const disabled = !isNull && !imageUrl;
 
   const handleUploadImage = async () => {
     try {
       const asset = await launchLibrary();
       if (!asset?.uri) return;
+
       setImageUrl(asset.uri);
+      setNull(false);
     } catch (err) {
       console.error(err);
     }
@@ -39,9 +41,9 @@ export default function AddTicketImagePhase({onConfirm}: Props) {
       title: '업로드를 그만할까요?',
       desc: '인증을 하지 않는다면\n프리미엄 리뷰 작성이 어렵습니다.',
       cancelLabel: '계속 작성',
-      confirmLabel: '그만하기',
       onConfirm: () => {
-        goBack();
+        setNull(true);
+        clearImageUrl();
       },
     });
   };
@@ -87,7 +89,9 @@ export default function AddTicketImagePhase({onConfirm}: Props) {
             </ImageUploadBtn>
 
             <NotUploadBtn onPress={handleNotUploadPress}>
-              <SvgXml xml={TicketBookIcon.checkBox} />
+              <SvgXml
+                xml={isNull ? TicketBookIcon.check : TicketBookIcon.checkBox}
+              />
               <Text style={AddTicketStyles.textCheckBox}>티켓 업로드 안함</Text>
             </NotUploadBtn>
           </Section>
