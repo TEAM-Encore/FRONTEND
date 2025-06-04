@@ -54,14 +54,6 @@ const TicketDetailStyles = StyleSheet.create({
     padding: 14,
     marginTop: 38,
   },
-  iconPencil: {
-    marginLeft: 5,
-    marginRight: 10,
-  },
-  iconArrowRight: {
-    position: 'absolute',
-    right: 14,
-  },
   textReviewTitle: {
     ...caption,
     color: Colors.gray_12,
