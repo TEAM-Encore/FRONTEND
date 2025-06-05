@@ -15,7 +15,27 @@ export type ITicketBook = {
   rating?: IReviewRating;
 };
 
-export const getTicketBookList = async (dateRange: string) => {
+export type ITicketBookListFilter = 'NULL' | 'WEEK' | 'MONTH' | 'YEAR';
+
+export type CreateTicketParams = {
+  musical_id: number;
+  user_id: number;
+  viewed_date: string;
+  show_time: string;
+  seat: string;
+  actor_ids: number[];
+  ticket_image_url: string;
+};
+
+export type EditTicketParams = {
+  ticketId: number;
+  viewed_date: string; // ISO 형식 날짜 문자열 (예: "2025-06-03")
+  show_time: string; // 예: "12:17"
+  seat: string;
+  ticket_image_url: string;
+};
+
+export const getTicketBookList = async (dateRange: ITicketBookListFilter) => {
   const {data} = await httpApi.get<IResponse<ITicketBook[]>>(
     `/api/v1/ticket/list`,
     {
@@ -26,23 +46,32 @@ export const getTicketBookList = async (dateRange: string) => {
   return data.data;
 };
 
-export const createTicket = (
-  musical_id: number,
-  user_id: number,
-  viewed_date: string,
-  show_time: string,
-  seat: string,
-  actors: {id: number; name: string; actor_image_url: string}[],
-  ticket_image_url: string,
-) => {
-  const requestBody = {
-    musical_id,
-    user_id,
-    viewed_date,
-    show_time,
-    seat,
-    actors,
-    ticket_image_url,
-  };
-  return httpApi.post(`/api/v1/ticket`, requestBody);
+export const createTicket = async (params: CreateTicketParams) => {
+  const {...body} = params;
+
+  const {data} = await httpApi.post<IResponse<ITicketBook>>(
+    `/api/v1/ticket`,
+    body,
+  );
+
+  return data.data;
+};
+
+export const editTicket = async (params: EditTicketParams) => {
+  const {ticketId, ...body} = params;
+
+  const {data} = await httpApi.patch<IResponse<ITicketBook>>(
+    `/api/v1/ticket/${ticketId}`,
+    body,
+  );
+
+  return data.data;
+};
+
+export const removeTicket = async (ticketId: number) => {
+  const {data} = await httpApi.delete<IResponse<null>>(
+    `/api/v1/ticket/${ticketId}`,
+  );
+
+  return data.data;
 };
