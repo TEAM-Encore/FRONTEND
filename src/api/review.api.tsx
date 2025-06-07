@@ -16,6 +16,30 @@ export const getReviewSearchSuggestions = (keyword: string) => {
 };
 
 // 프리미엄 리뷰 리스트 조회
+export const getSafeTicketReviewList = async (
+  size: number,
+  sort: string,
+  cursor?: number,
+  tag?: string,
+  search_word?: string,
+) => {
+  try {
+    const response = await getTicketReviewList(
+      size,
+      sort,
+      cursor,
+      tag,
+      search_word,
+    );
+    return response;
+  } catch (error: any) {
+    if (error.response?.status === 404) {
+      return {data: {content: []}}; // 태그에 해당하는 리뷰가 없는 경우 빈 배열 반환
+    }
+    throw error;
+  }
+};
+
 export const getTicketReviewList = (
   size: number,
   sort: string,
@@ -55,4 +79,4 @@ export const getTicketReviewImage = (cycle: number) => {
 
 export const deleteTicketReview = (review_id: number) => {
   return httpApi.delete(`/api/v1/review/${review_id}`);
-}
+};
