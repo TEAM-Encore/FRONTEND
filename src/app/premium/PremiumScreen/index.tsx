@@ -1,25 +1,13 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import {useFocusEffect} from '@react-navigation/native';
-import {
-  SafeAreaView,
-  View,
-  Text,
-  TouchableOpacity,
-  Alert,
-  FlatList,
-  ActivityIndicator,
-} from 'react-native';
+import React, {useState} from 'react';
+import {SafeAreaView, View, Text, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
 import IconSearch from '@/assets/icons/dashboard/IconSearch';
 import IconNotification from '@/assets/icons/dashboard/IconNotification';
-import PopularReviews from '@/components/premium/PopularReviews';
-import Tags from '@/components/premium/Tags';
-import ItemReview from '@/components/premium/ItemReview';
+import ReviewLists from '@/features/premium/modules/ReviewLists';
+import TodayPopularReviews from '@/features/premium/modules/TodayPopularReviews';
 import ToolTipModal from '@/components/alertModal/ToolTipModal';
-import {getPopularPremiumReviews} from '@/api/premium.api';
-import {getTicketReviewList} from '@/api/review.api';
 import PremiumStyles from './style';
 
 type RootStackParamList = {
@@ -35,11 +23,7 @@ export default function PremiumScreen() {
     right: 0,
   });
   const [reviewModalVisible, setReviewModalVisible] = useState(true);
-  const [popularPremiumReviews, setPopularPremiumReviews] = useState([]);
-  const [reviewData, setReviewData] = useState<any[]>([]); // 전체 리뷰 리스트
-  const [cursor, setCursor] = useState<number | undefined>(undefined); // 마지막 id
   const [hasMore, setHasMore] = useState(true); // 더 불러올 데이터가 있는지 확인
-  const [isLoading, setIsLoading] = useState(true); // 초기 로딩
   const [isFetching, setIsFetching] = useState(false); // 중복 요청 방지
   const [tag, setTag] = useState<string | undefined>(undefined);
 
@@ -51,54 +35,6 @@ export default function PremiumScreen() {
   const handleModalCancel = () => {
     setReviewModalVisible(false);
   };
-
-  // 무한 스크롤 적용 필요
-  const fetchReviewList = async () => {
-    try {
-      const response = await getTicketReviewList(
-        100,
-        'createdat',
-        undefined,
-        tag,
-        undefined,
-      );
-      const reviewData = response.data.data.content;
-
-      console.log('프리미엄 리뷰 조회 결과: ', reviewData);
-
-      if (reviewData.length === 0) {
-        setReviewData([]);
-      } else {
-        setReviewData(reviewData);
-      }
-    } catch (error: any) {
-      console.log('error: ', error);
-      if (error.response?.status === 404) {
-        setReviewData([]); // 데이터 없다고 간주
-      } else {
-        Alert.alert('프리미엄 리뷰 조회 중에 문제가 발생했습니다.');
-      }
-    }
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchReviewList();
-    }, [tag]),
-  );
-
-  useEffect(() => {
-    const fetchPopularPremiumReviewList = async () => {
-      try {
-        const response = await getPopularPremiumReviews();
-        setPopularPremiumReviews(response.data.data);
-      } catch (error) {
-        console.error('인기 프리미엄 리뷰 조회 오류: ', error);
-      }
-    };
-
-    fetchPopularPremiumReviewList();
-  }, []);
 
   const tagLabelToKey: {[key: string]: string} = {
     총평만점: 'PERFECT_REVIEW',
@@ -117,7 +53,6 @@ export default function PremiumScreen() {
       const mappedTag = tagLabelToKey[tag];
       setTag(mappedTag);
     }
-    fetchReviewList(true); // 태그 바뀌면 새로 불러오기
   };
 
   return (
@@ -147,41 +82,14 @@ export default function PremiumScreen() {
           )}
         </View>
       </View>
-      <FlatList
-        data={reviewData}
-        keyExtractor={(item, index) => item.id || index.toString()}
-        onEndReached={() => {
-          if (!isFetching && hasMore) {
-            setCursor(reviewData[reviewData.length - 1]?.id || null);
-          }
-        }}
-        onEndReachedThreshold={0.5}
-        ListHeaderComponent={
-          <>
-            <View style={PremiumStyles.containerHeader}>
-              <Text style={PremiumStyles.textPopularReviewsTilte}>
-                오늘의 인기 리뷰
-              </Text>
-              <View style={PremiumStyles.containerPopularReviews}>
-                <PopularReviews popularReviews={popularPremiumReviews} />
-              </View>
-              <View style={PremiumStyles.containerTags}>
-                <Tags onTagSelect={handleTagSelect} />
-              </View>
-              {reviewData.length === 0 && (
-                <View>
-                  <Text style={PremiumStyles.noReviewText}>
-                    등록된 리뷰가 없습니다.
-                  </Text>
-                </View>
-              )}
-            </View>
-          </>
-        }
-        renderItem={({item}) => <ItemReview item={item} />}
-        ListFooterComponent={
-          isFetching && hasMore ? <ActivityIndicator size="small" /> : null
-        }
+      {/* 오늘의 인기 리뷰 */}
+      <TodayPopularReviews />
+      {/* 후기 리스트 */}
+      <ReviewLists
+        tag={tag}
+        onTagSelect={handleTagSelect}
+        isFetching={isFetching}
+        hasMore={hasMore}
       />
 
       {/* 글쓰기 버튼 */}
