@@ -19,10 +19,9 @@ const ReviewLists: React.FC<ReviewListsProps> = ({
   hasMore,
 }) => {
   const {reviewLists} = useReviewLists(tag);
-  const data = reviewLists?.data?.data?.content ?? [];
-
-  //   console.log('ReviewLists tag:', tag);
-  //   console.log('ReviewLists data:', data);
+  const data = reviewLists?.content ?? [];
+  
+  //   console.log('ReviewLists: ', reviewLists);
 
   return (
     <>
@@ -33,22 +32,16 @@ const ReviewLists: React.FC<ReviewListsProps> = ({
       </View>
       <FlatList
         data={data}
-        keyExtractor={(item, index) => item.id?.toString() ?? index.toString()}
+        keyExtractor={(item, index) => item.review_id?.toString() ?? index.toString()}
         renderItem={({item}) => <ItemReview item={item} />}
         onEndReachedThreshold={0.5}
-        ListHeaderComponent={
-          <>
+        ListEmptyComponent={
             <View>
-              {data.length === 0 && (
-                <View>
-                  <Text style={PremiumStyles.noReviewText}>
-                    등록된 리뷰가 없습니다.
-                  </Text>
-                </View>
-              )}
+              <Text style={PremiumStyles.noReviewText}>
+                등록된 리뷰가 없습니다.
+              </Text>
             </View>
-          </>
-        }
+          }
         ListFooterComponent={
           isFetching && hasMore ? <ActivityIndicator size="small" /> : null
         }

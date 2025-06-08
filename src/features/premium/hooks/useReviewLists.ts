@@ -1,5 +1,6 @@
 import {useSuspenseQuery} from '@tanstack/react-query';
 import {getSafeTicketReviewList} from '@/api/review.api';
+import {IReviewParams} from '@/api/review.api';
 
 // function useReviewLists(tag?: string) {
 //   const {data: reviewLists} = useSuspenseQuery({
@@ -14,10 +15,15 @@ import {getSafeTicketReviewList} from '@/api/review.api';
 // }
 
 function useReviewLists(tag?: string) {
+  const params: IReviewParams = {
+    size: 100,
+    sort: 'createdat',
+    tag: tag,
+  };
+
   const {data: reviewLists} = useSuspenseQuery({
-    queryKey: ['reviewLists', tag],
-    queryFn: () =>
-      getSafeTicketReviewList(100, 'createdat', undefined, tag, undefined),
+    queryKey: ['reviewLists', params],
+    queryFn: () => getSafeTicketReviewList(params),
   });
 
   return {reviewLists};
