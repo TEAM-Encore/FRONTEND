@@ -33,7 +33,7 @@ const PremiumStyles = StyleSheet.create({
     color: Colors.gray_12,
     marginVertical: 23,
   },
-  textPopularReviewsTilte: {
+  textPopularReviewsTitle: {
     ...headline,
     marginTop: 21,
     marginBottom: 14,
