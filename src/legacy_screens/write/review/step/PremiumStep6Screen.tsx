@@ -16,7 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 import {SvgXml} from 'react-native-svg';
 import {ReviewWriteIcon} from '@/assets/icons/premium/ReviewWriteIcon';
 import RegisterReviewModal from '@/components/alertModal/RegisterReviewModal';
-import PremiumWriteStyles from '../PremiumWriteStyles';
+import PremiumWriteStyles from '@/app/premium/PremiumWriteScreen/style';
 import Colors from '@/assets/colors/Colors';
 import {postTicketReview, getTicketReview} from '@/api/review.api';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';

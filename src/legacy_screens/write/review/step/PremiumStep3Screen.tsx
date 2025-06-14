@@ -11,8 +11,9 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
-import PremiumWriteStyles from '../PremiumWriteStyles';
+import PremiumWriteStyles from '@/app/premium/PremiumWriteScreen/style';
 import {SvgXml} from 'react-native-svg';
 import {ReviewWriteIcon} from '@/assets/icons/premium/ReviewWriteIcon';
 import Colors from '@/assets/colors/Colors';
@@ -30,13 +31,6 @@ type ReviewItems = {
   image: ImageSourcePropType;
 };
 
-const data: ReviewItems[] = [
-  {id: '1', image: require('@/assets/images/premium/seat_1.png')},
-  {id: '2', image: require('@/assets/images/premium/seat_2.png')},
-  {id: '3', image: require('@/assets/images/premium/seat_3.png')},
-  {id: '4', image: require('@/assets/images/premium/seat_4.png')},
-];
-
 const PremiumStep3Screen: React.FC<PremiumProp> = ({
   goToNext,
   saveData,
@@ -45,6 +39,12 @@ const PremiumStep3Screen: React.FC<PremiumProp> = ({
   const [input, setInput] = useState(stepData[3] || '');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchText, setSearchText] = useState<string>('');
+  const [seatImg, setSeatImg] = useState<ReviewItems[]>([
+    {id: '1', image: require('@/assets/images/premium/seat_1.png')},
+    {id: '2', image: require('@/assets/images/premium/seat_2.png')},
+    {id: '3', image: require('@/assets/images/premium/seat_3.png')},
+    {id: '4', image: require('@/assets/images/premium/seat_4.png')},
+  ]);
 
   const isButtonDisabled = !selectedId || searchText.trim() === '';
 
@@ -78,17 +78,21 @@ const PremiumStep3Screen: React.FC<PremiumProp> = ({
   };
 
   const handleReload = async () => {
-    setSelectedId(null);
-    setSearchText('');
-
-    // try {
-    //   const response = await getTicketReviewImage(cycleId);
-    //   console.log('API 요청 결과값: ', response.data.data);
-    //   // setData(response.data.data);
-    // } catch (error) {
-    //   console.log(error);
-    //   Alert.alert('내역 조회 중 오류가 발생했습니다.');
-    // }
+    try {
+      const response = await getTicketReviewImage(1);
+      const images = response.data.data.view_images;
+  
+      const parsed: ReviewItems[] = images.map((item: any) => ({
+        id: item.id.toString(),
+        image: { uri: item.url },
+      }));
+  
+      setSeatImg(parsed);
+      console.log('API 요청 결과값: ', parsed);
+    } catch (error) {
+      console.log(error);
+      Alert.alert('내역 조회 중 오류가 발생했습니다.');
+    }
   };
 
   return (
@@ -116,7 +120,7 @@ const PremiumStep3Screen: React.FC<PremiumProp> = ({
               <Text style={PremiumWriteStyles.reload_text}>새로고침</Text>
             </View>
             <FlatList
-              data={data}
+              data={seatImg}
               renderItem={renderItem}
               keyExtractor={item => item.id}
               numColumns={2}
