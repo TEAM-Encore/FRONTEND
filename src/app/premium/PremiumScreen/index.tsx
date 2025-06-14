@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {SafeAreaView, View, Text, TouchableOpacity} from 'react-native';
+import {SafeAreaView, View, Text, TouchableOpacity, Alert} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {DashboardIcon} from '@/assets/icons/dashboard/DashboardIcon';
@@ -9,6 +9,8 @@ import ReviewLists from '@/features/premium/modules/ReviewLists';
 import TodayPopularReviews from '@/features/premium/modules/TodayPopularReviews';
 import ToolTipModal from '@/components/alertModal/ToolTipModal';
 import PremiumStyles from './style';
+import useTicketBookList from '@/features/ticket_book/hooks/useTicketBookList';
+import NoRegisteredTicketModal from '@/components/alertModal/NoRegisteredTicketModal';
 
 type RootStackParamList = {
   HomeSearchDefaultScreen: undefined;
@@ -26,6 +28,8 @@ export default function PremiumScreen() {
   const [hasMore, setHasMore] = useState(true); // 더 불러올 데이터가 있는지 확인
   const [isFetching, setIsFetching] = useState(false); // 중복 요청 방지
   const [tag, setTag] = useState<string | undefined>(undefined);
+  const [ticketModalVisible, setTicketModalVisible] = useState(false); // 티켓 없을 때 모달
+  const {ticketBookList, refetch} = useTicketBookList('NULL');
 
   const handleLayout = (event: any) => {
     const {x, y, width, height} = event.nativeEvent.layout;
@@ -52,6 +56,23 @@ export default function PremiumScreen() {
     } else {
       const mappedTag = tagLabelToKey[tag];
       setTag(mappedTag);
+    }
+  };
+
+  const handleWritePress = async () => {
+    try {
+      const { data: ticketList } = await refetch();
+  
+      if (!ticketList || ticketList.length === 0) {
+        console.warn('티켓이 없습니다:', ticketList);
+        setTicketModalVisible(true);
+        return;
+      }
+  
+      navigation.navigate('PremiumWriteScreen');
+    } catch (error) {
+      console.error('티켓 확인 중 오류:', error);
+      Alert.alert('티켓 확인 중 오류가 발생했습니다.');
     }
   };
 
@@ -95,10 +116,19 @@ export default function PremiumScreen() {
       {/* 글쓰기 버튼 */}
       <TouchableOpacity
         style={PremiumStyles.writeButton}
-        onPress={() => navigation.navigate('PremiumWriteScreen')}>
+        onPress={handleWritePress}>
         <SvgXml xml={DashboardIcon.writeIcon} style={PremiumStyles.writeIcon} />
         <Text style={PremiumStyles.buttonText}>후기 작성</Text>
       </TouchableOpacity>
+
+      {/* 등록 티켓 없을 때 모달 */}
+      <NoRegisteredTicketModal
+        modalVisible={ticketModalVisible}
+        setModalVisible={setTicketModalVisible}
+        topButton="티켓북 바로가기"
+        bottomButton="확인"
+        loading={false}
+      />
     </SafeAreaView>
   );
 }
