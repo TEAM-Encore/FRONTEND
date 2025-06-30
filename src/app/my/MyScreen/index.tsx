@@ -13,6 +13,8 @@ import {SvgXml} from 'react-native-svg';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {getMyInfo} from '@/api/users.api';
 import MyScreenStyles from './style';
+import styled from 'styled-components/native';
+import MyScreenHeader from '@/features/my/modules/MyScreenHeader';
 
 type NavigationProp = {
   navigate: (screen: 'ModifyProfileImg' | 'NotificationSettings') => void;
@@ -54,29 +56,9 @@ export default function MyScreen() {
     }, []),
   );
 
-  useEffect(() => {
-    console.log('Updated userData:', userData);
-  }, [userData]);
-
   return (
     <SafeAreaView style={MyScreenStyles.container}>
-      <View style={MyScreenStyles.containerHeader}>
-        <View style={MyScreenStyles.containerIcons}>
-          <Text style={MyScreenStyles.textTitle}>마이페이지</Text>
-          <View style={MyScreenStyles.containerRow}>
-            <TouchableOpacity>
-              <View style={MyScreenStyles.coinContainer}>
-                <SvgXml xml={MyPageIcon.coinIcon} />
-                <Text style={MyScreenStyles.coinText}>{userData.point}</Text>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={{marginLeft: 32}}>
-              <SvgXml xml={MyPageIcon.shareIcon} />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
+      <MyScreenHeader point={userData.point} />
       <FlatList
         keyExtractor={item => item.id.toString()}
         data={[]}
@@ -239,3 +221,8 @@ export default function MyScreen() {
     </SafeAreaView>
   );
 }
+
+const Header = styled.View`
+  justify-content: center;
+  margin: 0 20px;
+`;
