@@ -31,7 +31,7 @@ export default function MyScreenHeader({point}: Props) {
 const Header = styled.View`
   justify-content: space-between;
   flex-direction: row;
-  margin: 18px 20px;
+  padding: 18px 20px;
 `;
 
 const Title = styled(Typo.Display01)`
@@ -59,5 +59,5 @@ const CoinText = styled.Text`
 `;
 
 const ShareButton = styled.TouchableOpacity`
-  margin-left: 20px;
+  padding-left: 20px;
 `;

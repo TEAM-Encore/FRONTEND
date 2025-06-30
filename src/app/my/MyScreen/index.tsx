@@ -15,6 +15,7 @@ import {getMyInfo} from '@/api/users.api';
 import MyScreenStyles from './style';
 import styled from 'styled-components/native';
 import MyScreenHeader from '@/features/my/modules/MyScreenHeader';
+import MyScreenProfileCard from '@/features/my/modules/MyScreenProfileCard.tsx';
 
 type NavigationProp = {
   navigate: (screen: 'ModifyProfileImg' | 'NotificationSettings') => void;
@@ -57,85 +58,18 @@ export default function MyScreen() {
   );
 
   return (
-    <SafeAreaView style={MyScreenStyles.container}>
+    <Container>
       <MyScreenHeader point={userData.point} />
       <FlatList
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item, index) => index.toString()}
         data={[]}
+        contentContainerStyle={{paddingHorizontal: 20}}
+        showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <>
+            <MyScreenProfileCard userData={userData} />
+
             <View style={MyScreenStyles.containerHeader}>
-              <View style={MyScreenStyles.rectContainer}>
-                <SvgXml xml={MyPageIcon.rectangle1} />
-                <Image
-                  source={require('@/assets/images/myPage/profile.png')}
-                  style={MyScreenStyles.profileImg}
-                />
-                <View style={MyScreenStyles.overlayText}>
-                  <Text style={MyScreenStyles.nickname}>
-                    {userData.nickname}
-                  </Text>
-                  <SvgXml
-                    xml={MyPageIcon.profileCheck}
-                    style={{top: 5, left: 5.67}}
-                  />
-                </View>
-                <View style={MyScreenStyles.overlaySubText}>
-                  <Text style={MyScreenStyles.infoText}>
-                    구독자 {userData.num_of_subscriber}명 •
-                  </Text>
-                  <Text style={MyScreenStyles.infoText}>
-                    작성글 {userData.num_of_write_post}개
-                  </Text>
-                </View>
-              </View>
-              <View style={MyScreenStyles.userInfoContainer}>
-                <View style={MyScreenStyles.containerRow}>
-                  <SvgXml xml={MyPageIcon.heartIcon} />
-                  <Text style={MyScreenStyles.userInfoText}>선호하는 공연</Text>
-                </View>
-                <View
-                  style={{
-                    ...MyScreenStyles.containerRow,
-                    marginHorizontal: 20,
-                    marginTop: 8,
-                  }}>
-                  {userData.preferred_keywords.length > 0 ? (
-                    userData.preferred_keywords.map(option => (
-                      <View
-                        key={option}
-                        style={{
-                          ...MyScreenStyles.chipContainer,
-                          marginRight: 4,
-                        }}>
-                        <Text>{option}</Text>
-                      </View>
-                    ))
-                  ) : (
-                    <Text style={{marginTop: 10, color: 'gray'}}>
-                      아직 선택된 키워드가 없습니다
-                    </Text>
-                  )}
-                </View>
-
-                <View style={{...MyScreenStyles.containerRow, marginTop: 24}}>
-                  <SvgXml xml={MyPageIcon.calenderIcon} />
-                  <Text style={MyScreenStyles.userInfoText}>
-                    뮤지컬 관람 빈도
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    ...MyScreenStyles.containerRow,
-                    marginHorizontal: 20,
-                    marginTop: 8,
-                  }}>
-                  <View style={MyScreenStyles.chipContainer}>
-                    <Text>{userData.viewing_frequency}</Text>
-                  </View>
-                </View>
-              </View>
-
               <Text style={{...MyScreenStyles.infoTitle, marginTop: 40}}>
                 정보 관리
               </Text>
@@ -218,11 +152,11 @@ export default function MyScreen() {
         }
         renderItem={null}
       />
-    </SafeAreaView>
+    </Container>
   );
 }
 
-const Header = styled.View`
-  justify-content: center;
-  margin: 0 20px;
+const Container = styled.SafeAreaView`
+  flex: 1;
+  background-color: ${p => p.theme.gray.gray_01};
 `;

@@ -9,7 +9,6 @@ const MyScreenStyles = StyleSheet.create({
   },
   containerHeader: {
     justifyContent: 'center',
-    marginHorizontal: 20,
   },
   containerIcons: {
     flexDirection: 'row',
