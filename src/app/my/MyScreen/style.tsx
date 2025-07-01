@@ -106,7 +106,7 @@ const MyScreenStyles = StyleSheet.create({
   },
   line: {
     backgroundColor: Colors.gray_04,
-    width: 335,
+    width: '100%',
     height: 0.75,
     marginTop: 30,
   },
