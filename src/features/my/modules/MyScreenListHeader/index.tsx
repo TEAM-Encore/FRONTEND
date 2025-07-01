@@ -1,19 +1,10 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import MyScreenProfileCard from '@/features/my/modules/MyScreenProfileCard.tsx';
-
-interface UserData {
-  point: number;
-  nickname: string;
-  num_of_subscriber: number;
-  num_of_write_post: number;
-  preferred_keywords: [];
-  viewing_frequency: string;
-  email: string;
-}
+import {IUser} from '@/api/users.api';
 
 interface MyScreenListHeaderProps {
-  userData: UserData;
+  userData: IUser;
 }
 
 export default function MyScreenListHeader({

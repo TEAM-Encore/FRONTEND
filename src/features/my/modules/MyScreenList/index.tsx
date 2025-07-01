@@ -4,6 +4,7 @@ import styled from 'styled-components/native';
 import MyScreenListItem from '../MyScreenListItem';
 import useAppNavigation from '@/app/useAppNavigation';
 import MyScreenListHeader from '../MyScreenListHeader';
+import {IUser} from '@/api/users.api';
 
 export interface MyScreenListData {
   id: string;
@@ -14,18 +15,8 @@ export interface MyScreenListData {
   onPress?: () => void;
 }
 
-interface UserData {
-  point: number;
-  nickname: string;
-  num_of_subscriber: number;
-  num_of_write_post: number;
-  preferred_keywords: [];
-  viewing_frequency: string;
-  email: string;
-}
-
 interface Props {
-  userData: UserData;
+  userData: IUser;
 }
 
 export default function MyScreenList({userData}: Props) {
@@ -54,6 +45,35 @@ export default function MyScreenList({userData}: Props) {
       },
       {
         id: 'separator-1',
+        type: 'separator',
+      },
+      {
+        id: 'usage-history-header',
+        type: 'header',
+        title: '이용 내역',
+      },
+      {
+        id: 'point-history',
+        type: 'action',
+        title: '포인트 내역',
+      },
+      {
+        id: 'subscription-list',
+        type: 'action',
+        title: '구독 리스트',
+      },
+      {
+        id: 'post-history',
+        type: 'action',
+        title: '작성글 내역',
+      },
+      {
+        id: 'restriction-history',
+        type: 'action',
+        title: '이용 제한 내역',
+      },
+      {
+        id: 'separator-2',
         type: 'separator',
       },
       {
@@ -93,7 +113,7 @@ export default function MyScreenList({userData}: Props) {
         title: '카테고리 추가 요청',
       },
       {
-        id: 'separator-2',
+        id: 'separator-3',
         type: 'separator',
       },
       {

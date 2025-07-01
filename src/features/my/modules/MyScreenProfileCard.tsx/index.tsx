@@ -5,16 +5,11 @@ import Typo from '@/components/Typo';
 import {SvgXml} from 'react-native-svg';
 import {MyPageIcon} from '@/assets/icons/myPage/MyPageIcon';
 import theme from '@/common/theme';
+import {IUser} from '@/api/users.api';
 
 // TODO: 타입 정의 필요
 type Props = {
-  userData: {
-    nickname: string;
-    num_of_subscriber: number;
-    num_of_write_post: number;
-    preferred_keywords: [];
-    viewing_frequency: string;
-  };
+  userData: IUser;
 };
 
 export default function MyScreenProfileCard({userData}: Props) {
