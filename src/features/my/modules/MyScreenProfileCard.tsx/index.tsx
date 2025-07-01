@@ -7,24 +7,30 @@ import {MyPageIcon} from '@/assets/icons/myPage/MyPageIcon';
 import theme from '@/common/theme';
 import {IUser} from '@/api/users.api';
 
-// TODO: 타입 정의 필요
 type Props = {
   userData: IUser;
 };
 
 export default function MyScreenProfileCard({userData}: Props) {
+  const {
+    nickname,
+    num_of_subscriber,
+    num_of_write_post,
+    preferred_keywords,
+    viewing_frequency,
+  } = userData;
+
   return (
     <Container>
       <TopContainer>
         <ProfileImage source={require('@/assets/images/myPage/profile.png')} />
         <ProfileInfoContainer>
           <RowContainer>
-            <Typo.Subhead05>{userData.nickname}</Typo.Subhead05>
+            <Typo.Subhead05>{nickname}</Typo.Subhead05>
             <SvgXml xml={MyPageIcon.profileCheck} />
           </RowContainer>
           <SubInfoText>
-            구독자 {userData.num_of_subscriber}명 • 작성글{' '}
-            {userData.num_of_write_post}개
+            구독자 {num_of_subscriber}명 • 작성글 {num_of_write_post}개
           </SubInfoText>
         </ProfileInfoContainer>
       </TopContainer>
@@ -34,9 +40,9 @@ export default function MyScreenProfileCard({userData}: Props) {
             <SvgXml xml={MyPageIcon.heartIcon} />
             <Title>선호하는 공연</Title>
           </RowContainer>
-          {userData.preferred_keywords.length > 0 ? (
+          {preferred_keywords.length > 0 ? (
             <ChipRow>
-              {userData.preferred_keywords.map(keyword => (
+              {preferred_keywords.map(keyword => (
                 <ChipContainer key={keyword}>
                   <ChipText>{keyword}</ChipText>
                 </ChipContainer>
@@ -53,7 +59,7 @@ export default function MyScreenProfileCard({userData}: Props) {
           </RowContainer>
           <ChipRow>
             <ChipContainer>
-              <ChipText>{userData.viewing_frequency}</ChipText>
+              <ChipText>{viewing_frequency}</ChipText>
             </ChipContainer>
           </ChipRow>
         </Section>

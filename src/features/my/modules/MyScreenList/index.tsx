@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import MyScreenListItem from '../MyScreenListItem';
 import useAppNavigation from '@/app/useAppNavigation';
@@ -20,7 +20,7 @@ interface Props {
 }
 
 export default function MyScreenList({userData}: Props) {
-  const getListData = useMemo((): MyScreenListData[] => {
+  const listData = useMemo((): MyScreenListData[] => {
     return [
       {
         id: 'info-header',
@@ -131,14 +131,14 @@ export default function MyScreenList({userData}: Props) {
 
   return (
     <Container>
-      <FlatList
-        keyExtractor={item => item.id}
-        data={getListData}
+      <ScrollView
         contentContainerStyle={{paddingHorizontal: 20}}
-        showsVerticalScrollIndicator={false}
-        ListHeaderComponent={<MyScreenListHeader userData={userData} />}
-        renderItem={({item}) => <MyScreenListItem item={item} />}
-      />
+        showsVerticalScrollIndicator={false}>
+        <MyScreenListHeader userData={userData} />
+        {listData.map(item => (
+          <MyScreenListItem key={item.id} item={item} />
+        ))}
+      </ScrollView>
     </Container>
   );
 }
