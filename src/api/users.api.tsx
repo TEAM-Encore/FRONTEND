@@ -1,5 +1,15 @@
 import httpApi from './http.api';
 
+export type IUser = {
+  id: number;
+  email: string;
+  nickname: string;
+  viewing_frequency: string;
+  preferred_keywords: string[];
+  num_of_subscriber: number;
+  num_of_write_post: number;
+};
+
 export const getMyInfo = () => {
   return httpApi.get(`/api/v1/users/me`);
 };
