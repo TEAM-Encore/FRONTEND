@@ -1,28 +1,22 @@
 import React, {useCallback, useState} from 'react';
 import {Alert} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
-import {getMyInfo} from '@/api/users.api';
+import {getMyInfo, IUser} from '@/api/users.api';
 import styled from 'styled-components/native';
 import MyScreenHeader from '@/features/my/modules/MyScreenHeader';
 import MyScreenList from '@/features/my/modules/MyScreenList';
 
 export default function MyScreen() {
-  const [userData, setUserData] = useState<{
-    point: number;
-    nickname: string;
-    num_of_subscriber: number;
-    num_of_write_post: number;
-    preferred_keywords: [];
-    viewing_frequency: string;
-    email: string;
-  }>({
-    point: 0,
+  // TODO: 추후 삭제, 컴포넌트로 빼기
+  const [userData, setUserData] = useState<IUser>({
+    id: 0,
+    email: '',
     nickname: '',
+    point: 0,
+    viewing_frequency: '',
+    preferred_keywords: [],
     num_of_subscriber: 0,
     num_of_write_post: 0,
-    preferred_keywords: [],
-    viewing_frequency: '',
-    email: '',
   });
 
   // TODO: React Query 적용

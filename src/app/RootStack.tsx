@@ -16,6 +16,7 @@ import PremiumWriteScreen from './premium/PremiumWriteScreen';
 import PremiumMyScreen from './premium/PremiumMyScreen';
 import {IMusical} from '@/api/musical.api';
 import EditTicketScreen from './ticketBook/EditTicketScreen';
+import NotificationSettingScreen from './my/NotificationSettingScreen';
 
 export type RootStackParamList = {
   AuthStack: undefined;
@@ -35,6 +36,8 @@ export type RootStackParamList = {
   AddTicketScreen: undefined;
   TicketDetailScreen: {id: number};
   EditTicketScreen: {id: number};
+
+  NotificationSettingScreen: undefined;
 
   //   WriteScreen: {
   //     setPostData: React.Dispatch<React.SetStateAction<PostData | null>>;
@@ -84,6 +87,10 @@ function RootStack() {
           gestureEnabled: false,
           cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
         }}
+      />
+      <Stack.Screen
+        name="NotificationSettingScreen"
+        component={NotificationSettingScreen}
       />
     </Stack.Navigator>
   );
