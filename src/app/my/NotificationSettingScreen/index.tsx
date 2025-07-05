@@ -1,10 +1,12 @@
-import {View, Text} from 'react-native';
+import {Text, SafeAreaView} from 'react-native';
 import React from 'react';
+import NotificationSettingHeader from '@/features/my/modules/NotificationSettingHeader';
 
 export default function NotificationSettingScreen() {
   return (
-    <View>
+    <SafeAreaView>
+      <NotificationSettingHeader />
       <Text>index</Text>
-    </View>
+    </SafeAreaView>
   );
 }
