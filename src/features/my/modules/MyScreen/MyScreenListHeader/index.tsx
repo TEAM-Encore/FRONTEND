@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import MyScreenProfileCard from '@/features/my/modules/MyScreenProfileCard.tsx';
+import MyScreenProfileCard from '@/features/my/modules/MyScreen/MyScreenProfileCard.tsx';
 import {IUser} from '@/api/users.api';
 
 interface MyScreenListHeaderProps {

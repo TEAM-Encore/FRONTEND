@@ -27,4 +27,6 @@ const Container = styled.View`
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
+  border-bottom-width: 1.5px;
+  border-bottom-color: ${({theme}) => theme.gray.gray_03};
 `;

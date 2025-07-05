@@ -3,8 +3,8 @@ import {Alert} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {getMyInfo, IUser} from '@/api/users.api';
 import styled from 'styled-components/native';
-import MyScreenHeader from '@/features/my/modules/MyScreenHeader';
-import MyScreenList from '@/features/my/modules/MyScreenList';
+import MyScreenHeader from '@/features/my/modules/MyScreen/MyScreenHeader';
+import MyScreenList from '@/features/my/modules/MyScreen/MyScreenList';
 
 export default function MyScreen() {
   // TODO: 추후 삭제, 컴포넌트로 빼기
