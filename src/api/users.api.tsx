@@ -4,6 +4,7 @@ export type IUser = {
   id: number;
   email: string;
   nickname: string;
+  point: number;
   viewing_frequency: string;
   preferred_keywords: string[];
   num_of_subscriber: number;

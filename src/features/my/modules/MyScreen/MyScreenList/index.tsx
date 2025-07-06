@@ -20,6 +20,8 @@ interface Props {
 }
 
 export default function MyScreenList({userData}: Props) {
+  const navigation = useAppNavigation();
+
   const listData = useMemo((): MyScreenListData[] => {
     return [
       {
@@ -42,6 +44,9 @@ export default function MyScreenList({userData}: Props) {
         id: 'notification-settings',
         type: 'action',
         title: '수신 설정',
+        onPress: () => {
+          navigation.navigate('NotificationSettingScreen');
+        },
       },
       {
         id: 'separator-1',
