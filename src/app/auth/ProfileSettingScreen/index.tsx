@@ -4,9 +4,11 @@ import {SvgXml} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import HomeBannerStyles from '@/app/home/HomeBannerScreen/styles';
-import OnboardingHeader from '@/features/auth/modules/OnboardingHeader';
-import ProfilePicture from '@/features/auth/modules/ProfileSetting/ProfilePicture';
+import OnboardingHeader from '@/features/onboarding/modules/OnboardingHeader';
+import ProfilePicture from '@/features/onboarding/modules/ProfileSetting/ProfilePicture';
 import styled from 'styled-components/native';
+import ProfileNicknameInput from '@/features/onboarding/modules/ProfileSetting/ProfileNicknameInput';
+import OnboardingNextButton from '@/features/onboarding/modules/OnboardingNextButton';
 
 export default function ProfileSettingScreen() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -43,9 +45,12 @@ export default function ProfileSettingScreen() {
           description="프로필 사진과 닉네임을 추가해주세요."
           step={1}
         />
-        <View style={{height: 96, alignItems: 'center', marginTop: 24}}>
-          <ProfilePicture />
-        </View>
+
+        <ProfilePicture />
+
+        <ProfileNicknameInput />
+
+        <OnboardingNextButton />
       </SafeAreaView>
     </>
   );

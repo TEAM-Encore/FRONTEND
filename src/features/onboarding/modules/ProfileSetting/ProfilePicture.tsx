@@ -16,6 +16,8 @@ export default function ProfilePicture() {
         backgroundColor: theme.system.sub_03,
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: 24,
+        alignSelf: 'center',
       }}>
       <SvgXml xml={OnboardingIcon.profile} />
       <View
