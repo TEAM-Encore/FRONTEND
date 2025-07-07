@@ -3,7 +3,7 @@ import React from 'react';
 import {useTheme} from 'styled-components';
 import LoginScreen from './LoginScreen';
 import SignUpScreen from './SignUpScreen';
-import OnboardingScreen from './OnboardingScreen';
+import ProfileSettingScreen from './ProfileSettingScreen';
 import ProfileCardScreen from './ProfileCardScreen';
 
 export type AuthStackParamList = {
@@ -26,7 +26,7 @@ function AuthStack() {
       }}>
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-      <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} />
+      <Stack.Screen name="OnboardingScreen" component={ProfileSettingScreen} />
       <Stack.Screen name="ProfileCardScreen" component={ProfileCardScreen} />
     </Stack.Navigator>
   );

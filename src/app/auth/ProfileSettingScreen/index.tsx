@@ -4,8 +4,11 @@ import {SvgXml} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import HomeBannerStyles from '@/app/home/HomeBannerScreen/styles';
+import OnboardingHeader from '@/features/auth/modules/OnboardingHeader';
+import ProfilePicture from '@/features/auth/modules/ProfileSetting/ProfilePicture';
+import styled from 'styled-components/native';
 
-export default function OnboardingScreen() {
+export default function ProfileSettingScreen() {
   const [currentStep, setCurrentStep] = useState(1);
   const [stepData, setStepData] = useState({});
   const navigation = useNavigation();
@@ -34,37 +37,16 @@ export default function OnboardingScreen() {
 
   return (
     <>
-      <SafeAreaView>
-        <View style={HomeBannerStyles.containerHeader}>
-          <TouchableOpacity
-            style={HomeBannerStyles.iconGoBack}
-            onPress={goToPrevious}>
-            <SvgXml style={{margin: 7.75}} xml={PostIcon.arrowLeft} />
-          </TouchableOpacity>
-          <Text style={HomeBannerStyles.textTitle}>프로필 설정</Text>
+      <SafeAreaView style={{flex: 1}}>
+        <OnboardingHeader
+          title="프로필 설정"
+          description="프로필 사진과 닉네임을 추가해주세요."
+          step={1}
+        />
+        <View style={{height: 96, alignItems: 'center', marginTop: 24}}>
+          <ProfilePicture />
         </View>
       </SafeAreaView>
-      {/* {currentStep === 1 && (
-        <OnboardingStep1Screen
-          goToNext={goToNext}
-          saveData={saveData}
-          stepData={stepData}
-        />
-      )}
-      {currentStep === 2 && (
-        <OnboardingStep2Screen
-          goToNext={goToNext}
-          saveData={saveData}
-          stepData={stepData}
-        />
-      )}
-      {currentStep === 3 && (
-        <OnboardingStep3Screen
-          goToNext={goToNext}
-          saveData={saveData}
-          stepData={stepData}
-        />
-      )} */}
     </>
   );
 }
