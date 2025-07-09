@@ -1,4 +1,4 @@
-import httpApi from './http.api';
+import httpApi, {IResponse} from './http.api';
 
 export type IUser = {
   id: number;
@@ -41,6 +41,10 @@ export const createUser = (
   return httpApi.post('/api/v1/users/signup', requestBody);
 };
 
-export const getNicknameValidation = (nickname: string) => {
-  return httpApi.get(`api/v1/users/nickname-validation/${nickname}`);
+export const getNicknameValidation = async (nickname: string) => {
+  const {data} = await httpApi.get<IResponse<{is_valid: boolean}>>(
+    `/api/v1/users/nickname-validation/${nickname}`,
+  );
+
+  return data.data.is_valid;
 };
