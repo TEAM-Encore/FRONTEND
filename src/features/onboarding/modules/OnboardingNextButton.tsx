@@ -32,7 +32,7 @@ export default function OnboardingNextButton({
         right: 0,
       }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ButtonContainer insets={insets}>
+      <ButtonContainer>
         <StyledButton onPress={onPress} disabled={disabled}>
           <Typo.Subhead04
             style={{color: disabled ? theme.system.white : theme.gray.gray_12}}>
@@ -44,7 +44,7 @@ export default function OnboardingNextButton({
   );
 }
 
-const ButtonContainer = styled.View<{insets: EdgeInsets}>`
+const ButtonContainer = styled.View`
   bottom: 20px;
   left: 0;
   right: 0;
@@ -59,10 +59,4 @@ const StyledButton = styled(TouchableOpacity)<{disabled?: boolean}>`
   border-radius: 8px;
   justify-content: center;
   align-items: center;
-`;
-
-const ButtonText = styled(Text)<{disabled?: boolean}>`
-  font-family: ${typography.subhead04.fontFamily};
-  font-size: ${typography.subhead04.fontSize}px;
-  color: ${props => (props.disabled ? Colors.white : Colors.gray_12)};
 `;
