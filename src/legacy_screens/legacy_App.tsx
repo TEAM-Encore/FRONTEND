@@ -28,7 +28,7 @@ import AddTicketScreen from '@/app/ticketBook/AddTicketScreen';
 import TicketDetailScreen from '@/app/ticketBook/TicketDetailScreen';
 import LoginScreen from '@/app/auth/LoginScreen';
 import SignUpScreen from '@/app/auth/SignUpScreen';
-import OnboardingScreen from '@/app/auth/OnboardingScreen';
+import ProfileSettingScreen from '@/app/auth/ProfileSettingScreen';
 import ProfileCardScreen from '@/app/auth/ProfileCardScreen';
 
 import { AddTicketProvider } from '@/state/AddTicketContext';

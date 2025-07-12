@@ -15,7 +15,7 @@ import Colors from '@/assets/colors/Colors';
 import {patchMyInfo} from '@/api/users.api';
 import {useOnboarding} from '@/state/OnboardingContext';
 import {StackNavigationProp} from '@react-navigation/stack';
-import OnboardingStyles from '../OnboardingScreen/style';
+import OnboardingStyles from '../ProfileSettingScreen/style';
 import MyScreenStyles from '@/app/my/MyScreen/style';
 import HomeBannerStyles from '@/app/home/HomeBannerScreen/styles';
 
