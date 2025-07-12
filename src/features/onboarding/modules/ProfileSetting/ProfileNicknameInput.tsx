@@ -69,11 +69,16 @@ export default function ProfileNicknameInput({setNextButtonDisabled}: Props) {
           )}
         </InputContainer>
       </Container>
-      {errorMessage && (
-        <ErrorMessage>
+      <ErrorMessage>
+        {errorMessage && (
           <Typo.Caption style={{color: '#FF692D'}}>{errorMessage}</Typo.Caption>
-        </ErrorMessage>
-      )}
+        )}
+        {isDuplicated === false && (
+          <Typo.Caption style={{color: '#1975FF'}}>
+            사용 가능한 닉네임이에요
+          </Typo.Caption>
+        )}
+      </ErrorMessage>
     </View>
   );
 }
