@@ -26,10 +26,10 @@ import HomeSearchDefaultScreen from '@/app/home/HomeSearchDefaultScreen';
 import HomeBannerScreen from '@/app/home/HomeBannerScreen';
 import AddTicketScreen from '@/app/ticketBook/AddTicketScreen';
 import TicketDetailScreen from '@/app/ticketBook/TicketDetailScreen';
-import LoginScreen from '@/app/auth/LoginScreen';
-import SignUpScreen from '@/app/auth/SignUpScreen';
-import ProfileSettingScreen from '@/app/auth/ProfileSettingScreen';
-import ProfileCardScreen from '@/app/auth/ProfileCardScreen';
+import LoginScreen from '@/app/onboarding/LoginScreen';
+import SignUpScreen from '@/app/onboarding/SignUpScreen';
+import ProfileSettingScreen from '@/app/onboarding/ProfileSettingScreen';
+import ProfileCardScreen from '@/app/onboarding/ProfileCardScreen';
 
 import { AddTicketProvider } from '@/state/AddTicketContext';
 import {OnboardingProvider} from '@/state/OnboardingContext';

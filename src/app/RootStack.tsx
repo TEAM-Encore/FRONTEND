@@ -3,7 +3,7 @@ import {
   createStackNavigator,
 } from '@react-navigation/stack';
 import React from 'react';
-import AuthStack from './auth/AuthStack';
+import AuthStack from './onboarding/AuthStack';
 import MainTabs from './MainTabs';
 import {useTheme} from 'styled-components';
 import HomeBannerScreen from './home/HomeBannerScreen';
