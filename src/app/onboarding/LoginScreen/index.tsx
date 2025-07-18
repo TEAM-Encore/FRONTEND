@@ -6,8 +6,6 @@ import LoginStyles from './style';
 import Colors from '@/assets/colors/Colors';
 import {useOnboarding} from '@/state/OnboardingContext';
 import useAppNavigation from '@/app/useAppNavigation';
-import * as WebBrowser from 'expo-web-browser';
-import InAppBrowser from 'react-native-inappbrowser-reborn';
 import {WebView, WebViewNavigation} from 'react-native-webview';
 
 function LoginScreen() {
