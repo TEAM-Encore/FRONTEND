@@ -26,6 +26,7 @@ function AuthStack() {
         headerShown: false,
         cardStyle: {backgroundColor: theme.gray.gray_01},
       }}>
+      <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen
         name="ProfilePreferenceScreen"
         component={ProfilePreferenceScreen}
@@ -35,7 +36,6 @@ function AuthStack() {
         component={ProfileSettingScreen}
       />
       <Stack.Screen name="ProfileCardScreen" component={ProfileCardScreen} />
-      <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
     </Stack.Navigator>
   );

@@ -7,6 +7,8 @@ import MyScreen from './my/MyScreen';
 import HomeScreen from './home/HomeScreen';
 import PremiumScreen from './premium/PremiumScreen';
 import TicketBookScreen from './ticketBook/TicketBookScreen';
+import HomeStack from './home/HomeStack';
+import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 
 export type MainTabsParamList = {
   HomeScreen: undefined;
@@ -28,7 +30,7 @@ function MainTabs() {
     {
       label: '홈',
       name: 'HomeScreen',
-      component: HomeScreen,
+      component: HomeStack,
       icon: TabSvg.HomeIcon,
       tabIcon: TabSvg.tabHomeIcon,
     },
@@ -59,16 +61,22 @@ function MainTabs() {
   return (
     <Tab.Navigator
       initialRouteName="HomeScreen"
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: {
-          height: 102,
-        },
-        tabBarActiveTintColor: Colors.gray_12,
-        tabBarInactiveTintColor: Colors.gray_12,
-        tabBarLabelStyle: {
-          fontSize: 12,
-        },
+      screenOptions={({route}) => {
+        const routeName = getFocusedRouteNameFromRoute(route);
+        const hideOnScreens = ['HomeSearchScreen'];
+
+        return {
+          headerShown: false,
+          tabBarStyle: {
+            height: 102,
+            display: hideOnScreens.includes(routeName ?? '') ? 'none' : 'flex',
+          },
+          tabBarActiveTintColor: Colors.gray_12,
+          tabBarInactiveTintColor: Colors.gray_12,
+          tabBarLabelStyle: {
+            fontSize: 12,
+          },
+        };
       }}>
       {tabList.map(item => (
         <Tab.Screen
