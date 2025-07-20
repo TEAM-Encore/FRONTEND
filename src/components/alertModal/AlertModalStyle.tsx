@@ -58,6 +58,7 @@ const AlertModalStyle = StyleSheet.create({
   },
   bottomButtonText: {
     ...subhead02,
+    color: Colors.gray_08,
   },
   containerReviewModal: {
     position: 'absolute',

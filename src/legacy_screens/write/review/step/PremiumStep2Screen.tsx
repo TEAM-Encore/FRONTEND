@@ -12,7 +12,7 @@ import {
   Alert,
   FlatList,
 } from 'react-native';
-import PremiumWriteStyles from '../PremiumWriteStyles';
+import PremiumWriteStyles from '@/app/premium/PremiumWriteScreen/style';
 import {SvgXml} from 'react-native-svg';
 import {ReviewWriteIcon} from '@/assets/icons/premium/ReviewWriteIcon';
 import Colors from '@/assets/colors/Colors';

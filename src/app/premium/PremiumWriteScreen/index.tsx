@@ -1,7 +1,20 @@
 import React, {useState, useEffect} from 'react';
-
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from 'types';
+import {SvgXml} from 'react-native-svg';
+import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
+import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
+import styled from 'styled-components/native';
+import {Text} from 'react-native';
+import HomeBannerStyles from '@/app/home/HomeBannerScreen/styles';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import PremiumStep1Screen from '@/legacy_screens/write/review/step/PremiumStep1Screen';
+import PremiumStep2Screen from '@/legacy_screens/write/review/step/PremiumStep2Screen';
+import PremiumStep3Screen from '@/legacy_screens/write/review/step/PremiumStep3Screen';
+import PremiumStep4Screen from '@/legacy_screens/write/review/step/PremiumStep4Screen';
+import PremiumStep5Screen from '@/legacy_screens/write/review/step/PremiumStep5Screen';
+import PremiumStep6Screen from '@/legacy_screens/write/review/step/PremiumStep6Screen';
+import useDialog from '@/features/core/hooks/useDialog';
 
 interface PremiumWriteScreenProps {
   navigation: any;
@@ -77,9 +90,34 @@ const PremiumWriteScreen: React.FC<PremiumWriteScreenProps> = ({
   console.log(requestData);
   console.log('현재 단계: ', currentStep, '데이터: ', stepData);
 
+  const {showDialog} = useDialog();
+
+  const handleClose = () => {
+    showDialog({
+      title: '리뷰 작성을 그만할까요?',
+      desc: '중간에 나갈 시 작성한 내용은 삭제됩니다.',
+      confirmLabel: '그만하기',
+      onConfirm: goToPrevious,
+    });
+  };
+
   return (
-    <>
-      {/* {currentStep === 1 && (
+    <Screen>
+      <Header>
+        <MenuBtn onPress={goToPrevious}>
+          <SvgXml xml={PostIcon.arrowLeft} />
+        </MenuBtn>
+
+        <TitleContainer>
+          <Text style={HomeBannerStyles.textTitle}>프리미엄 리뷰 작성</Text>
+        </TitleContainer>
+
+        <MenuBtn onPress={handleClose}>
+          <SvgXml xml={TicketBookIcon.close} />
+        </MenuBtn>
+      </Header>
+
+      {currentStep === 1 && (
         <PremiumStep1Screen goToNext={goToNext} saveData={saveData} />
       )}
       {currentStep === 2 && (
@@ -116,9 +154,34 @@ const PremiumWriteScreen: React.FC<PremiumWriteScreenProps> = ({
           saveData={saveData}
           stepData={stepData}
         />
-      )} */}
-    </>
+      )}
+    </Screen>
   );
 };
 
 export default PremiumWriteScreen;
+
+const Screen = styled(SafeAreaView)`
+  flex: 1;
+`;
+
+const Header = styled.View`
+  height: 62px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 20px;
+`;
+
+const TitleContainer = styled.View`
+  z-index: -10;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  justify-content: center;
+  align-items: center;
+`;
+
+const MenuBtn = styled.TouchableOpacity.attrs({hitSlop: 12})``;

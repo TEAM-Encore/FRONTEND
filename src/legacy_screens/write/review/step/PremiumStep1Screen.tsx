@@ -10,21 +10,20 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
-  Alert,
 } from 'react-native';
-import PremiumWriteStyles from '../PremiumWriteStyles';
+import PremiumWriteStyles from '@/app/premium/PremiumWriteScreen/style';
 import {SvgXml} from 'react-native-svg';
 import {ReviewWriteIcon} from '@/assets/icons/premium/ReviewWriteIcon';
 import Colors from '@/assets/colors/Colors';
-import {getTicketBookList} from '@/api/ticketBookList.api';
 import {useFocusEffect} from '@react-navigation/native';
+import useTicketBookList from '@/features/ticket_book/hooks/useTicketBookList';
 
 type ReviewItems = {
-  id: string;
+  id: number;
   musical_title: string;
   location: string;
   seat: string;
-  actors: string;
+  actors: string[];
   ticket_image_url: string;
 };
 
@@ -34,26 +33,15 @@ type PremiumProp = {
 };
 
 const PremiumStep1Screen: React.FC<PremiumProp> = ({goToNext, saveData}) => {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const [reviewData, setReviewData] = useState();
-  const [input, setInput] = useState([]);
-
-  const fetchreviewData = async () => {
-    try {
-      const response = await getTicketBookList('NULL');
-      // console.log('API 요청 결과값: ', response.data.data);
-      setReviewData(response.data.data);
-    } catch (error) {
-      console.log(error);
-      Alert.alert('내역 조회 중 오류가 발생했습니다.');
-    }
-  };
+  const {ticketBookList, refetch} = useTicketBookList();
 
   useFocusEffect(
     useCallback(() => {
-      fetchreviewData();
-    }, []),
+      refetch();
+    }, [refetch]),
   );
 
   const renderItem: ListRenderItem<ReviewItems> = ({item}) => {
@@ -155,9 +143,9 @@ const PremiumStep1Screen: React.FC<PremiumProp> = ({goToNext, saveData}) => {
               후기를 작성할 내역을 선택해주세요.
             </Text>
             <FlatList
-              data={reviewData}
+              data={ticketBookList}
               renderItem={renderItem}
-              keyExtractor={item => item.id}
+              keyExtractor={item => String(item.id)}
               scrollEnabled={false}
             />
           </View>
