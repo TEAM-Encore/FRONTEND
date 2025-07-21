@@ -4,7 +4,7 @@ import {SvgXml} from 'react-native-svg';
 import {HomeIcon} from '@/assets/icons/home/HomeIcon';
 import IconSearch from '@/assets/icons/home/IconSearch';
 import IconNotification from '@/assets/icons/home/IconNotification';
-import useAppNavigation from '@/app/useAppNavigation';
+import useAppNavigation from '@/features/core/hooks/useAppNavigation';
 import HomeStyles from './style';
 import HomeCarousel from '@/features/home/modules/HomeCarousel';
 import LatestMusical from '@/features/home/modules/LatestMusical';

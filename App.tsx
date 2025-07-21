@@ -6,8 +6,9 @@ import queryClient from './src/common/queryClient';
 import {AddTicketProvider} from './src/state/AddTicketContext';
 import {OnboardingProvider} from './src/state/OnboardingContext';
 import {ThemeProvider} from 'styled-components';
-import Navigator from './src/app/Navigator';
-import {OverlayProvider} from 'overlay-kit'
+import {OverlayProvider} from 'overlay-kit';
+import {NavigationContainer} from '@react-navigation/native';
+import RootStack from './src/features/core/navigation/RootStack';
 
 function App() {
   return (
@@ -17,7 +18,9 @@ function App() {
           <OverlayProvider>
             <OnboardingProvider>
               <AddTicketProvider>
-                <Navigator />
+                <NavigationContainer>
+                  <RootStack />
+                </NavigationContainer>
               </AddTicketProvider>
             </OnboardingProvider>
           </OverlayProvider>

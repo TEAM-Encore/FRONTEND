@@ -4,7 +4,7 @@ import useTicket from '../../hooks/useTicket';
 import Typo from '@/components/Typo';
 import {SvgXml} from 'react-native-svg';
 import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
-import useAppNavigation from '@/app/useAppNavigation';
+import useAppNavigation from '@/features/core/hooks/useAppNavigation';
 
 type Props = {
   ticketId: number;

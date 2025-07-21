@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {HomeIcon} from '@/assets/icons/home/HomeIcon';
-import MusicalDetailStyles from './style';
-import useAppRoute from '@/app/useAppRoute';
+import MusicalDetailStyles from '@/app/home/HomeMusicalScreen/style';
+import useAppRoute from '@/features/core/hooks/useAppRoute';
 import Header from '@/components/Header';
 import MusicalDetailInfo from '@/features/home/modules/MusicalDetailInfo';
 import MusicalDetailReview from '@/features/home/modules/MusicalDetailReview';
@@ -18,8 +18,8 @@ import styled from 'styled-components/native';
 import {overlay} from 'overlay-kit';
 import MusicalSeriesSelectBottomSheet from '@/features/home/modules/MusicalSeriesSelectBottomSheet';
 
-const MusicalDetailScreen: React.FC = () => {
-  const {data} = useAppRoute('MusicalDetailScreen').params;
+const HomeMusicalScreen: React.FC = () => {
+  const {data} = useAppRoute('HomeMusicalScreen').params;
 
   const [series, setSeries] = useState('3연');
   const tabs = ['공연 정보', '공연 후기'] as const;
@@ -94,6 +94,6 @@ const MusicalDetailScreen: React.FC = () => {
   );
 };
 
-export default MusicalDetailScreen;
+export default HomeMusicalScreen;
 
 const ImageContainer = styled.View``;

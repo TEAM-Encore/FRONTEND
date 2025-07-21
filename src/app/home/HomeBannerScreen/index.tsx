@@ -11,7 +11,7 @@ import {SvgXml} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import HomeBannerStyles from './styles';
-import useAppRoute from '@/app/useAppRoute';
+import useAppRoute from '@/features/core/hooks/useAppRoute';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 const HomeBannerScreen: React.FC = () => {

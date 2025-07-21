@@ -11,7 +11,7 @@ import AddTicketDatePhase from '@/features/ticket_book/modules/AddTicketDatePhas
 import AddTicketInfoPhase from '@/features/ticket_book/modules/AddTicketInfoPhase';
 import AddTicketActorsPhase from '@/features/ticket_book/modules/AddTicketActorsPhase';
 import AddTicketImagePhase from '@/features/ticket_book/modules/AddTicketImagePhase';
-import useAppNavigation from '@/app/useAppNavigation';
+import useAppNavigation from '@/features/core/hooks/useAppNavigation';
 import useCreateTicket from '@/features/ticket_book/hooks/useCreateTicket';
 import useAddTicketStore from '@/features/ticket_book/stores/useAddTicketStore';
 import {useShallow} from 'zustand/react/shallow';

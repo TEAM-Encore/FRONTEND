@@ -1,5 +1,5 @@
 import TicketDetailStyles from '@/app/ticketBook/TicketDetailScreen/style';
-import useAppNavigation from '@/app/useAppNavigation';
+import useAppNavigation from '@/features/core/hooks/useAppNavigation';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
 import useDialog from '@/features/core/hooks/useDialog';

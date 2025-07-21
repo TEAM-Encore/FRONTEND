@@ -12,7 +12,7 @@ import styled from 'styled-components/native';
 import useUpcomingMusicals from '../../hooks/useUpcomingMusicals';
 import {IMusical} from '@/api/musical.api';
 import DateUtil from '@/util/DateUtil';
-import useAppNavigation from '@/app/useAppNavigation';
+import useAppNavigation from '@/features/core/hooks/useAppNavigation';
 
 function UpcomingMusicals() {
   const {navigate} = useAppNavigation();

@@ -2,7 +2,7 @@ import React from 'react';
 import {SvgXml} from 'react-native-svg';
 import styled, {useTheme} from 'styled-components/native';
 import Typo from '@/components/Typo';
-import useAppNavigation from '@/app/useAppNavigation';
+import useAppNavigation from '@/features/core/hooks/useAppNavigation';
 import {MyPageIcon} from '@/assets/icons/myPage/MyPageIcon';
 import {Text, TouchableOpacity, View} from 'react-native';
 

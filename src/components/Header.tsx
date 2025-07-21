@@ -1,5 +1,5 @@
 import HomeBannerStyles from '@/app/home/HomeBannerScreen/styles';
-import useAppNavigation from '@/app/useAppNavigation';
+import useAppNavigation from '@/features/core/hooks/useAppNavigation';
 import {PostIcon} from '@/assets/icons/dashboard/PostIcon';
 import React from 'react';
 import {TouchableOpacity, View} from 'react-native';

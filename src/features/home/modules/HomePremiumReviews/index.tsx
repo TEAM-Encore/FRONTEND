@@ -5,7 +5,7 @@ import {Text, TouchableOpacity} from 'react-native';
 import styled from 'styled-components/native';
 import usePopularPremiumReviews from '../../hooks/usePopularPremiumReviews';
 import Typo from '@/components/Typo';
-import useAppNavigation from '@/app/useAppNavigation';
+import useAppNavigation from '@/features/core/hooks/useAppNavigation';
 
 function HomePremiumReviews() {
   const {navigate} = useAppNavigation();

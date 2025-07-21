@@ -4,7 +4,7 @@ import Typo from '@/components/Typo';
 import styled from 'styled-components/native';
 import {SvgXml} from 'react-native-svg';
 import {MyPageIcon} from '@/assets/icons/myPage/MyPageIcon';
-import useAppNavigation from '@/app/useAppNavigation';
+import useAppNavigation from '@/features/core/hooks/useAppNavigation';
 
 export default function NotificationSettingHeader() {
   const navigation = useAppNavigation();

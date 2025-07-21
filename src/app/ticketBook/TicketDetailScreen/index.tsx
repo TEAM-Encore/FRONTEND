@@ -1,7 +1,7 @@
 import React from 'react';
 import {SafeAreaView, ScrollView} from 'react-native';
 import TicketDetailStyles from './style';
-import useAppRoute from '@/app/useAppRoute';
+import useAppRoute from '@/features/core/hooks/useAppRoute';
 import TicketBookDetails from '@/features/ticket_book/modules/TicketBookDetails';
 import TicketBookDetailsHeader from '@/features/ticket_book/modules/TicketBookDetailsHeader';
 import TicketBookWriteReviewBanner from '@/features/ticket_book/modules/TicketBookWriteReviewBanner';

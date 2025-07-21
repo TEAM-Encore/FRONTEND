@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, FlatList, StyleSheet} from 'react-native';
 import Colors from '@/assets/colors/Colors';
 import {typography} from '@/styles/typography';
-import MusicalDetailStyles from '@/app/musical/MusicalDetailScreen/style';
+import MusicalDetailStyles from '@/app/home/HomeMusicalScreen/style';
 import useMusicalReviews from '../../hooks/useMusicalReviews';
 import styled from 'styled-components/native';
 import Typo from '@/components/Typo';

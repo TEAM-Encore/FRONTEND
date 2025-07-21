@@ -5,7 +5,7 @@ import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
 import IconSearch from '@/assets/icons/dashboard/IconSearch';
 import IconNotification from '@/assets/icons/dashboard/IconNotification';
 import TicketBookStyles from './style';
-import useAppNavigation from '@/app/useAppNavigation';
+import useAppNavigation from '@/features/core/hooks/useAppNavigation';
 import TicketBookList from '@/features/ticket_book/modules/TicketBookList';
 
 export default function TicketBookScreen() {

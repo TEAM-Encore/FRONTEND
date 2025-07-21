@@ -6,7 +6,7 @@ import styled, {useTheme} from 'styled-components/native';
 import useTicket from '../../hooks/useTicket';
 import DateUtil from '@/util/DateUtil';
 import {TicketBookIcon} from '@/assets/icons/ticketBook/TicketBookIcon';
-import useAppNavigation from '@/app/useAppNavigation';
+import useAppNavigation from '@/features/core/hooks/useAppNavigation';
 import {Image} from 'react-native';
 
 type Props = {

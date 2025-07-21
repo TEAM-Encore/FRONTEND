@@ -3,23 +3,22 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {SvgXml} from 'react-native-svg';
 import {TabSvg} from '@/assets/icons/TabSvg';
 import Colors from '@/assets/colors/Colors';
-import MyScreen from './my/MyScreen';
-import HomeScreen from './home/HomeScreen';
-import PremiumScreen from './premium/PremiumScreen';
-import TicketBookScreen from './ticketBook/TicketBookScreen';
-import HomeStack from './home/HomeStack';
+import HomeStack from '../../home/navigation/HomeStack';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
+import PremiumStack from '../../premium/navigation/PremiumStack';
+import TicketBookStack from '../../ticket_book/navigation/TicketBookStack';
+import MyStack from '../../my/navigation/MyStack';
 
 export type MainTabsParamList = {
-  HomeScreen: undefined;
-  PremiumScreen: undefined;
-  TicketBookScreen: undefined;
-  MyScreen: undefined;
+  HomeStack: undefined;
+  PremiumStack: undefined;
+  TicketBookStack: undefined;
+  MyStack: undefined;
 };
 
 const Tab = createBottomTabNavigator<MainTabsParamList>();
 
-function MainTabs() {
+function TabNavigator() {
   const tabList: Array<{
     name: keyof MainTabsParamList;
     label: string;
@@ -29,30 +28,30 @@ function MainTabs() {
   }> = [
     {
       label: '홈',
-      name: 'HomeScreen',
+      name: 'HomeStack',
       component: HomeStack,
       icon: TabSvg.HomeIcon,
       tabIcon: TabSvg.tabHomeIcon,
     },
     {
       label: '프리미엄',
-      name: 'PremiumScreen',
-      component: PremiumScreen,
+      name: 'PremiumStack',
+      component: PremiumStack,
       icon: TabSvg.PremiumIcon,
       tabIcon: TabSvg.tabPremiumIcon,
     },
 
     {
-      name: 'TicketBookScreen',
+      name: 'TicketBookStack',
       label: '티켓북',
-      component: TicketBookScreen,
+      component: TicketBookStack,
       icon: TabSvg.TicketBookIcon,
       tabIcon: TabSvg.tabTicketBookIcon,
     },
     {
-      name: 'MyScreen',
+      name: 'MyStack',
       label: '마이',
-      component: MyScreen,
+      component: MyStack,
       icon: TabSvg.MyPageIcon,
       tabIcon: TabSvg.tabMyPageIcon,
     },
@@ -60,7 +59,7 @@ function MainTabs() {
 
   return (
     <Tab.Navigator
-      initialRouteName="HomeScreen"
+      initialRouteName="HomeStack"
       screenOptions={({route}) => {
         const routeName = getFocusedRouteNameFromRoute(route);
         const hideOnScreens = ['HomeSearchScreen'];
@@ -95,4 +94,4 @@ function MainTabs() {
   );
 }
 
-export default MainTabs;
+export default TabNavigator;

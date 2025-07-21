@@ -13,7 +13,7 @@ import {SearchIcon} from '@/assets/icons/search/SearchIcon';
 import {GetPostList} from '@/api/post.api';
 import {getReviewSearchSuggestions} from '@/api/review.api'; // ⭐️ 추가
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import useAppNavigation from '@/app/useAppNavigation';
+import useAppNavigation from '@/features/core/hooks/useAppNavigation';
 import SearchStyles from './style';
 
 const MAX_HISTORY = 10;

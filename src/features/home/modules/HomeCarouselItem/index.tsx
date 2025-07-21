@@ -1,4 +1,4 @@
-import useAppNavigation from '@/app/useAppNavigation';
+import useAppNavigation from '@/features/core/hooks/useAppNavigation';
 import React from 'react';
 import {Image} from 'react-native';
 import styled from 'styled-components/native';

@@ -5,7 +5,7 @@ import styled from 'styled-components/native';
 import useFeaturedMusicals from '../../hooks/useFeaturedMusicals';
 import {IMusical} from '@/api/musical.api';
 import {TouchableOpacity} from 'react-native';
-import useAppNavigation from '@/app/useAppNavigation';
+import useAppNavigation from '@/features/core/hooks/useAppNavigation';
 import DateUtil from '@/util/DateUtil';
 
 function FeaturedMusicals() {

@@ -26,14 +26,14 @@ import HomeSearchDefaultScreen from '@/app/home/HomeSearchDefaultScreen';
 import HomeBannerScreen from '@/app/home/HomeBannerScreen';
 import AddTicketScreen from '@/app/ticketBook/AddTicketScreen';
 import TicketDetailScreen from '@/app/ticketBook/TicketDetailScreen';
-import LoginScreen from '@/app/onboarding/LoginScreen';
-import SignUpScreen from '@/app/onboarding/SignUpScreen';
+import LoginScreen from '@/app/auth/LoginScreen';
+import SignUpScreen from '@/app/auth/SignUpScreen';
 import ProfileSettingScreen from '@/app/onboarding/ProfileSettingScreen';
 import ProfileCardScreen from '@/app/onboarding/ProfileCardScreen';
 
 import { AddTicketProvider } from '@/state/AddTicketContext';
 import {OnboardingProvider} from '@/state/OnboardingContext';
-import MusicalDetailScreen from '@/app/musical/MusicalDetailScreen';
+import HomeMusicalScreen from '@/app/home/HomeMusicalScreen';
 import ModifyProfileImg from './myScreen/ModifyProfileImg';
 import NotificationSettings from './myScreen/NotificationSettings';
 import MarketingDetails from './myScreen/MarketingDetails';
@@ -266,7 +266,7 @@ export default function App() {
                   />
                   <Stack.Screen
                     name="MusicalDetailScreen"
-                    component={MusicalDetailScreen}
+                    component={HomeMusicalScreen}
                     options={({navigation}) => ({
                       headerStyle: {
                         height: 123,

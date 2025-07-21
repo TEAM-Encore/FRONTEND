@@ -1,6 +1,6 @@
 import {ITicketBook} from '@/api/ticketBookList.api';
 import HomeStyles from '@/app/home/HomeScreen/style';
-import useAppNavigation from '@/app/useAppNavigation';
+import useAppNavigation from '@/features/core/hooks/useAppNavigation';
 import {HomeIcon} from '@/assets/icons/home/HomeIcon';
 import Typo from '@/components/Typo';
 import React from 'react';

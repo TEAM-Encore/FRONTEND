@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, Image, ScrollView} from 'react-native';
 import {HomeIcon} from '@/assets/icons/home/HomeIcon';
 import {SvgXml} from 'react-native-svg';
-import MusicalDetailStyles from '@/app/musical/MusicalDetailScreen/style';
+import MusicalDetailStyles from '@/app/home/HomeMusicalScreen/style';
 import useMusicalDetail from '../../hooks/useMusicalDetail';
 import DateUtil from '@/util/DateUtil';
 import styled from 'styled-components/native';

@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import {FlatList, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import MyScreenListItem from '../MyScreenListItem';
-import useAppNavigation from '@/app/useAppNavigation';
+import useAppNavigation from '@/features/core/hooks/useAppNavigation';
 import MyScreenListHeader from '../MyScreenListHeader';
 import {IUser} from '@/api/users.api';
 
